@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -17,7 +19,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
-  private RobotContainer m_robotContainer;
+  public static RobotContainer mRobotContainer;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -27,7 +29,9 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
-    m_robotContainer = new RobotContainer();
+    mRobotContainer = new RobotContainer();
+    mRobotContainer.mDrivetrain.navx.zeroYaw();
+
   }
 
   /**
@@ -48,7 +52,10 @@ public class Robot extends TimedRobot {
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    mRobotContainer.mDrivetrain.setDriveNeutralMode(NeutralMode.Coast);
+    mRobotContainer.mDrivetrain.setTurnNeutralMode(NeutralMode.Coast);
+  }
 
   @Override
   public void disabledPeriodic() {}
@@ -56,7 +63,16 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    m_autonomousCommand = mRobotContainer.getAutonomousCommand();
+
+    mRobotContainer.mDrivetrain.setDriveNeutralMode(NeutralMode.Brake);
+    mRobotContainer.mDrivetrain.setTurnNeutralMode(NeutralMode.Brake);
+
+    // Set the Drive Motors Current Limit
+    mRobotContainer.mDrivetrain.setDriveCurrentLimit(60.0, 60.0);
+
+    // Set the Drive Motors Ramp Rate
+    mRobotContainer.mDrivetrain.setDriveRampRate(0.0);
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
@@ -74,9 +90,16 @@ public class Robot extends TimedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
+
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+
+    mRobotContainer.mDrivetrain.setDriveNeutralMode(NeutralMode.Brake);
+        mRobotContainer.mDrivetrain.setTurnNeutralMode(NeutralMode.Brake);
+
+        mRobotContainer.mDrivetrain.setDriveCurrentLimit(40.0, 40.0);
+        mRobotContainer.mDrivetrain.setDriveRampRate(0.25);
   }
 
   /** This function is called periodically during operator control. */
