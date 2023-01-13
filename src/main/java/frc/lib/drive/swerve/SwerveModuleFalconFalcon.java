@@ -6,6 +6,7 @@ import com.ctre.phoenix.sensors.CANCoder;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 
 public class SwerveModuleFalconFalcon {
@@ -97,8 +98,8 @@ public class SwerveModuleFalconFalcon {
     public double getEncoderAngle() {
         double tempAngle = encoderInput.getAbsolutePosition() - encoderOffset;
 
-        // Not sure if -180 adjust needed.  Not sure why this was here before
-        //tempAngle += 180.0;
+        // Not sure if -180 adjust needed. Not sure why this was here before
+        // tempAngle += 180.0;
 
         if (tempAngle < -180.0) {
             tempAngle += 360.0;
@@ -125,8 +126,7 @@ public class SwerveModuleFalconFalcon {
         double angle = state.angle.getDegrees();
         double speed = state.speedMetersPerSecond;
 
-        //angle -= 180.0;
-
+        // angle -= 180.0;
 
         if (Math.abs(getEncoderAngle() - angle) > 90.0) {
             if (angle > 0) {
@@ -141,4 +141,18 @@ public class SwerveModuleFalconFalcon {
         setVelocityMeters(speed);
         setTurnAngle(angle);
     }
+    // TODO finish this
+
+    public double getWheelPositionMeters() {
+        double position = driveMotor.getSelectedSensorPosition();
+        position = (position * wheelDiameter * Math.PI) / (wheelGearRatio * 2048);
+
+        return position;
+    }
+
+    public SwerveModulePosition getPosition() {
+        return new SwerveModulePosition(getWheelPositionMeters(), Rotation2d.fromDegrees(getEncoderAngle()));
+    }
+
+
 }

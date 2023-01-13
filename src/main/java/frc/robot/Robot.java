@@ -95,6 +95,8 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
     }
 
+    mRobotContainer.mDrivetrain.navx.zeroYaw();
+
     mRobotContainer.mDrivetrain.setDriveNeutralMode(NeutralMode.Brake);
         mRobotContainer.mDrivetrain.setTurnNeutralMode(NeutralMode.Brake);
 

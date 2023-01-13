@@ -15,7 +15,13 @@ import frc.lib.drive.swerve.SwerveController;
 import frc.lib.drive.swerve.SwerveModuleFalconFalcon;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -60,8 +66,24 @@ public class Drivetrain extends SubsystemBase {
   public AHRS navx;
   public double gyroOffset = 0.0;
 
+  public Pose2d latestSwervePose = new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0.0));
+
+
   // Swerve Drive Kinematics
   public final SwerveDriveKinematics swerveDriveKinematics;
+
+  // Swerve Drive Odometry
+  public final SwerveDriveOdometry swerveDriveOdometry;
+  public SwerveModulePosition[] swerveDriveModulePositions = {
+    new SwerveModulePosition(),
+    new SwerveModulePosition(),
+    new SwerveModulePosition(),
+    new SwerveModulePosition()
+  };
+
+  public Transform2d moved;
+
+
 
   // Slowmode
   private boolean inSlowMode = false;
@@ -71,26 +93,26 @@ public class Drivetrain extends SubsystemBase {
     frontRightDrive = new TalonFX(2);
     initTalonFX(frontRightDrive, false);
 
-    frontLeftTurn = new TalonFX(3);
-    initTalonFX(frontLeftTurn, false);
+    frontRightTurn = new TalonFX(3);
+    initTalonFX(frontRightTurn, true);
 
     frontLeftDrive = new TalonFX(4);
     initTalonFX(frontLeftDrive, false);
 
-    frontRightTurn = new TalonFX(5);
-    initTalonFX(frontRightTurn, false);
+    frontLeftTurn = new TalonFX(5);
+    initTalonFX(frontLeftTurn, true);
 
     rearRightDrive = new TalonFX(6);
     initTalonFX(rearRightDrive, false);
 
     rearRightTurn = new TalonFX(7);
-    initTalonFX(rearRightTurn, false);
+    initTalonFX(rearRightTurn, true);
 
     rearLeftDrive = new TalonFX(8);
     initTalonFX(rearLeftDrive, false);
     
     rearLeftTurn = new TalonFX(9);
-    initTalonFX(rearLeftTurn, false);
+    initTalonFX(rearLeftTurn, true);
 
     frontRightEncoder = new CANCoder(3);
     initCANCoder(frontRightEncoder, AbsoluteSensorRange.Signed_PlusMinus180, true);
@@ -179,10 +201,21 @@ public class Drivetrain extends SubsystemBase {
     // robot gyro initialization
     navx = new AHRS();
 
+    swerveDriveModulePositions[0] = frontLeftModule.getPosition();
+    swerveDriveModulePositions[1] = frontRightModule.getPosition();
+    swerveDriveModulePositions[2] = rearLeftModule.getPosition();
+    swerveDriveModulePositions[3] = rearRightModule.getPosition();
+
     // Swerve Drive Kinematics
     swerveDriveKinematics = new SwerveDriveKinematics(Constants.DriveConstants.frontLeftLocation,
         Constants.DriveConstants.frontRightLocation,
         Constants.DriveConstants.rearLeftLocation, Constants.DriveConstants.rearRightLocation);
+
+        // Serve Drive Odometry
+        swerveDriveOdometry = new SwerveDriveOdometry(
+          swerveDriveKinematics, Rotation2d.fromDegrees(navx.getYaw()),
+          swerveDriveModulePositions,
+          new Pose2d(0.0, 0.0, new Rotation2d()));
   }
 
   private void initTalonFX(TalonFX motorContollerName, boolean isInverted) {
@@ -198,10 +231,25 @@ public class Drivetrain extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
 
+    swerveDriveModulePositions[0] = frontLeftModule.getPosition();
+    swerveDriveModulePositions[1] = frontRightModule.getPosition();
+    swerveDriveModulePositions[2] = rearLeftModule.getPosition();
+    swerveDriveModulePositions[3] = rearRightModule.getPosition();
+
+    latestSwervePose = swerveDriveOdometry.update(
+      Rotation2d.fromDegrees(-getGyroYaw()), swerveDriveModulePositions);
+
     SmartDashboard.putNumber("front left encoder", frontLeftModule.getEncoderAngle());
     SmartDashboard.putNumber("front right encoder", frontRightModule.getEncoderAngle());
     SmartDashboard.putNumber("back left encoder", rearLeftModule.getEncoderAngle());
     SmartDashboard.putNumber("back right encoder", rearRightModule.getEncoderAngle());
+
+    SmartDashboard.putNumber("gyro y", navx.getYaw());
+    SmartDashboard.putNumber("gyro y", getGyroYaw());
+
+    SmartDashboard.putNumber("x odometry", latestSwervePose.getX());
+    SmartDashboard.putNumber("y odometry", latestSwervePose.getY());
+
 
   }
 
@@ -221,8 +269,7 @@ public class Drivetrain extends SubsystemBase {
 
   public void setDriveCurrentLimit(double currentLimit, double triggerCurrent) {
     frontLeftDrive.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, currentLimit, triggerCurrent, 0));
-    frontRightDrive
-        .configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, currentLimit, triggerCurrent, 0));
+    frontRightDrive.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, currentLimit, triggerCurrent, 0));
     rearLeftDrive.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, currentLimit, triggerCurrent, 0));
     rearRightDrive.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, currentLimit, triggerCurrent, 0));
   }

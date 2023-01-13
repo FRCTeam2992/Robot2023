@@ -26,8 +26,8 @@ public final class Constants {
   public static double joystickRotationInverseDeadband = 0.14;
 
   // Length and Width of the Robot in Meters (Inches: 22.0 x 24.5)
-  public static final double swerveWidth = 0.591;
-  public static final double swerveLength = 0.654;
+  public static final double swerveWidth = 0.6604;
+  public static final double swerveLength = 0.6604;
 
   // Max Swerve Speed (Velocity Control)
   public static final double swerveMaxSpeed = 4.5; // (Meters per Second)(2 Slow, 4.5 normal)
@@ -44,14 +44,14 @@ public final class Constants {
   public static final double rearRightOffset = 6.8;
 
   // Swerve Drive PID (Velocity Control)
-  public static final double driveP = 0.05;
-  public static final double driveI = 0.0;
+  public static final double driveP = 0.05;//.05
+  public static final double driveI = 0.0;//.0
   public static final double driveD = 0.01;
   public static final double driveF = 0.047;
 
   // Swerve Turn PIDs
-  public static final double turnP = 0.0045; //.013
-  public static final double turnI = 0.0;
+  public static final double turnP = 0.013; //.013
+  public static final double turnI = 0.0;//.0
   public static final double turnD = 0.00005;
   
   
