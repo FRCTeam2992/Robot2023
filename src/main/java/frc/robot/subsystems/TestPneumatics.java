@@ -9,13 +9,13 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class TestPnuematics extends SubsystemBase {
+public class TestPneumatics extends SubsystemBase {
   /** Creates a new TestPnuematics. */
 
   private PneumaticHub pneumaticHub;
 
   private Solenoid clawTester;
-  public TestPnuematics() {
+  public TestPneumatics() {
     pneumaticHub = new PneumaticHub(1);
 
     clawTester = new Solenoid(PneumaticsModuleType.REVPH, 0);

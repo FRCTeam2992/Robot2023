@@ -9,7 +9,7 @@ import frc.robot.commands.DriveSticks;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.ExampleSubsystem;
-import frc.robot.subsystems.TestPnuematics;
+import frc.robot.subsystems.TestPneumatics;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -31,7 +31,7 @@ public class RobotContainer {
 
   public final Drivetrain mDrivetrain;
 
-  public final TestPnuematics mTestPnuematics;
+  public final TestPneumatics mTestPneumatics;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -39,7 +39,7 @@ public class RobotContainer {
     mDrivetrain = new Drivetrain();
     mDrivetrain.setDefaultCommand(new DriveSticks(mDrivetrain));
 
-    mTestPnuematics = new TestPnuematics();
+    mTestPneumatics = new TestPneumatics();
     // Configure the trigger bindings
     configureBindings();
   }
