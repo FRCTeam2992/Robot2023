@@ -68,25 +68,24 @@ public class Drivetrain extends SubsystemBase {
 
   public Pose2d latestSwervePose = new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0.0));
 
-
   // Swerve Drive Kinematics
   public final SwerveDriveKinematics swerveDriveKinematics;
 
   // Swerve Drive Odometry
   public final SwerveDriveOdometry swerveDriveOdometry;
   public SwerveModulePosition[] swerveDriveModulePositions = {
-    new SwerveModulePosition(),
-    new SwerveModulePosition(),
-    new SwerveModulePosition(),
-    new SwerveModulePosition()
+      new SwerveModulePosition(),
+      new SwerveModulePosition(),
+      new SwerveModulePosition(),
+      new SwerveModulePosition()
   };
 
   public Transform2d moved;
 
-
-
   // Slowmode
   private boolean inSlowMode = false;
+
+  private int dashboardCounter = 0;
 
   public Drivetrain() {
     // Motor Inits
@@ -110,7 +109,7 @@ public class Drivetrain extends SubsystemBase {
 
     rearLeftDrive = new TalonFX(8);
     initTalonFX(rearLeftDrive, false);
-    
+
     rearLeftTurn = new TalonFX(9);
     initTalonFX(rearLeftTurn, true);
 
@@ -211,11 +210,11 @@ public class Drivetrain extends SubsystemBase {
         Constants.DriveConstants.frontRightLocation,
         Constants.DriveConstants.rearLeftLocation, Constants.DriveConstants.rearRightLocation);
 
-        // Serve Drive Odometry
-        swerveDriveOdometry = new SwerveDriveOdometry(
-          swerveDriveKinematics, Rotation2d.fromDegrees(navx.getYaw()),
-          swerveDriveModulePositions,
-          new Pose2d(0.0, 0.0, new Rotation2d()));
+    // Serve Drive Odometry
+    swerveDriveOdometry = new SwerveDriveOdometry(
+        swerveDriveKinematics, Rotation2d.fromDegrees(navx.getYaw()),
+        swerveDriveModulePositions,
+        new Pose2d(0.0, 0.0, new Rotation2d()));
   }
 
   private void initTalonFX(TalonFX motorContollerName, boolean isInverted) {
@@ -237,20 +236,22 @@ public class Drivetrain extends SubsystemBase {
     swerveDriveModulePositions[3] = rearRightModule.getPosition();
 
     latestSwervePose = swerveDriveOdometry.update(
-      Rotation2d.fromDegrees(-getGyroYaw()), swerveDriveModulePositions);
+        Rotation2d.fromDegrees(-getGyroYaw()), swerveDriveModulePositions);
 
-    SmartDashboard.putNumber("front left encoder", frontLeftModule.getEncoderAngle());
-    SmartDashboard.putNumber("front right encoder", frontRightModule.getEncoderAngle());
-    SmartDashboard.putNumber("back left encoder", rearLeftModule.getEncoderAngle());
-    SmartDashboard.putNumber("back right encoder", rearRightModule.getEncoderAngle());
+    if (dashboardCounter++ > 5) {
+      SmartDashboard.putNumber("front left encoder", frontLeftModule.getEncoderAngle());
+      SmartDashboard.putNumber("front right encoder", frontRightModule.getEncoderAngle());
+      SmartDashboard.putNumber("back left encoder", rearLeftModule.getEncoderAngle());
+      SmartDashboard.putNumber("back right encoder", rearRightModule.getEncoderAngle());
 
-    SmartDashboard.putNumber("gyro y", navx.getYaw());
-    SmartDashboard.putNumber("gyro y", getGyroYaw());
+      SmartDashboard.putNumber("gyro y", navx.getYaw());
+      SmartDashboard.putNumber("gyro y", getGyroYaw());
 
-    SmartDashboard.putNumber("x odometry", latestSwervePose.getX());
-    SmartDashboard.putNumber("y odometry", latestSwervePose.getY());
+      SmartDashboard.putNumber("x odometry", latestSwervePose.getX());
+      SmartDashboard.putNumber("y odometry", latestSwervePose.getY());
 
-
+      dashboardCounter = 0;
+    }
   }
 
   public void setDriveNeutralMode(NeutralMode mode) {
@@ -269,7 +270,8 @@ public class Drivetrain extends SubsystemBase {
 
   public void setDriveCurrentLimit(double currentLimit, double triggerCurrent) {
     frontLeftDrive.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, currentLimit, triggerCurrent, 0));
-    frontRightDrive.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, currentLimit, triggerCurrent, 0));
+    frontRightDrive
+        .configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, currentLimit, triggerCurrent, 0));
     rearLeftDrive.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, currentLimit, triggerCurrent, 0));
     rearRightDrive.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, currentLimit, triggerCurrent, 0));
   }
