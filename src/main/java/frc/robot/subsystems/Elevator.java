@@ -37,6 +37,8 @@ public class Elevator extends SubsystemBase {
       SmartDashboard.putNumber("Elevator Encoder", getElevatorPostion());
 
       dashboardCounter = 0;
+
+      
     }
   }
 
@@ -49,8 +51,8 @@ public class Elevator extends SubsystemBase {
   }
 
 
-  public void setElevatorPosition(double postion){
-    elevatorMotor.set(ControlMode.Position, postion);
+  public void setElevatorPosition(double position){
+    elevatorMotor.set(ControlMode.Position, position);
   }
 
   public void deployElevator(boolean toggle){

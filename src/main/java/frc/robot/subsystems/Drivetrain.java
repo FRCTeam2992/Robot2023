@@ -238,7 +238,7 @@ public class Drivetrain extends SubsystemBase {
     latestSwervePose = swerveDriveOdometry.update(
         Rotation2d.fromDegrees(-getGyroYaw()), swerveDriveModulePositions);
 
-    if (dashboardCounter++ > 5) {
+    if (dashboardCounter++ >= 5) {
       SmartDashboard.putNumber("front left encoder", frontLeftModule.getEncoderAngle());
       SmartDashboard.putNumber("front right encoder", frontRightModule.getEncoderAngle());
       SmartDashboard.putNumber("back left encoder", rearLeftModule.getEncoderAngle());
