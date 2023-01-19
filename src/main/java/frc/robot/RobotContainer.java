@@ -7,8 +7,13 @@ package frc.robot;
 import frc.robot.commands.Autos;
 import frc.robot.commands.DriveSticks;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Spindexer;
 import frc.robot.subsystems.TestPneumatics;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -31,6 +36,14 @@ public class RobotContainer {
 
   public final Drivetrain mDrivetrain;
 
+  public final Intake mIntake;
+  public final Spindexer mSpindexer;
+
+  public final Elevator mElevator;
+  public final Arm mArm;
+  public final Claw mClaw;
+
+
   public final TestPneumatics mTestPneumatics;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -38,6 +51,19 @@ public class RobotContainer {
 
     mDrivetrain = new Drivetrain();
     mDrivetrain.setDefaultCommand(new DriveSticks(mDrivetrain));
+
+    mIntake = new Intake();
+
+    mSpindexer = new Spindexer();
+
+    mElevator = new Elevator();
+
+    mArm = new Arm();
+
+    mClaw = new Claw();
+  
+
+
 
     mTestPneumatics = new TestPneumatics();
     // Configure the trigger bindings
