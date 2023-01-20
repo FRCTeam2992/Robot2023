@@ -5,31 +5,27 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Claw;
+import frc.robot.subsystems.Intake;
 
-public class SetClawState extends CommandBase {
-  /** Creates a new SetClawState. */
-  private Claw mClaw;
+public class StopIntake extends CommandBase {
+  /** Creates a new StopIntake. */
+  private Intake mIntake;
 
-  private Claw.ClawStates mState;
-
-  public SetClawState(Claw subsystem, Claw.ClawStates state) {
+  public StopIntake(Intake subsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
-    mClaw = subsystem;
-    mState = state;
-
-    addRequirements(mClaw);
+    mIntake = subsystem;
+    addRequirements(mIntake);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    mClaw.setClawState(mState);
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    mIntake.setIntakeSpeed(0.0);
+  }
 
   // Called once the command ends or is interrupted.
   @Override

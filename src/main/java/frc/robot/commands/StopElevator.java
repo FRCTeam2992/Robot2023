@@ -5,31 +5,27 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Claw;
+import frc.robot.subsystems.Elevator;
 
-public class SetClawState extends CommandBase {
-  /** Creates a new SetClawState. */
-  private Claw mClaw;
+public class StopElevator extends CommandBase {
+  /** Creates a new StopElevator. */
+  private Elevator mElevator;
 
-  private Claw.ClawStates mState;
-
-  public SetClawState(Claw subsystem, Claw.ClawStates state) {
+  public StopElevator(Elevator subsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
-    mClaw = subsystem;
-    mState = state;
-
-    addRequirements(mClaw);
+    mElevator = subsystem;
+    addRequirements(mElevator);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    mClaw.setClawState(mState);
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    mElevator.setElevatorSpeed(0);
+  }
 
   // Called once the command ends or is interrupted.
   @Override

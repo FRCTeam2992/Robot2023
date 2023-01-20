@@ -7,6 +7,10 @@ package frc.robot;
 import frc.robot.commands.Autos;
 import frc.robot.commands.DriveSticks;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.StopArm;
+import frc.robot.commands.StopElevator;
+import frc.robot.commands.StopIntake;
+import frc.robot.commands.StopSpindexer;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
@@ -53,12 +57,16 @@ public class RobotContainer {
     mDrivetrain.setDefaultCommand(new DriveSticks(mDrivetrain));
 
     mIntake = new Intake();
+    mIntake.setDefaultCommand(new StopIntake(mIntake));
 
     mSpindexer = new Spindexer();
+    mSpindexer.setDefaultCommand(new StopSpindexer(mSpindexer));
 
     mElevator = new Elevator();
+    mElevator.setDefaultCommand(new StopElevator(mElevator));
 
     mArm = new Arm();
+    mArm.setDefaultCommand(new StopArm(mArm));
 
     mClaw = new Claw();
   

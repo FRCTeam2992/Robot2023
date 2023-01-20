@@ -39,6 +39,10 @@ public class Arm extends SubsystemBase {
     return armMotor.getSensorCollection().getIntegratedSensorPosition();
   }
 
+  public void setArmSpeed(double speed){
+    armMotor.set(ControlMode.PercentOutput, speed);
+  }
+
 
 }
 
