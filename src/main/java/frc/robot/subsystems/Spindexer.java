@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class Spindexer extends SubsystemBase {
   /** Creates a new Spindexer. */
@@ -22,7 +23,7 @@ public class Spindexer extends SubsystemBase {
   private int dashboardCounter = 0;
 
   public Spindexer() {
-    spindexerMotor = new TalonSRX(23);
+    spindexerMotor = new TalonSRX(Constants.SpindexerConstants.CanIDs.spindexerMotor);
     spindexerMotor.setInverted(false);
     spindexerMotor.setNeutralMode(NeutralMode.Coast);
 

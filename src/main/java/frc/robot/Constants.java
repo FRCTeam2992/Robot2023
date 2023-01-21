@@ -113,4 +113,36 @@ public final class Constants {
     }
 
   }
+
+  public static class IntakeConstants {
+    public static class CanIDs{
+      public static int intakeMotor = 22;
+    }
+  }
+
+  public static class ElevatorConstants {
+    public static class CanIDs{
+      public static int elevatorMotor = 25;
+    }
+
+  }
+
+  public static class SpindexerConstants {
+    public static class CanIDs{
+      public static int spindexerMotor = 23;
+    }
+
+  }
+
+  public static class ArmConstants {
+    public static class CanIDs{
+      public static int armMotor = 26;
+    }
+
+  }
+
+
+  public static class DrivetrainConstants {
+
+  }
 }

@@ -9,6 +9,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class Arm extends SubsystemBase {
   /** Creates a new Arm. */
@@ -17,7 +18,7 @@ public class Arm extends SubsystemBase {
   private int dashboardCounter;
 
   public Arm() {
-    armMotor = new TalonFX(26);
+    armMotor = new TalonFX(Constants.ArmConstants.CanIDs.armMotor);
     armMotor.setInverted(false);
     armMotor.setNeutralMode(NeutralMode.Brake);
 
