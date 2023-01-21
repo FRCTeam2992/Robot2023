@@ -89,40 +89,40 @@ public class Drivetrain extends SubsystemBase {
 
   public Drivetrain() {
     // Motor Inits
-    frontRightDrive = new TalonFX(2);
-    initTalonFX(frontRightDrive, false);
-
-    frontRightTurn = new TalonFX(3);
-    initTalonFX(frontRightTurn, true);
-
-    frontLeftDrive = new TalonFX(4);
+    frontLeftDrive = new TalonFX(Constants.DriveConstants.CanIDs.frontLeftDrive);
     initTalonFX(frontLeftDrive, false);
 
-    frontLeftTurn = new TalonFX(5);
+    frontLeftTurn = new TalonFX(Constants.DriveConstants.CanIDs.frontLeftTurn);
     initTalonFX(frontLeftTurn, true);
 
-    rearRightDrive = new TalonFX(6);
+    frontRightDrive = new TalonFX(Constants.DriveConstants.CanIDs.frontRightDrive);
+    initTalonFX(frontRightDrive, false);
+
+    frontRightTurn = new TalonFX(Constants.DriveConstants.CanIDs.frontRightTurn);
+    initTalonFX(frontRightTurn, true);
+
+    rearRightDrive = new TalonFX(Constants.DriveConstants.CanIDs.rearRightDrive);
     initTalonFX(rearRightDrive, false);
 
-    rearRightTurn = new TalonFX(7);
+    rearRightTurn = new TalonFX(Constants.DriveConstants.CanIDs.rearRightTurn);
     initTalonFX(rearRightTurn, true);
 
-    rearLeftDrive = new TalonFX(8);
+    rearLeftDrive = new TalonFX(Constants.DriveConstants.CanIDs.rearLeftDrive);
     initTalonFX(rearLeftDrive, false);
 
-    rearLeftTurn = new TalonFX(9);
+    rearLeftTurn = new TalonFX(Constants.DriveConstants.CanIDs.rearLeftTurn);
     initTalonFX(rearLeftTurn, true);
 
-    frontRightEncoder = new CANCoder(3);
+    frontRightEncoder = new CANCoder(Constants.DriveConstants.CanIDs.frontRightEncoder);
     initCANCoder(frontRightEncoder, AbsoluteSensorRange.Signed_PlusMinus180, true);
 
-    frontLeftEncoder = new CANCoder(5);
+    frontLeftEncoder = new CANCoder(Constants.DriveConstants.CanIDs.frontLeftEncoder);
     initCANCoder(frontLeftEncoder, AbsoluteSensorRange.Signed_PlusMinus180, true);
 
-    rearRightEncoder = new CANCoder(7);
+    rearRightEncoder = new CANCoder(Constants.DriveConstants.CanIDs.rearRightEncoder);
     initCANCoder(rearRightEncoder, AbsoluteSensorRange.Signed_PlusMinus180, true);
 
-    rearLeftEncoder = new CANCoder(9);
+    rearLeftEncoder = new CANCoder(Constants.DriveConstants.CanIDs.rearLeftEncoder);
     initCANCoder(rearLeftEncoder, AbsoluteSensorRange.Signed_PlusMinus180, true);
 
     setDriveNeutralMode(NeutralMode.Coast);
@@ -131,46 +131,46 @@ public class Drivetrain extends SubsystemBase {
     setDriveCurrentLimit(40.0, 40.0);
     setTurnCurrentLimit(60.0); // potentially unused
 
-    frontLeftController = new PIDController(Constants.DriveConstants.turnP, Constants.DriveConstants.turnI,
-        Constants.DriveConstants.turnD);
+    frontLeftController = new PIDController(Constants.DriveConstants.PIDConstants.turnP, Constants.DriveConstants.PIDConstants.turnI,
+        Constants.DriveConstants.PIDConstants.turnD);
     frontLeftController.enableContinuousInput(-180.0, 180.0);
     frontLeftController.setTolerance(2.0);
 
-    frontRightController = new PIDController(Constants.DriveConstants.turnP, Constants.DriveConstants.turnI,
-        Constants.DriveConstants.turnD);
+    frontRightController = new PIDController(Constants.DriveConstants.PIDConstants.turnP, Constants.DriveConstants.PIDConstants.turnI,
+        Constants.DriveConstants.PIDConstants.turnD);
     frontRightController.enableContinuousInput(-180.0, 180.0);
     frontRightController.setTolerance(2.0);
 
-    rearLeftController = new PIDController(Constants.DriveConstants.turnP, Constants.DriveConstants.turnI,
-        Constants.DriveConstants.turnD);
+    rearLeftController = new PIDController(Constants.DriveConstants.PIDConstants.turnP, Constants.DriveConstants.PIDConstants.turnI,
+        Constants.DriveConstants.PIDConstants.turnD);
     rearLeftController.enableContinuousInput(-180.0, 180.0);
     rearLeftController.setTolerance(2.0);
 
-    rearRightController = new PIDController(Constants.DriveConstants.turnP, Constants.DriveConstants.turnI,
-        Constants.DriveConstants.turnD);
+    rearRightController = new PIDController(Constants.DriveConstants.PIDConstants.turnP, Constants.DriveConstants.PIDConstants.turnI,
+        Constants.DriveConstants.PIDConstants.turnD);
     rearRightController.enableContinuousInput(-180.0, 180.0);
     rearRightController.setTolerance(2.0);
 
     // Set the Drive PID Controllers
-    frontLeftDrive.config_kP(0, Constants.DriveConstants.driveP);
-    frontLeftDrive.config_kI(0, Constants.DriveConstants.driveI);
-    frontLeftDrive.config_kD(0, Constants.DriveConstants.driveD);
-    frontLeftDrive.config_kF(0, Constants.DriveConstants.driveF);
+    frontLeftDrive.config_kP(0, Constants.DriveConstants.PIDConstants.driveP);
+    frontLeftDrive.config_kI(0, Constants.DriveConstants.PIDConstants.driveI);
+    frontLeftDrive.config_kD(0, Constants.DriveConstants.PIDConstants.driveD);
+    frontLeftDrive.config_kF(0, Constants.DriveConstants.PIDConstants.driveF);
 
-    frontRightDrive.config_kP(0, Constants.DriveConstants.driveP);
-    frontRightDrive.config_kI(0, Constants.DriveConstants.driveI);
-    frontRightDrive.config_kD(0, Constants.DriveConstants.driveD);
-    frontRightDrive.config_kF(0, Constants.DriveConstants.driveF);
+    frontRightDrive.config_kP(0, Constants.DriveConstants.PIDConstants.driveP);
+    frontRightDrive.config_kI(0, Constants.DriveConstants.PIDConstants.driveI);
+    frontRightDrive.config_kD(0, Constants.DriveConstants.PIDConstants.driveD);
+    frontRightDrive.config_kF(0, Constants.DriveConstants.PIDConstants.driveF);
 
-    rearLeftDrive.config_kP(0, Constants.DriveConstants.driveP);
-    rearLeftDrive.config_kI(0, Constants.DriveConstants.driveI);
-    rearLeftDrive.config_kD(0, Constants.DriveConstants.driveD);
-    rearLeftDrive.config_kF(0, Constants.DriveConstants.driveF);
+    rearLeftDrive.config_kP(0, Constants.DriveConstants.PIDConstants.driveP);
+    rearLeftDrive.config_kI(0, Constants.DriveConstants.PIDConstants.driveI);
+    rearLeftDrive.config_kD(0, Constants.DriveConstants.PIDConstants.driveD);
+    rearLeftDrive.config_kF(0, Constants.DriveConstants.PIDConstants.driveF);
 
-    rearRightDrive.config_kP(0, Constants.DriveConstants.driveP);
-    rearRightDrive.config_kI(0, Constants.DriveConstants.driveI);
-    rearRightDrive.config_kD(0, Constants.DriveConstants.driveD);
-    rearRightDrive.config_kF(0, Constants.DriveConstants.driveF);
+    rearRightDrive.config_kP(0, Constants.DriveConstants.PIDConstants.driveP);
+    rearRightDrive.config_kI(0, Constants.DriveConstants.PIDConstants.driveI);
+    rearRightDrive.config_kD(0, Constants.DriveConstants.PIDConstants.driveD);
+    rearRightDrive.config_kF(0, Constants.DriveConstants.PIDConstants.driveF);
 
     // Swerve Modules
     frontLeftModule = new SwerveModuleFalconFalcon(frontLeftDrive, frontLeftTurn, frontLeftEncoder,
