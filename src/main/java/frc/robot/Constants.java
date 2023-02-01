@@ -19,6 +19,8 @@ import edu.wpi.first.math.geometry.Translation2d;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+  public static final boolean dataLogging = true;
+
   public static class DriveConstants {
     // Drive Variables
     public static final boolean isFieldCentric = true;
@@ -137,6 +139,7 @@ public final class Constants {
   public static class ArmConstants {
     public static class CanIDs{
       public static int armMotor = 26;
+      public static int armEncoder = 26;
     }
 
   }

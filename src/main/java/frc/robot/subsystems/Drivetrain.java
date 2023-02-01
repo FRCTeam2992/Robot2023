@@ -13,7 +13,8 @@ import com.kauailabs.navx.frc.AHRS;
 
 import frc.lib.drive.swerve.SwerveController;
 import frc.lib.drive.swerve.SwerveModuleFalconFalcon;
-
+import frc.lib.vision.LimeLight;
+import frc.lib.vision.LimeLight.CoordinateSpace;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -22,6 +23,12 @@ import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
+import edu.wpi.first.util.datalog.DataLog;
+import edu.wpi.first.util.datalog.DoubleArrayLogEntry;
+import edu.wpi.first.util.datalog.DoubleLogEntry;
+import edu.wpi.first.util.datalog.IntegerLogEntry;
+import edu.wpi.first.util.datalog.StringLogEntry;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -61,6 +68,24 @@ public class Drivetrain extends SubsystemBase {
 
   // Swerve Controller
   public final SwerveController swerveController;
+
+  // Limelights
+  public final LimeLight limeLightCamera11;
+  public final LimeLight limeLightCamera12;
+
+  private DataLog mDataLog;
+
+  private StringLogEntry limelight11JsonLog;
+  private StringLogEntry limelight12JsonLog;
+
+  private DoubleArrayLogEntry ll11BotposeFieldSpaceLog;
+  private DoubleArrayLogEntry ll12BotposeFieldSpaceLog;
+  private DoubleArrayLogEntry ll11BotposeBlueLog;
+  private DoubleArrayLogEntry ll12BotposeBlueLog;
+  private DoubleArrayLogEntry ll11BotposeRedLog;
+  private DoubleArrayLogEntry ll12BotposeRedLog;
+  private IntegerLogEntry ll11TargetIDLog;
+  private IntegerLogEntry ll12TargetIDLog;
 
   // Robot Gyro
   public AHRS navx;
@@ -131,22 +156,26 @@ public class Drivetrain extends SubsystemBase {
     setDriveCurrentLimit(40.0, 40.0);
     setTurnCurrentLimit(60.0); // potentially unused
 
-    frontLeftController = new PIDController(Constants.DriveConstants.PIDConstants.turnP, Constants.DriveConstants.PIDConstants.turnI,
+    frontLeftController = new PIDController(Constants.DriveConstants.PIDConstants.turnP,
+        Constants.DriveConstants.PIDConstants.turnI,
         Constants.DriveConstants.PIDConstants.turnD);
     frontLeftController.enableContinuousInput(-180.0, 180.0);
     frontLeftController.setTolerance(2.0);
 
-    frontRightController = new PIDController(Constants.DriveConstants.PIDConstants.turnP, Constants.DriveConstants.PIDConstants.turnI,
+    frontRightController = new PIDController(Constants.DriveConstants.PIDConstants.turnP,
+        Constants.DriveConstants.PIDConstants.turnI,
         Constants.DriveConstants.PIDConstants.turnD);
     frontRightController.enableContinuousInput(-180.0, 180.0);
     frontRightController.setTolerance(2.0);
 
-    rearLeftController = new PIDController(Constants.DriveConstants.PIDConstants.turnP, Constants.DriveConstants.PIDConstants.turnI,
+    rearLeftController = new PIDController(Constants.DriveConstants.PIDConstants.turnP,
+        Constants.DriveConstants.PIDConstants.turnI,
         Constants.DriveConstants.PIDConstants.turnD);
     rearLeftController.enableContinuousInput(-180.0, 180.0);
     rearLeftController.setTolerance(2.0);
 
-    rearRightController = new PIDController(Constants.DriveConstants.PIDConstants.turnP, Constants.DriveConstants.PIDConstants.turnI,
+    rearRightController = new PIDController(Constants.DriveConstants.PIDConstants.turnP,
+        Constants.DriveConstants.PIDConstants.turnI,
         Constants.DriveConstants.PIDConstants.turnD);
     rearRightController.enableContinuousInput(-180.0, 180.0);
     rearRightController.setTolerance(2.0);
@@ -197,6 +226,27 @@ public class Drivetrain extends SubsystemBase {
     swerveController = new SwerveController(Constants.DriveConstants.swerveLength,
         Constants.DriveConstants.swerveWidth);
 
+    // Limelight
+    limeLightCamera11 = new LimeLight("limelight-eleven");
+    limeLightCamera12 = new LimeLight("limelight-twelve");
+
+    if (Constants.dataLogging) {
+      mDataLog = DataLogManager.getLog();
+
+      limelight11JsonLog = new StringLogEntry(mDataLog, "/ll/eleven/json");
+      limelight12JsonLog = new StringLogEntry(mDataLog, "/ll/twelve/json");
+      
+      ll11BotposeFieldSpaceLog = new DoubleArrayLogEntry(mDataLog, "/ll/eleven/botpose_field");
+      ll12BotposeFieldSpaceLog = new DoubleArrayLogEntry(mDataLog, "/ll/twelve/botpose_field");
+      ll11BotposeBlueLog = new DoubleArrayLogEntry(mDataLog, "/ll/eleven/botpose_blue");
+      ll12BotposeBlueLog = new DoubleArrayLogEntry(mDataLog, "/ll/twelve/botpose_blue");
+      ll11BotposeRedLog = new DoubleArrayLogEntry(mDataLog, "/ll/eleven/botpose_red");
+      ll12BotposeRedLog = new DoubleArrayLogEntry(mDataLog, "/ll/twelve/botpose_red");
+      ll11TargetIDLog = new IntegerLogEntry(mDataLog, "/ll/eleven/target_id");
+      ll12TargetIDLog = new IntegerLogEntry(mDataLog, "/ll/twelve/target_id");
+
+    }
+
     // robot gyro initialization
     navx = new AHRS();
 
@@ -237,6 +287,20 @@ public class Drivetrain extends SubsystemBase {
 
     latestSwervePose = swerveDriveOdometry.update(
         Rotation2d.fromDegrees(-getGyroYaw()), swerveDriveModulePositions);
+
+    if (Constants.dataLogging) {
+      limelight11JsonLog.append(limeLightCamera11.getLimelightJson());
+      limelight12JsonLog.append(limeLightCamera12.getLimelightJson());
+
+      ll11BotposeFieldSpaceLog.append(limeLightCamera11.getBotPose(CoordinateSpace.Field));
+      ll12BotposeFieldSpaceLog.append(limeLightCamera12.getBotPose(CoordinateSpace.Field));
+ll11BotposeBlueLog.append(limeLightCamera11.getBotPose(CoordinateSpace.Blue));
+ll12BotposeBlueLog.append(limeLightCamera12.getBotPose(CoordinateSpace.Blue));
+ll11BotposeRedLog.append(limeLightCamera11.getBotPose(CoordinateSpace.Red));
+ll12BotposeRedLog.append(limeLightCamera12.getBotPose(CoordinateSpace.Red));
+ll11TargetIDLog.append(limeLightCamera11.getTargetID());
+ll12TargetIDLog.append(limeLightCamera12.getTargetID());
+    }
 
     if (dashboardCounter++ >= 5) {
       SmartDashboard.putNumber("front left encoder", frontLeftModule.getEncoderAngle());

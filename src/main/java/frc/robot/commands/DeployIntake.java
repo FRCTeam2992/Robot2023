@@ -5,20 +5,12 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Arm;
 
-public class MoveArm extends CommandBase {
-  /** Creates a new MoveArm. */
-  private Arm mArm;
-
-  private double mArmSpeed;
-
-  public MoveArm(Arm subsystem, double armspeed) {
+public class DeployIntake extends CommandBase {
+  /** Creates a new DeployIntake. */
+  
+  public DeployIntake() {
     // Use addRequirements() here to declare subsystem dependencies.
-    mArm = subsystem;
-    mArmSpeed = armspeed;
-
-    addRequirements(mArm);
   }
 
   // Called when the command is initially scheduled.
@@ -27,9 +19,7 @@ public class MoveArm extends CommandBase {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-    mArm.setArmSpeed(mArmSpeed);
-  }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override

@@ -5,8 +5,11 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.sensors.AbsoluteSensorRange;
+import com.ctre.phoenix.sensors.CANCoder;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -15,12 +18,18 @@ public class Arm extends SubsystemBase {
   /** Creates a new Arm. */
   private TalonFX armMotor;
 
+  private CANCoder armEncoder;
+
   private int dashboardCounter;
 
   public Arm() {
     armMotor = new TalonFX(Constants.ArmConstants.CanIDs.armMotor);
     armMotor.setInverted(false);
     armMotor.setNeutralMode(NeutralMode.Brake);
+
+    armEncoder = new CANCoder(Constants.ArmConstants.CanIDs.armEncoder);
+    armEncoder.configAbsoluteSensorRange(AbsoluteSensorRange.Signed_PlusMinus180);
+
 
   }
 

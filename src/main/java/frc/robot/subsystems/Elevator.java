@@ -29,6 +29,9 @@ public class Elevator extends SubsystemBase {
     elevatorMotor.setNeutralMode(NeutralMode.Brake);
 
     elevatorSolenoid = new Solenoid(PneumaticsModuleType.REVPH, 3);
+
+
+
   }
 
   @Override
@@ -37,9 +40,7 @@ public class Elevator extends SubsystemBase {
     if(dashboardCounter++ >= 5){
       SmartDashboard.putNumber("Elevator Encoder", getElevatorPostion());
 
-      dashboardCounter = 0;
-
-      
+      dashboardCounter = 0;      
     }
   }
 
@@ -53,7 +54,7 @@ public class Elevator extends SubsystemBase {
 
 
   public void setElevatorPosition(double position){
-    elevatorMotor.set(ControlMode.Position, position);
+    elevatorMotor.set(ControlMode.MotionMagic, position);
   }
 
   public void deployElevator(boolean toggle){

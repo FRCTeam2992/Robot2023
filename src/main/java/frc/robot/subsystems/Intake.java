@@ -24,6 +24,11 @@ public class Intake extends SubsystemBase {
 
   private int dashboardCounter = 0;
 
+  public enum IntakeStates {
+    In,
+    Out
+  }
+
   public Intake() {
     intakeMotor = new TalonSRX(Constants.IntakeConstants.CanIDs.intakeMotor);
     intakeMotor.setInverted(false);
@@ -45,7 +50,13 @@ public class Intake extends SubsystemBase {
     intakeMotor.set(ControlMode.PercentOutput, speed);
   }
 
-  public void deployIntake(boolean toggle){
-    intakeSolenoid.set(toggle);
+  public void deployIntake(IntakeStates toggle){
+    switch(toggle){
+      case In:
+        intakeSolenoid.set(true);
+        break;
+      case Out:
+        
+    }
   }
 }
