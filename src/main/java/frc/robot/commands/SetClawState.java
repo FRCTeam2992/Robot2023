@@ -6,14 +6,15 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Claw;
+import frc.robot.subsystems.Claw.ClawStates;
 
 public class SetClawState extends CommandBase {
   /** Creates a new SetClawState. */
   private Claw mClaw;
 
-  private Claw.ClawStates mState;
+  private ClawStates mState;
 
-  public SetClawState(Claw subsystem, Claw.ClawStates state) {
+  public SetClawState(Claw subsystem, ClawStates state) {
     // Use addRequirements() here to declare subsystem dependencies.
     mClaw = subsystem;
     mState = state;

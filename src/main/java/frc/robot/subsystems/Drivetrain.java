@@ -16,7 +16,6 @@ import frc.lib.drive.swerve.SwerveModuleFalconFalcon;
 import frc.lib.vision.LimeLight;
 import frc.lib.vision.LimeLight.CoordinateSpace;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
@@ -25,7 +24,6 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.DoubleArrayLogEntry;
-import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.util.datalog.IntegerLogEntry;
 import edu.wpi.first.util.datalog.StringLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
@@ -114,40 +112,40 @@ public class Drivetrain extends SubsystemBase {
 
   public Drivetrain() {
     // Motor Inits
-    frontLeftDrive = new TalonFX(Constants.DriveConstants.CanIDs.frontLeftDrive);
+    frontLeftDrive = new TalonFX(Constants.DrivetrainConstants.CanIDs.frontLeftDrive);
     initTalonFX(frontLeftDrive, false);
 
-    frontLeftTurn = new TalonFX(Constants.DriveConstants.CanIDs.frontLeftTurn);
+    frontLeftTurn = new TalonFX(Constants.DrivetrainConstants.CanIDs.frontLeftTurn);
     initTalonFX(frontLeftTurn, true);
 
-    frontRightDrive = new TalonFX(Constants.DriveConstants.CanIDs.frontRightDrive);
+    frontRightDrive = new TalonFX(Constants.DrivetrainConstants.CanIDs.frontRightDrive);
     initTalonFX(frontRightDrive, false);
 
-    frontRightTurn = new TalonFX(Constants.DriveConstants.CanIDs.frontRightTurn);
+    frontRightTurn = new TalonFX(Constants.DrivetrainConstants.CanIDs.frontRightTurn);
     initTalonFX(frontRightTurn, true);
 
-    rearRightDrive = new TalonFX(Constants.DriveConstants.CanIDs.rearRightDrive);
+    rearRightDrive = new TalonFX(Constants.DrivetrainConstants.CanIDs.rearRightDrive);
     initTalonFX(rearRightDrive, false);
 
-    rearRightTurn = new TalonFX(Constants.DriveConstants.CanIDs.rearRightTurn);
+    rearRightTurn = new TalonFX(Constants.DrivetrainConstants.CanIDs.rearRightTurn);
     initTalonFX(rearRightTurn, true);
 
-    rearLeftDrive = new TalonFX(Constants.DriveConstants.CanIDs.rearLeftDrive);
+    rearLeftDrive = new TalonFX(Constants.DrivetrainConstants.CanIDs.rearLeftDrive);
     initTalonFX(rearLeftDrive, false);
 
-    rearLeftTurn = new TalonFX(Constants.DriveConstants.CanIDs.rearLeftTurn);
+    rearLeftTurn = new TalonFX(Constants.DrivetrainConstants.CanIDs.rearLeftTurn);
     initTalonFX(rearLeftTurn, true);
 
-    frontRightEncoder = new CANCoder(Constants.DriveConstants.CanIDs.frontRightEncoder);
+    frontRightEncoder = new CANCoder(Constants.DrivetrainConstants.CanIDs.frontRightEncoder);
     initCANCoder(frontRightEncoder, AbsoluteSensorRange.Signed_PlusMinus180, true);
 
-    frontLeftEncoder = new CANCoder(Constants.DriveConstants.CanIDs.frontLeftEncoder);
+    frontLeftEncoder = new CANCoder(Constants.DrivetrainConstants.CanIDs.frontLeftEncoder);
     initCANCoder(frontLeftEncoder, AbsoluteSensorRange.Signed_PlusMinus180, true);
 
-    rearRightEncoder = new CANCoder(Constants.DriveConstants.CanIDs.rearRightEncoder);
+    rearRightEncoder = new CANCoder(Constants.DrivetrainConstants.CanIDs.rearRightEncoder);
     initCANCoder(rearRightEncoder, AbsoluteSensorRange.Signed_PlusMinus180, true);
 
-    rearLeftEncoder = new CANCoder(Constants.DriveConstants.CanIDs.rearLeftEncoder);
+    rearLeftEncoder = new CANCoder(Constants.DrivetrainConstants.CanIDs.rearLeftEncoder);
     initCANCoder(rearLeftEncoder, AbsoluteSensorRange.Signed_PlusMinus180, true);
 
     setDriveNeutralMode(NeutralMode.Coast);
@@ -156,75 +154,75 @@ public class Drivetrain extends SubsystemBase {
     setDriveCurrentLimit(40.0, 40.0);
     setTurnCurrentLimit(60.0); // potentially unused
 
-    frontLeftController = new PIDController(Constants.DriveConstants.PIDConstants.turnP,
-        Constants.DriveConstants.PIDConstants.turnI,
-        Constants.DriveConstants.PIDConstants.turnD);
+    frontLeftController = new PIDController(Constants.DrivetrainConstants.PIDConstants.turnP,
+        Constants.DrivetrainConstants.PIDConstants.turnI,
+        Constants.DrivetrainConstants.PIDConstants.turnD);
     frontLeftController.enableContinuousInput(-180.0, 180.0);
     frontLeftController.setTolerance(2.0);
 
-    frontRightController = new PIDController(Constants.DriveConstants.PIDConstants.turnP,
-        Constants.DriveConstants.PIDConstants.turnI,
-        Constants.DriveConstants.PIDConstants.turnD);
+    frontRightController = new PIDController(Constants.DrivetrainConstants.PIDConstants.turnP,
+        Constants.DrivetrainConstants.PIDConstants.turnI,
+        Constants.DrivetrainConstants.PIDConstants.turnD);
     frontRightController.enableContinuousInput(-180.0, 180.0);
     frontRightController.setTolerance(2.0);
 
-    rearLeftController = new PIDController(Constants.DriveConstants.PIDConstants.turnP,
-        Constants.DriveConstants.PIDConstants.turnI,
-        Constants.DriveConstants.PIDConstants.turnD);
+    rearLeftController = new PIDController(Constants.DrivetrainConstants.PIDConstants.turnP,
+        Constants.DrivetrainConstants.PIDConstants.turnI,
+        Constants.DrivetrainConstants.PIDConstants.turnD);
     rearLeftController.enableContinuousInput(-180.0, 180.0);
     rearLeftController.setTolerance(2.0);
 
-    rearRightController = new PIDController(Constants.DriveConstants.PIDConstants.turnP,
-        Constants.DriveConstants.PIDConstants.turnI,
-        Constants.DriveConstants.PIDConstants.turnD);
+    rearRightController = new PIDController(Constants.DrivetrainConstants.PIDConstants.turnP,
+        Constants.DrivetrainConstants.PIDConstants.turnI,
+        Constants.DrivetrainConstants.PIDConstants.turnD);
     rearRightController.enableContinuousInput(-180.0, 180.0);
     rearRightController.setTolerance(2.0);
 
     // Set the Drive PID Controllers
-    frontLeftDrive.config_kP(0, Constants.DriveConstants.PIDConstants.driveP);
-    frontLeftDrive.config_kI(0, Constants.DriveConstants.PIDConstants.driveI);
-    frontLeftDrive.config_kD(0, Constants.DriveConstants.PIDConstants.driveD);
-    frontLeftDrive.config_kF(0, Constants.DriveConstants.PIDConstants.driveF);
+    frontLeftDrive.config_kP(0, Constants.DrivetrainConstants.PIDConstants.driveP);
+    frontLeftDrive.config_kI(0, Constants.DrivetrainConstants.PIDConstants.driveI);
+    frontLeftDrive.config_kD(0, Constants.DrivetrainConstants.PIDConstants.driveD);
+    frontLeftDrive.config_kF(0, Constants.DrivetrainConstants.PIDConstants.driveF);
 
-    frontRightDrive.config_kP(0, Constants.DriveConstants.PIDConstants.driveP);
-    frontRightDrive.config_kI(0, Constants.DriveConstants.PIDConstants.driveI);
-    frontRightDrive.config_kD(0, Constants.DriveConstants.PIDConstants.driveD);
-    frontRightDrive.config_kF(0, Constants.DriveConstants.PIDConstants.driveF);
+    frontRightDrive.config_kP(0, Constants.DrivetrainConstants.PIDConstants.driveP);
+    frontRightDrive.config_kI(0, Constants.DrivetrainConstants.PIDConstants.driveI);
+    frontRightDrive.config_kD(0, Constants.DrivetrainConstants.PIDConstants.driveD);
+    frontRightDrive.config_kF(0, Constants.DrivetrainConstants.PIDConstants.driveF);
 
-    rearLeftDrive.config_kP(0, Constants.DriveConstants.PIDConstants.driveP);
-    rearLeftDrive.config_kI(0, Constants.DriveConstants.PIDConstants.driveI);
-    rearLeftDrive.config_kD(0, Constants.DriveConstants.PIDConstants.driveD);
-    rearLeftDrive.config_kF(0, Constants.DriveConstants.PIDConstants.driveF);
+    rearLeftDrive.config_kP(0, Constants.DrivetrainConstants.PIDConstants.driveP);
+    rearLeftDrive.config_kI(0, Constants.DrivetrainConstants.PIDConstants.driveI);
+    rearLeftDrive.config_kD(0, Constants.DrivetrainConstants.PIDConstants.driveD);
+    rearLeftDrive.config_kF(0, Constants.DrivetrainConstants.PIDConstants.driveF);
 
-    rearRightDrive.config_kP(0, Constants.DriveConstants.PIDConstants.driveP);
-    rearRightDrive.config_kI(0, Constants.DriveConstants.PIDConstants.driveI);
-    rearRightDrive.config_kD(0, Constants.DriveConstants.PIDConstants.driveD);
-    rearRightDrive.config_kF(0, Constants.DriveConstants.PIDConstants.driveF);
+    rearRightDrive.config_kP(0, Constants.DrivetrainConstants.PIDConstants.driveP);
+    rearRightDrive.config_kI(0, Constants.DrivetrainConstants.PIDConstants.driveI);
+    rearRightDrive.config_kD(0, Constants.DrivetrainConstants.PIDConstants.driveD);
+    rearRightDrive.config_kF(0, Constants.DrivetrainConstants.PIDConstants.driveF);
 
     // Swerve Modules
     frontLeftModule = new SwerveModuleFalconFalcon(frontLeftDrive, frontLeftTurn, frontLeftEncoder,
-        Constants.DriveConstants.frontLeftOffset, frontLeftController, Constants.DriveConstants.driveWheelDiameter,
-        Constants.DriveConstants.driveGearRatio,
-        Constants.DriveConstants.swerveMaxSpeed);
+        Constants.DrivetrainConstants.frontLeftOffset, frontLeftController, Constants.DrivetrainConstants.driveWheelDiameter,
+        Constants.DrivetrainConstants.driveGearRatio,
+        Constants.DrivetrainConstants.swerveMaxSpeed);
 
     frontRightModule = new SwerveModuleFalconFalcon(frontRightDrive, frontRightTurn, frontRightEncoder,
-        Constants.DriveConstants.frontRightOffset, frontRightController, Constants.DriveConstants.driveWheelDiameter,
-        Constants.DriveConstants.driveGearRatio,
-        Constants.DriveConstants.swerveMaxSpeed);
+        Constants.DrivetrainConstants.frontRightOffset, frontRightController, Constants.DrivetrainConstants.driveWheelDiameter,
+        Constants.DrivetrainConstants.driveGearRatio,
+        Constants.DrivetrainConstants.swerveMaxSpeed);
 
     rearLeftModule = new SwerveModuleFalconFalcon(rearLeftDrive, rearLeftTurn, rearLeftEncoder,
-        Constants.DriveConstants.rearLeftOffset,
-        rearLeftController, Constants.DriveConstants.driveWheelDiameter, Constants.DriveConstants.driveGearRatio,
-        Constants.DriveConstants.swerveMaxSpeed);
+        Constants.DrivetrainConstants.rearLeftOffset,
+        rearLeftController, Constants.DrivetrainConstants.driveWheelDiameter, Constants.DrivetrainConstants.driveGearRatio,
+        Constants.DrivetrainConstants.swerveMaxSpeed);
 
     rearRightModule = new SwerveModuleFalconFalcon(rearRightDrive, rearRightTurn, rearRightEncoder,
-        Constants.DriveConstants.rearRightOffset, rearRightController, Constants.DriveConstants.driveWheelDiameter,
-        Constants.DriveConstants.driveGearRatio,
-        Constants.DriveConstants.swerveMaxSpeed);
+        Constants.DrivetrainConstants.rearRightOffset, rearRightController, Constants.DrivetrainConstants.driveWheelDiameter,
+        Constants.DrivetrainConstants.driveGearRatio,
+        Constants.DrivetrainConstants.swerveMaxSpeed);
 
     // Swerve Controller
-    swerveController = new SwerveController(Constants.DriveConstants.swerveLength,
-        Constants.DriveConstants.swerveWidth);
+    swerveController = new SwerveController(Constants.DrivetrainConstants.swerveLength,
+        Constants.DrivetrainConstants.swerveWidth);
 
     // Limelight
     limeLightCamera11 = new LimeLight("limelight-eleven");
@@ -235,7 +233,7 @@ public class Drivetrain extends SubsystemBase {
 
       limelight11JsonLog = new StringLogEntry(mDataLog, "/ll/eleven/json");
       limelight12JsonLog = new StringLogEntry(mDataLog, "/ll/twelve/json");
-      
+
       ll11BotposeFieldSpaceLog = new DoubleArrayLogEntry(mDataLog, "/ll/eleven/botpose_field");
       ll12BotposeFieldSpaceLog = new DoubleArrayLogEntry(mDataLog, "/ll/twelve/botpose_field");
       ll11BotposeBlueLog = new DoubleArrayLogEntry(mDataLog, "/ll/eleven/botpose_blue");
@@ -256,9 +254,9 @@ public class Drivetrain extends SubsystemBase {
     swerveDriveModulePositions[3] = rearRightModule.getPosition();
 
     // Swerve Drive Kinematics
-    swerveDriveKinematics = new SwerveDriveKinematics(Constants.DriveConstants.frontLeftLocation,
-        Constants.DriveConstants.frontRightLocation,
-        Constants.DriveConstants.rearLeftLocation, Constants.DriveConstants.rearRightLocation);
+    swerveDriveKinematics = new SwerveDriveKinematics(Constants.DrivetrainConstants.frontLeftLocation,
+        Constants.DrivetrainConstants.frontRightLocation,
+        Constants.DrivetrainConstants.rearLeftLocation, Constants.DrivetrainConstants.rearRightLocation);
 
     // Serve Drive Odometry
     swerveDriveOdometry = new SwerveDriveOdometry(
@@ -294,12 +292,12 @@ public class Drivetrain extends SubsystemBase {
 
       ll11BotposeFieldSpaceLog.append(limeLightCamera11.getBotPose(CoordinateSpace.Field));
       ll12BotposeFieldSpaceLog.append(limeLightCamera12.getBotPose(CoordinateSpace.Field));
-ll11BotposeBlueLog.append(limeLightCamera11.getBotPose(CoordinateSpace.Blue));
-ll12BotposeBlueLog.append(limeLightCamera12.getBotPose(CoordinateSpace.Blue));
-ll11BotposeRedLog.append(limeLightCamera11.getBotPose(CoordinateSpace.Red));
-ll12BotposeRedLog.append(limeLightCamera12.getBotPose(CoordinateSpace.Red));
-ll11TargetIDLog.append(limeLightCamera11.getTargetID());
-ll12TargetIDLog.append(limeLightCamera12.getTargetID());
+      ll11BotposeBlueLog.append(limeLightCamera11.getBotPose(CoordinateSpace.Blue));
+      ll12BotposeBlueLog.append(limeLightCamera12.getBotPose(CoordinateSpace.Blue));
+      ll11BotposeRedLog.append(limeLightCamera11.getBotPose(CoordinateSpace.Red));
+      ll12BotposeRedLog.append(limeLightCamera12.getBotPose(CoordinateSpace.Red));
+      ll11TargetIDLog.append(limeLightCamera11.getTargetID());
+      ll12TargetIDLog.append(limeLightCamera12.getTargetID());
     }
 
     if (dashboardCounter++ >= 5) {

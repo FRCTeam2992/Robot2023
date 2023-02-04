@@ -4,13 +4,10 @@
 
 package frc.robot.subsystems;
 
-import java.lang.invoke.ConstantBootstraps;
-
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
-import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -30,7 +27,7 @@ public class Intake extends SubsystemBase {
   }
 
   public Intake() {
-    intakeMotor = new TalonSRX(Constants.IntakeConstants.CanIDs.intakeMotor);
+    intakeMotor = new TalonSRX(Constants.IntakeConstants.CanOrSolenoidIDs.intakeMotor);
     intakeMotor.setInverted(false);
     intakeMotor.setNeutralMode(NeutralMode.Coast);
 
@@ -50,7 +47,7 @@ public class Intake extends SubsystemBase {
     intakeMotor.set(ControlMode.PercentOutput, speed);
   }
 
-  public void deployIntake(IntakeStates toggle){
+  public void setIntakeState(IntakeStates toggle){
     switch(toggle){
       case In:
         intakeSolenoid.set(true);

@@ -2,7 +2,6 @@
 package frc.lib.vision;
 
 import edu.wpi.first.math.filter.MedianFilter;
-import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
