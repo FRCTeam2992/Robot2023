@@ -22,11 +22,11 @@ public class Arm extends SubsystemBase {
   private int dashboardCounter;
 
   public Arm() {
-    armMotor = new TalonFX(Constants.ArmConstants.CanIDs.armMotor);
+    armMotor = new TalonFX(Constants.ArmConstants.DeviceIDs.armMotor);
     armMotor.setInverted(false);
     armMotor.setNeutralMode(NeutralMode.Brake);
 
-    armEncoder = new CANCoder(Constants.ArmConstants.CanIDs.armEncoder);
+    armEncoder = new CANCoder(Constants.ArmConstants.DeviceIDs.armEncoder);
     armEncoder.configAbsoluteSensorRange(AbsoluteSensorRange.Signed_PlusMinus180);
 
 

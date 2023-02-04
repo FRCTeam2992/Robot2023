@@ -117,25 +117,29 @@ public final class Constants {
   }
 
   public static class IntakeConstants {
-    public static class CanOrSolenoidIDs{
+    public static class DeviceIDs{
       public static int intakeMotor = 22;
 
       public static int intakeSolenoid = 0;
+
     }
   }
 
 public static class SpindexerConstants {
-    public static class CanIDs{
+    public static class DeviceIDs{
       public static int spindexerMotor = 23;
     }
 
   }
 
   public static class ElevatorConstants {
-    public static class CanOrSoleniodIDs{
-      public static int elevatorMotor = 25;
+    public static class DeviceIDs{
+      public static int elevatorMotorLead = 25;
+      public static int elevatorMotorFollow = 26;
 
       public static int elevatorSolenoid = 1;
+
+      public static int elevatorLimitSwitch = 0;
     }
     public static class PIDConstants{
 
@@ -144,7 +148,7 @@ public static class SpindexerConstants {
   }
 
   public static class ArmConstants {
-    public static class CanIDs{
+    public static class DeviceIDs{
       public static int armMotor = 26;
       public static int armEncoder = 26;
     }
@@ -153,7 +157,7 @@ public static class SpindexerConstants {
 
 
   public static class ClawConstants{
-    public static class SolenoidIDs{
+    public static class DeviceIDs{
       public static int ClawSolenoid60 = 2;
       public static int ClawSolenoid40 = 3;
 
