@@ -22,13 +22,18 @@ public class Elevator extends SubsystemBase {
 
   private int dashboardCounter = 0;
 
+  public enum ElevatorStates{
+    Loading,
+    Scoring
+  }
+
   /** Creates a new Elevator. */
   public Elevator() {
-    elevatorMotor = new TalonFX(Constants.ElevatorConstants.CanIDs.elevatorMotor);
+    elevatorMotor = new TalonFX(Constants.ElevatorConstants.CanOrSoleniodIDs.elevatorMotor);
     elevatorMotor.setInverted(false);
     elevatorMotor.setNeutralMode(NeutralMode.Brake);
 
-    elevatorSolenoid = new Solenoid(PneumaticsModuleType.REVPH, 3);
+    elevatorSolenoid = new Solenoid(PneumaticsModuleType.REVPH, Constants.ElevatorConstants.CanOrSoleniodIDs.elevatorSolenoid);
 
 
 
@@ -55,6 +60,17 @@ public class Elevator extends SubsystemBase {
 
   public void setElevatorPosition(double position){
     elevatorMotor.set(ControlMode.MotionMagic, position);
+  }
+
+  public void setElevatorState(ElevatorStates state){
+    switch(state){
+      case Loading:
+        elevatorSolenoid.set(false);
+        break;
+      case Scoring:
+        elevatorSolenoid.set(true);
+        break;
+    }
   }
 
   public void deployElevator(boolean toggle){

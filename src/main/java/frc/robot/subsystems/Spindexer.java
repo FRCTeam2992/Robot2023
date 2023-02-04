@@ -8,9 +8,6 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
-import edu.wpi.first.wpilibj.PneumaticHub;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -18,16 +15,12 @@ public class Spindexer extends SubsystemBase {
   /** Creates a new Spindexer. */
   private TalonSRX spindexerMotor;
 
-  private Solenoid spindexerBar;
-
   private int dashboardCounter = 0;
 
   public Spindexer() {
     spindexerMotor = new TalonSRX(Constants.SpindexerConstants.CanIDs.spindexerMotor);
     spindexerMotor.setInverted(false);
     spindexerMotor.setNeutralMode(NeutralMode.Coast);
-
-    spindexerBar = new Solenoid(PneumaticsModuleType.REVPH, 1);
   }
 
   @Override
@@ -43,7 +36,4 @@ public class Spindexer extends SubsystemBase {
     spindexerMotor.set(ControlMode.PercentOutput, speed);
   }
 
-  public void deploySpindexerBar(boolean toggle){
-    spindexerBar.set(toggle);
-  }
 }

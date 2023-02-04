@@ -7,20 +7,27 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class Claw extends SubsystemBase {
   /** Creates a new Claw. */
-  private Solenoid armSolenoid;
+  private Solenoid armSolenoid60;
+  private Solenoid armSolenoid40;
+
 
   private int dashboardCounter;
 
   public enum ClawStates {
     Opened,
-    Closed
+    Closed_Cone,
+    Closed_Cube,
+    Unused
   }
 
   public Claw() {
-    armSolenoid = new Solenoid(PneumaticsModuleType.REVPH, 4);
+    armSolenoid60 = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.ClawConstants.SolenoidIDs.ClawSolenoid60);
+    armSolenoid40 = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.ClawConstants.SolenoidIDs.ClawSolenoid40);
+
   }
 
   @Override
@@ -35,11 +42,21 @@ public class Claw extends SubsystemBase {
   public void setClawState(ClawStates state) {
     switch (state) {
       case Opened:
-        armSolenoid.set(true);
+        armSolenoid60.set(true);
+        armSolenoid40.set(true);
         break;
-      case Closed:
-        armSolenoid.set(false);
+      case Closed_Cone:
+        armSolenoid60.set(false);
+        armSolenoid40.set(false);
         break;
-    }
+      case Closed_Cube:
+        armSolenoid60.set(false);
+        armSolenoid40.set(true);
+        break;
+      case Unused:
+        armSolenoid60.set(true);
+        armSolenoid40.set(false);
+        break;
+    } 
   }
 }
