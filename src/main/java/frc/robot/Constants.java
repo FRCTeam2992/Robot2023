@@ -21,7 +21,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 public final class Constants {
   public static final boolean dataLogging = true;
 
-  public static class DriveConstants {
+  public static class DrivetrainConstants {
     // Drive Variables
     public static final boolean isFieldCentric = true;
     public static final boolean isVelocityControlled = true;
@@ -99,39 +99,46 @@ public final class Constants {
     public static final double maxTurnToX = 20.0; // degrees/sec
 
     public static class CanIDs {
-      public static int frontLeftDrive = 4;
-      public static int frontLeftTurn = 5;
-      public static int frontRightDrive = 2;
-      public static int frontRightTurn = 3;
-      public static int rearLeftDrive = 8;
-      public static int rearLeftTurn = 9;
-      public static int rearRightDrive = 6;
-      public static int rearRightTurn = 7;
+      public static int frontLeftDrive = 2;
+      public static int frontLeftTurn = 3;
+      public static int frontRightDrive = 4;
+      public static int frontRightTurn = 5;
+      public static int rearLeftDrive = 6;
+      public static int rearLeftTurn = 7;
+      public static int rearRightDrive = 8;
+      public static int rearRightTurn = 9;
 
-      public static int frontLeftEncoder = 5;
-      public static int frontRightEncoder = 3;
-      public static int rearLeftEncoder = 9;
-      public static int rearRightEncoder = 7;
+      public static int frontLeftEncoder = 3;
+      public static int frontRightEncoder = 4;
+      public static int rearLeftEncoder = 7;
+      public static int rearRightEncoder = 9;
     }
 
   }
 
   public static class IntakeConstants {
-    public static class CanIDs{
+    public static class CanOrSolenoidIDs{
       public static int intakeMotor = 22;
+
+      public static int intakeSolenoid = 0;
     }
+  }
+
+public static class SpindexerConstants {
+    public static class CanIDs{
+      public static int spindexerMotor = 23;
+    }
+
   }
 
   public static class ElevatorConstants {
-    public static class CanIDs{
+    public static class CanOrSoleniodIDs{
       public static int elevatorMotor = 25;
+
+      public static int elevatorSolenoid = 1;
     }
+    public static class PIDConstants{
 
-  }
-
-  public static class SpindexerConstants {
-    public static class CanIDs{
-      public static int spindexerMotor = 23;
     }
 
   }
@@ -145,7 +152,11 @@ public final class Constants {
   }
 
 
-  public static class DrivetrainConstants {
+  public static class ClawConstants{
+    public static class SolenoidIDs{
+      public static int ClawSolenoid60 = 2;
+      public static int ClawSolenoid40 = 3;
 
+    }
   }
 }
