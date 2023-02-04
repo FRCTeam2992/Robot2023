@@ -8,6 +8,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
+import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -16,9 +17,12 @@ import frc.robot.Constants;
 
 public class Elevator extends SubsystemBase {
 
-  private TalonFX elevatorMotor;
+  private TalonFX elevatorMotorLead;
+  private TalonFX elevatorMotorFollow;
 
   private Solenoid elevatorSolenoid;
+
+  private DigitalOutput elevatorLimitSwitch;
 
   private int dashboardCounter = 0;
 
@@ -29,14 +33,16 @@ public class Elevator extends SubsystemBase {
 
   /** Creates a new Elevator. */
   public Elevator() {
-    elevatorMotor = new TalonFX(Constants.ElevatorConstants.CanOrSoleniodIDs.elevatorMotor);
-    elevatorMotor.setInverted(false);
-    elevatorMotor.setNeutralMode(NeutralMode.Brake);
+    elevatorMotorLead = new TalonFX(Constants.ElevatorConstants.DeviceIDs.elevatorMotorLead);
+    elevatorMotorLead.setInverted(false);
+    elevatorMotorLead.setNeutralMode(NeutralMode.Brake);
 
-    elevatorSolenoid = new Solenoid(PneumaticsModuleType.REVPH, Constants.ElevatorConstants.CanOrSoleniodIDs.elevatorSolenoid);
+    elevatorMotorFollow = new TalonFX(Constants.ElevatorConstants.DeviceIDs.elevatorMotorFollow);
+    elevatorMotorFollow.follow(elevatorMotorLead);
 
+    elevatorSolenoid = new Solenoid(PneumaticsModuleType.REVPH, Constants.ElevatorConstants.DeviceIDs.elevatorSolenoid);
 
-
+    elevatorLimitSwitch = new DigitalOutput(Constants.ElevatorConstants.DeviceIDs.elevatorLimitSwitch);
   }
 
   @Override
@@ -50,16 +56,16 @@ public class Elevator extends SubsystemBase {
   }
 
   public double getElevatorPostion(){
-    return elevatorMotor.getSensorCollection().getIntegratedSensorPosition();
+    return elevatorMotorLead.getSensorCollection().getIntegratedSensorPosition();
   }
 
   public void setElevatorSpeed(double speed){
-    elevatorMotor.set(ControlMode.PercentOutput, speed);
+    elevatorMotorLead.set(ControlMode.PercentOutput, speed);
   }
 
 
   public void setElevatorPosition(double position){
-    elevatorMotor.set(ControlMode.MotionMagic, position);
+    elevatorMotorLead.set(ControlMode.MotionMagic, position);
   }
 
   public void setElevatorState(ElevatorStates state){

@@ -25,8 +25,8 @@ public class Claw extends SubsystemBase {
   }
 
   public Claw() {
-    armSolenoid60 = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.ClawConstants.SolenoidIDs.ClawSolenoid60);
-    armSolenoid40 = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.ClawConstants.SolenoidIDs.ClawSolenoid40);
+    armSolenoid60 = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.ClawConstants.DeviceIDs.ClawSolenoid60);
+    armSolenoid40 = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.ClawConstants.DeviceIDs.ClawSolenoid40);
 
   }
 

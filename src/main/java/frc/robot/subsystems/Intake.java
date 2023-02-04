@@ -27,7 +27,7 @@ public class Intake extends SubsystemBase {
   }
 
   public Intake() {
-    intakeMotor = new TalonSRX(Constants.IntakeConstants.CanOrSolenoidIDs.intakeMotor);
+    intakeMotor = new TalonSRX(Constants.IntakeConstants.DeviceIDs.intakeMotor);
     intakeMotor.setInverted(false);
     intakeMotor.setNeutralMode(NeutralMode.Coast);
 

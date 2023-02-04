@@ -18,7 +18,7 @@ public class Spindexer extends SubsystemBase {
   private int dashboardCounter = 0;
 
   public Spindexer() {
-    spindexerMotor = new TalonSRX(Constants.SpindexerConstants.CanIDs.spindexerMotor);
+    spindexerMotor = new TalonSRX(Constants.SpindexerConstants.DeviceIDs.spindexerMotor);
     spindexerMotor.setInverted(false);
     spindexerMotor.setNeutralMode(NeutralMode.Coast);
   }
