@@ -63,7 +63,7 @@ public class DriveSticks extends CommandBase {
     double xyMagnitude = Math.sqrt((x1 * x1) + (y1 * y1));
 
     // Check the Magnitude Deadband
-    if (Math.abs(xyMagnitude) <= Constants.DriveConstants.joystickDeadband) {
+    if (Math.abs(xyMagnitude) <= Constants.DrivetrainConstants.joystickDeadband) {
       x1 = 0.0;
       y1 = 0.0;
     } else {
@@ -71,8 +71,8 @@ public class DriveSticks extends CommandBase {
       double xyAngle = Math.atan2(y1, x1);
 
       // Smooth the X and Y Axis
-      double smoothedXYMagnitude = (Constants.DriveConstants.joystickXYSmoothFactor * Math.pow(xyMagnitude, 3.0))
-          + ((1.0 - Constants.DriveConstants.joystickXYSmoothFactor) * xyMagnitude);
+      double smoothedXYMagnitude = (Constants.DrivetrainConstants.joystickXYSmoothFactor * Math.pow(xyMagnitude, 3.0))
+          + ((1.0 - Constants.DrivetrainConstants.joystickXYSmoothFactor) * xyMagnitude);
 
       // Normalize the Magnitude
       smoothedXYMagnitude = Math.max(-1.0, Math.min(1.0, smoothedXYMagnitude));
@@ -83,7 +83,7 @@ public class DriveSticks extends CommandBase {
     }
 
     // Check the Rotation Deadband
-    if (Math.abs(x2) <= Constants.DriveConstants.joystickDeadband) {
+    if (Math.abs(x2) <= Constants.DrivetrainConstants.joystickDeadband) {
       x2 = 0.0;
     } else {
       // Smooth the Rotation Axis
@@ -91,7 +91,7 @@ public class DriveSticks extends CommandBase {
       // + ((1.0 - Constants.joystickRotationSmoothFactor) * x2);
 
       // Smooth the Rotation Axis and Apply Inverse Deadband
-      double tempInverseDeadband = Constants.DriveConstants.joystickRotationInverseDeadband;
+      double tempInverseDeadband = Constants.DrivetrainConstants.joystickRotationInverseDeadband;
 
       if (mDriveTrain.isInSlowMode()) {
         tempInverseDeadband /= 0.3;
@@ -99,12 +99,12 @@ public class DriveSticks extends CommandBase {
 
       if (x2 >= 0.0) {
         x2 = tempInverseDeadband
-            + (1.0 - tempInverseDeadband) * ((Constants.DriveConstants.joystickRotationSmoothFactor * Math.pow(x2, 3.0))
-                + ((1.0 - Constants.DriveConstants.joystickRotationSmoothFactor) * x2));
+            + (1.0 - tempInverseDeadband) * ((Constants.DrivetrainConstants.joystickRotationSmoothFactor * Math.pow(x2, 3.0))
+                + ((1.0 - Constants.DrivetrainConstants.joystickRotationSmoothFactor) * x2));
       } else {
         x2 = -tempInverseDeadband
-            + (1.0 - tempInverseDeadband) * ((Constants.DriveConstants.joystickRotationSmoothFactor * Math.pow(x2, 3.0))
-                + ((1.0 - Constants.DriveConstants.joystickRotationSmoothFactor) * x2));
+            + (1.0 - tempInverseDeadband) * ((Constants.DrivetrainConstants.joystickRotationSmoothFactor * Math.pow(x2, 3.0))
+                + ((1.0 - Constants.DrivetrainConstants.joystickRotationSmoothFactor) * x2));
       }
     }
 
@@ -147,12 +147,12 @@ public class DriveSticks extends CommandBase {
       // Gyro Input (-180 to 180)
       double gyroValue = mDriveTrain.getGyroYaw();
 
-      if (Math.abs(x1) <= Constants.DriveConstants.joystickDeadband && Math.abs(y1) <= Constants.DriveConstants.joystickDeadband) {
+      if (Math.abs(x1) <= Constants.DrivetrainConstants.joystickDeadband && Math.abs(y1) <= Constants.DrivetrainConstants.joystickDeadband) {
         gyroTargetRecorded = false;
       }
 
       // Gyro Correction
-      if (Math.abs(x2) <= Constants.DriveConstants.joystickDeadband && Constants.DriveConstants.isGyroCorrected) {
+      if (Math.abs(x2) <= Constants.DrivetrainConstants.joystickDeadband && Constants.DrivetrainConstants.isGyroCorrected) {
 
         // Check for Recorded Value
         if (gyroTargetRecorded) {
@@ -184,7 +184,7 @@ public class DriveSticks extends CommandBase {
           }
 
           // Calculate Correction Speed
-          x2 = gyroError * Constants.DriveConstants.driveGyroP;
+          x2 = gyroError * Constants.DrivetrainConstants.driveGyroP;
         } else {
           // Record a Gyro Value
           gyroTarget = -gyroValue;
@@ -199,7 +199,7 @@ public class DriveSticks extends CommandBase {
       double[] swerveStates;
 
       // Check for Field Centric Enabled
-      if (Constants.DriveConstants.isFieldCentric) {
+      if (Constants.DrivetrainConstants.isFieldCentric) {
         swerveStates = mDriveTrain.swerveController.calculate(x1, y1, x2, gyroValue);
         // SmartDashboard.putBoolean("Is Field Oriented", true);
       } else {
@@ -215,7 +215,7 @@ public class DriveSticks extends CommandBase {
       SwerveModuleFalconFalcon rearRight = mDriveTrain.rearRightModule;
 
       // Command the Swerve Modules
-      if (Constants.DriveConstants.isVelocityControlled) {
+      if (Constants.DrivetrainConstants.isVelocityControlled) {
         frontLeft.setDriveVelocity(swerveStates[0], swerveStates[1]);
         frontRight.setDriveVelocity(swerveStates[2], swerveStates[3]);
         rearLeft.setDriveVelocity(swerveStates[4], swerveStates[5]);

@@ -5,20 +5,22 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Elevator.ElevatorStates;
 import frc.robot.subsystems.Intake.IntakeStates;
 
-public class DeployIntake extends CommandBase {
+public class DeployElevator extends CommandBase {
   /** Creates a new DeployIntake. */
-  private Intake mIntake;
+  private Elevator mElevator;
 
-  private IntakeStates mIntakeState;
+  private ElevatorStates mElevatorState;
 
-  public DeployIntake(Intake subsystem, IntakeStates intakeState) {
+  public DeployElevator(Elevator subsystem, ElevatorStates elevatorState) {
     // Use addRequirements() here to declare subsystem dependencies.
-    mIntake = subsystem;
+    mElevator = subsystem;
 
-    mIntakeState = intakeState;
+    mElevatorState = elevatorState;
 
 
   }
@@ -26,7 +28,7 @@ public class DeployIntake extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    mIntake.setIntakeState(mIntakeState);
+    mElevator.setElevatorState(mElevatorState);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
