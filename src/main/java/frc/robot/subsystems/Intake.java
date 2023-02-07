@@ -7,6 +7,9 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
@@ -15,7 +18,8 @@ import frc.robot.Constants;
 
 public class Intake extends SubsystemBase {
   /** Creates a new Spindexer. */
-  private TalonSRX intakeMotor;
+  private CANSparkMax intakeMotorTop;
+  private CANSparkMax intakeMotorBottom;
 
   private Solenoid intakeSolenoid;
 
@@ -27,11 +31,19 @@ public class Intake extends SubsystemBase {
   }
 
   public Intake() {
-    intakeMotor = new TalonSRX(Constants.IntakeConstants.DeviceIDs.intakeMotor);
-    intakeMotor.setInverted(false);
-    intakeMotor.setNeutralMode(NeutralMode.Coast);
+    intakeMotorTop = new CANSparkMax(Constants.IntakeConstants.DeviceIDs.intakeMotorTop, MotorType.kBrushless);
+    intakeMotorTop.setInverted(false);
+    intakeMotorTop.setIdleMode(IdleMode.kCoast);
 
-    intakeSolenoid = new Solenoid(PneumaticsModuleType.REVPH, 0);
+
+    intakeMotorBottom = new CANSparkMax(Constants.IntakeConstants.DeviceIDs.intakeMotorBottom, MotorType.kBrushless);
+    intakeMotorBottom.setInverted(false);
+    intakeMotorBottom.setIdleMode(IdleMode.kCoast);
+
+
+
+    intakeSolenoid = new Solenoid(PneumaticsModuleType.REVPH, Constants.IntakeConstants.DeviceIDs.intakeSolenoid);
+
   }
 
   @Override
@@ -43,8 +55,12 @@ public class Intake extends SubsystemBase {
     }
   }
 
-  public void setIntakeSpeed(double speed){
-    intakeMotor.set(ControlMode.PercentOutput, speed);
+  public void setIntakeTopSpeed(double speed){
+    intakeMotorTop.set(speed);
+  }
+
+  public void setIntakeBottomSpeed(double speed){
+    intakeMotorBottom.set(speed);
   }
 
   public void setIntakeState(IntakeStates toggle){

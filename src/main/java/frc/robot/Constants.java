@@ -118,7 +118,8 @@ public final class Constants {
 
   public static class IntakeConstants {
     public static class DeviceIDs{
-      public static int intakeMotor = 22;
+      public static int intakeMotorTop = 21;
+      public static int intakeMotorBottom = 22;
 
       public static int intakeSolenoid = 0;
 
