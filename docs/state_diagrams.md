@@ -2,7 +2,7 @@
 
 ## Elevator-Arm-Claw Assembly State Diagram
 
-```{mermaid}
+```mermaid
 stateDiagram-v2
     home: Homed
     state arm_position <<choice>>
@@ -44,7 +44,7 @@ stateDiagram-v2
 
 ## Butterfly Wheels State Diagram
 
-```{mermaid}
+```mermaid
 stateDiagram-v2
     state endgame <<choice>>
     up: (Home) up in bot chassis
