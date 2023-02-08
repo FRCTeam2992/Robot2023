@@ -1,5 +1,7 @@
 # State Diagrams for Robot Assemblies
 
+[Back to Project Documentation](../)
+
 ## Elevator-Arm-Claw Assembly State Diagram
 
 ```mermaid
