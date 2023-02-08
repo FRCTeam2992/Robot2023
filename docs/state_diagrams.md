@@ -44,6 +44,43 @@ stateDiagram-v2
     deployed --> scoring: Initiate scoring
 ```
 
+## Intake State Diagram
+
+```mermaid
+stateDiagram-v2
+    state "During match" as match {
+        in: Inside bot
+        out: Deployed
+        [*] --> in: Start in
+        in --> out: Deploy
+        out --> in: Undeploy
+        --
+        off: Not Spinning
+        on: Spinning
+
+        [*] --> off: Start off
+        off --> on: Spin
+        on --> off: Stop
+    }
+```
+
+## Spindexer State Diagram
+
+```mermaid
+stateDiagram-v2
+    off: Not moving
+    ccw: Moving counterclockwise
+    cw: Moving clockwise
+
+    [*] --> off
+    off --> ccw: Spin piece
+    off --> cw: Manual only?
+    ccw --> cw: Align game piece
+    cw --> ccw: Retry
+    ccw --> off: Manual only
+    cw --> off: Game piece aligned
+```
+
 ## Butterfly Wheels State Diagram
 
 ```mermaid
@@ -57,4 +94,24 @@ stateDiagram-v2
     endgame --> up: Endgame inactive
     endgame --> down: Endgame active
     down --> [*]
+```
+
+## Bumper Eater State Diagram
+
+```mermaid
+stateDiagram-v2
+    state endgame <<choice>>
+    in: (Home) Inside bot chassis
+    eating: Eating
+    out: Deployed
+    note right of eating
+        Driver controlled stop
+    end note
+
+    [*] --> in
+    in --> endgame
+    endgame --> in: Endgame inactive
+    endgame --> eating: Endgame active
+    eating --> out: Stop eating
+    out --> [*]
 ```
