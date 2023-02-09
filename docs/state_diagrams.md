@@ -18,6 +18,9 @@ stateDiagram-v2
     note right of home
         Carriage on limit switch, not deployed
     end note
+    note right of up
+        Carriage is above the determined threshold for moving the arm
+    end note
     [*] --> home
     home --> down
     down --> home
@@ -32,7 +35,7 @@ stateDiagram-v2
         arm_in_position --> closed: Arm in place, drop piece
         arm_in_position --> in: Arm still moving
         closed --> open: Open claw
-        open --> in: Return arm while closing claw
+        open --> in: Return arm with open claw
     }
 
     arm_position --> down: Arm in
@@ -59,7 +62,7 @@ stateDiagram-v2
         on: Spinning
 
         [*] --> off: Start off
-        off --> on: Spin
+        off --> on: Spin(power)
         on --> off: Stop
     }
 ```
@@ -73,12 +76,12 @@ stateDiagram-v2
     cw: Moving clockwise
 
     [*] --> off
-    off --> ccw: Spin piece
-    off --> cw: Manual only?
-    ccw --> cw: Align game piece
+    off --> ccw: Manual spin
+    off --> cw: Align game piece
+    ccw --> cw: Realign game piece
     cw --> ccw: Retry
     ccw --> off: Manual only
-    cw --> off: Game piece aligned
+    cw --> off: Game piece aligned/Manual
 ```
 
 ## Butterfly Wheels State Diagram
