@@ -38,6 +38,7 @@ public class Elevator extends SubsystemBase {
     elevatorMotorLead.setNeutralMode(NeutralMode.Brake);
 
     elevatorMotorFollow = new TalonFX(Constants.ElevatorConstants.DeviceIDs.elevatorMotorFollow);
+    elevatorMotorFollow.setInverted(false);
     elevatorMotorFollow.follow(elevatorMotorLead);
 
     elevatorSolenoid = new Solenoid(PneumaticsModuleType.REVPH, Constants.ElevatorConstants.DeviceIDs.elevatorSolenoid);
@@ -81,4 +82,9 @@ public class Elevator extends SubsystemBase {
 
   public void deployElevator(boolean toggle){
     elevatorSolenoid.set(toggle);
-  }}
+  }
+
+  public boolean getElevatorSolenoidState(){
+    return elevatorSolenoid.get();
+  }
+}
