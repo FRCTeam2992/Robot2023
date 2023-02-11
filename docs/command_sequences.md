@@ -37,11 +37,6 @@ These are the top-level human- or auto-triggered command sequences needed.
 - X Drive Wheels
 - Deploy Butterfly Wheels (Endgame only)
 
-### Endgame: Buddy Driving with Alliance Partner
-
-- Deploy Bumper Eater and set to eating/spinning
-- Stop Bumper Eater eating/spinning (maybe just held button for spinning is released)
-
 ## Subcommand Sequences
 
 These are command sequences that are used by other command sequences

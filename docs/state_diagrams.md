@@ -98,23 +98,3 @@ stateDiagram-v2
     endgame --> down: Endgame active
     down --> [*]
 ```
-
-## Bumper Eater State Diagram
-
-```mermaid
-stateDiagram-v2
-    state endgame <<choice>>
-    in: (Home) Inside bot chassis
-    eating: Eating
-    out: Deployed
-    note right of eating
-        Driver controlled stop
-    end note
-
-    [*] --> in
-    in --> endgame
-    endgame --> in: Endgame inactive
-    endgame --> eating: Endgame active
-    eating --> out: Stop eating
-    out --> [*]
-```
