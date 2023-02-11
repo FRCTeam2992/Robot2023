@@ -16,11 +16,6 @@ Swerves each have(4 sets of):
 - one-way switch, can't put them back(spring loaded)
 - need some protection against deploying before last 30s of match
 
-## Bumper eater (buddy drive/balance)
-
-- motor to spin velcro flaps (VictorSPX controller, BAG motor)
-- pneumatic solenoid controlling piston to extend(may be spring loaded or one way extension)
-
 ## Intake
 
 - 2x motors to spin wheels (NEO 550 motor, SPARK MAX encoder)
