@@ -1,5 +1,5 @@
 ---
-name: Command Group
+name: Command Group Template
 about: Create a command group
 title: "[Command Group] CommandGroupNameHere"
 labels: ''
@@ -22,6 +22,6 @@ _The following Commands or Command Sequences are not part of this issue and can 
 
 ## Implementation notes
 
-_The following notes should help you navigate how to implement this Command Sequence. You can always ask your Programming Lead or Mentor for help if needed._
+_The following notes should help you navigate how to implement this Command Sequence. You can always ask your Programming Lead or Mentor for help if needed. Please explicitly call out any new empty commands or functions in your pull request with this change when you submit it for review._
 
 - Note
