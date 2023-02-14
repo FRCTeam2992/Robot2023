@@ -1,7 +1,7 @@
 ---
 name: Change Feature Template
 about: Describe this issue template's purpose here.
-title: ''
+title: '[Changes] NameOfChanges'
 labels: ''
 assignees: ''
 
@@ -23,6 +23,6 @@ _The following Commands ,Command Sequences, or functions in the subsystem are no
 
 ## Implementation notes
 
-_The following notes should help you navigate how to implement this Command Sequence. You can always ask your Programming Lead or Mentor for help if needed. Also let someone know if you create an empty command or function, as mentioned above._
+_The following notes should help you navigate how to implement this Command Sequence. You can always ask your Programming Lead or Mentor for help if needed. Please explicitly call out any new EMPTY commands or functions in your pull request with this change when you submit it for review.._
 
 - 'Notes'
