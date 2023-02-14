@@ -1,7 +1,7 @@
 ---
 name: Command Template
 about: Describe this issue template's purpose here.
-title: ''
+title: '[Command] CommandNameHere'
 labels: ''
 assignees: ''
 
@@ -11,7 +11,7 @@ assignees: ''
 
 _These define what the command should do when triggered, and are the functional requirements that will be used to determine whether this issue is complete or not.
 
-- [ ] The Command Group should require 'subsytems here'
+- [ ] The Command should require 'subsytems here'
 - [ ] Enter requirements here
 - [ ] Finishes true/false
 
@@ -23,6 +23,6 @@ _The following Subsystems and functions in the subsystems are not part of this i
 
 ## Implementation notes
 
-_The following notes should help you navigate how to implement this Command. You can always ask your Programming Lead or Mentor for help if needed. Also let someone know if you create an empty command or function, as mentioned above._
+_The following notes should help you navigate how to implement this Command. You can always ask your Programming Lead or Mentor for help if needed. Please explicitly call out any new empty commands or functions in your pull request with this change when you submit it for review._
 
 - Note
