@@ -109,7 +109,7 @@ public final class Constants {
       public static int rearRightTurn = 9;
 
       public static int frontLeftEncoder = 3;
-      public static int frontRightEncoder = 4;
+      public static int frontRightEncoder = 5;
       public static int rearLeftEncoder = 7;
       public static int rearRightEncoder = 9;
     }

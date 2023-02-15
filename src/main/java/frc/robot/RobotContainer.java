@@ -5,6 +5,7 @@
 package frc.robot;
 
 import frc.robot.commands.Autos;
+import frc.robot.commands.DeployElevator;
 import frc.robot.commands.DriveSticks;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.StopArm;
@@ -19,6 +20,7 @@ import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Spindexer;
 import frc.robot.subsystems.TestPneumatics;
+import frc.robot.subsystems.Elevator.ElevatorStates;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -40,12 +42,12 @@ public class RobotContainer {
 
   public final Drivetrain mDrivetrain;
 
-  public final Intake mIntake;
+  // public final Intake mIntake;
   public final Spindexer mSpindexer;
 
   public final Elevator mElevator;
-  public final Arm mArm;
-  public final Claw mClaw;
+  // public final Arm mArm;
+  // public final Claw mClaw;
 
 
   public final TestPneumatics mTestPneumatics;
@@ -56,8 +58,8 @@ public class RobotContainer {
     mDrivetrain = new Drivetrain();
     mDrivetrain.setDefaultCommand(new DriveSticks(mDrivetrain));
 
-    mIntake = new Intake();
-    mIntake.setDefaultCommand(new StopIntake(mIntake));
+    // mIntake = new Intake();
+    // mIntake.setDefaultCommand(new StopIntake(mIntake));
 
     mSpindexer = new Spindexer();
     mSpindexer.setDefaultCommand(new StopSpindexer(mSpindexer));
@@ -65,10 +67,10 @@ public class RobotContainer {
     mElevator = new Elevator();
     mElevator.setDefaultCommand(new StopElevator(mElevator));
 
-    mArm = new Arm();
-    mArm.setDefaultCommand(new StopArm(mArm));
+    // mArm = new Arm();
+    // mArm.setDefaultCommand(new StopArm(mArm));
 
-    mClaw = new Claw();
+    // mClaw = new Claw();
   
 
 
@@ -89,12 +91,16 @@ public class RobotContainer {
    */
   private void configureBindings() {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    new Trigger(m_exampleSubsystem::exampleCondition)
-        .onTrue(new ExampleCommand(m_exampleSubsystem));
+    // new Trigger(m_exampleSubsystem::exampleCondition)
+    //     .onTrue(new ExampleCommand(m_exampleSubsystem));
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
-    controller0.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
+    // controller0.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
+
+    controller0.a().onTrue(new DeployElevator(mElevator, ElevatorStates.Loading));
+    controller0.b().onTrue(new DeployElevator(mElevator, ElevatorStates.Scoring));
+
   }
 
   /**
