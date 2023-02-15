@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class ExampleSubsystem extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
+  private boolean exampleBool = false;
   public ExampleSubsystem() {}
 
   /**
@@ -16,12 +17,12 @@ public class ExampleSubsystem extends SubsystemBase {
    *
    * @return a command
    */
-  public CommandBase exampleMethodCommand() {
+  public CommandBase exampleMethodCommand(boolean bool) {
     // Inline construction of command goes here.
     // Subsystem::RunOnce implicitly requires `this` subsystem.
     return runOnce(
         () -> {
-          /* one-time action goes here */
+          exampleBool = bool;
         });
   }
 

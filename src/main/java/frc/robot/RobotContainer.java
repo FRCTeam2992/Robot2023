@@ -7,6 +7,7 @@ package frc.robot;
 import frc.robot.commands.Autos;
 import frc.robot.commands.DriveSticks;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.MoveSpindexer;
 import frc.robot.commands.StopArm;
 import frc.robot.commands.StopElevator;
 import frc.robot.commands.StopIntake;
@@ -43,7 +44,7 @@ public class RobotContainer {
   public final Drivetrain mDrivetrain;
 
   // public final Intake mIntake;
-  // public final Spindexer mSpindexer;
+  public final Spindexer mSpindexer;
 
   // public final Elevator mElevator;
   // public final Arm mArm;
@@ -61,8 +62,8 @@ public class RobotContainer {
     // mIntake = new Intake();
     // mIntake.setDefaultCommand(new StopIntake(mIntake));
 
-    // mSpindexer = new Spindexer();
-    // mSpindexer.setDefaultCommand(new StopSpindexer(mSpindexer));
+    mSpindexer = new Spindexer();
+    mSpindexer.setDefaultCommand(new StopSpindexer(mSpindexer));
 
     // mElevator = new Elevator();
     // mElevator.setDefaultCommand(new StopElevator(mElevator));
@@ -90,13 +91,23 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    new Trigger(m_exampleSubsystem::exampleCondition)
-        .onTrue(new ExampleCommand(m_exampleSubsystem));
+    // Based off of a boolean in ExampleSubsystem
+    // new Trigger(m_exampleSubsystem::exampleCondition).onTrue(new ExampleCommand(m_exampleSubsystem));
 
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
-    // controller0.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
+    // Button Example (B, While Held)
+    // controller0.b().whileTrue(new ExampleCommand(m_exampleSubsystem));
+
+    // Trigger Example (Left Trigger at 30%, When Pressed)
+    // controller0.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, .3).onTrue(new ExampleCommand(m_exampleSubsystem));
+
+    controller0.leftBumper().whileTrue(new MoveSpindexer(mSpindexer, -0.3));
+    controller0.rightBumper().whileTrue(new MoveSpindexer(mSpindexer, 0.3));
+
+    controller0.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, .3).onTrue(new MoveSpindexer(mSpindexer, -.3));
+    controller0.axisGreaterThan(XboxController.Axis.kRightTrigger.value, .3).onTrue(new MoveSpindexer(mSpindexer, .3));
+    
+
+
   }
 
   /**
