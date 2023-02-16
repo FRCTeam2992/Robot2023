@@ -13,25 +13,28 @@ public class DeployElevator extends CommandBase {
   private Elevator mElevator;
 
   private ElevatorStates mElevatorState;
+  private boolean mState;
 
-  public DeployElevator(Elevator subsystem, ElevatorStates elevatorState) {
+  public DeployElevator(Elevator subsystem, ElevatorStates elevatorState, boolean state) {
     // Use addRequirements() here to declare subsystem dependencies.
     mElevator = subsystem;
 
     mElevatorState = elevatorState;
-
-
+    mState = state;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    mElevator.setElevatorState(mElevatorState);
+    mElevator.deployElevator(mState);
   }
+
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    mElevator.deployElevator(mState);
+  }
 
   // Called once the command ends or is interrupted.
   @Override

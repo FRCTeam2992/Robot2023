@@ -21,6 +21,7 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Spindexer;
 import frc.robot.subsystems.TestPneumatics;
 import frc.robot.subsystems.Elevator.ElevatorStates;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -40,10 +41,10 @@ public class RobotContainer {
       new CommandXboxController(0);
 
 
-  public final Drivetrain mDrivetrain;
+  // public final Drivetrain mDrivetrain;
 
   // public final Intake mIntake;
-  public final Spindexer mSpindexer;
+  // public final Spindexer mSpindexer;
 
   public final Elevator mElevator;
   // public final Arm mArm;
@@ -55,17 +56,17 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
-    mDrivetrain = new Drivetrain();
-    mDrivetrain.setDefaultCommand(new DriveSticks(mDrivetrain));
+    // mDrivetrain = new Drivetrain();
+    // mDrivetrain.setDefaultCommand(new DriveSticks(mDrivetrain));
 
     // mIntake = new Intake();
     // mIntake.setDefaultCommand(new StopIntake(mIntake));
 
-    mSpindexer = new Spindexer();
-    mSpindexer.setDefaultCommand(new StopSpindexer(mSpindexer));
+    // mSpindexer = new Spindexer();
+    // mSpindexer.setDefaultCommand(new StopSpindexer(mSpindexer));
 
     mElevator = new Elevator();
-    mElevator.setDefaultCommand(new StopElevator(mElevator));
+    // mElevator.setDefaultCommand(new StopElevator(mElevator));
 
     // mArm = new Arm();
     // mArm.setDefaultCommand(new StopArm(mArm));
@@ -98,8 +99,12 @@ public class RobotContainer {
     // cancelling on release.
     // controller0.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
 
-    controller0.a().onTrue(new DeployElevator(mElevator, ElevatorStates.Loading));
-    controller0.b().onTrue(new DeployElevator(mElevator, ElevatorStates.Scoring));
+    controller0.a().onTrue(new DeployElevator(mElevator, ElevatorStates.Loading, false));
+    controller0.b().onTrue(new DeployElevator(mElevator, ElevatorStates.Scoring, true));
+
+    SmartDashboard.putData("Scoring", new DeployElevator(mElevator, ElevatorStates.Scoring, true));
+    SmartDashboard.putData("Loading", new DeployElevator(mElevator, ElevatorStates.Loading, false));
+    
 
   }
 

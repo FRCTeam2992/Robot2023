@@ -41,7 +41,7 @@ public class Elevator extends SubsystemBase {
     // elevatorMotorFollow.setInverted(false);
     // elevatorMotorFollow.follow(elevatorMotorLead);
 
-    elevatorSolenoid = new Solenoid(PneumaticsModuleType.REVPH, Constants.ElevatorConstants.DeviceIDs.elevatorSolenoid);
+    elevatorSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.ElevatorConstants.DeviceIDs.elevatorSolenoid);
 
     // elevatorLimitSwitch = new DigitalOutput(Constants.ElevatorConstants.DeviceIDs.elevatorLimitSwitch);
   }
