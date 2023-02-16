@@ -25,10 +25,10 @@ public class Intake extends SubsystemBase {
     In(true),
     Out(false);
 
-    public final boolean state;
+    public final boolean solenoidSeting;
 
-    private IntakeStates(boolean state){
-      this.state = state;
+    private IntakeStates(boolean solenoidSeting){
+      this.solenoidSeting = solenoidSeting;
     }
   }
 
@@ -63,10 +63,10 @@ public class Intake extends SubsystemBase {
   }
 
   public void setIntakeState(IntakeStates state) {
-    intakeSolenoid.set(state.state);
+    intakeSolenoid.set(state.solenoidSeting);
   }
 
   public void onDisable() {
-    setIntakeState(null);
+    setIntakeState(IntakeStates.In);
   }
 }

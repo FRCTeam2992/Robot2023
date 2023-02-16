@@ -60,6 +60,8 @@ public class Robot extends TimedRobot {
   public void disabledInit() {
     mRobotContainer.mDrivetrain.setDriveNeutralMode(NeutralMode.Coast);
     mRobotContainer.mDrivetrain.setTurnNeutralMode(NeutralMode.Coast);
+
+    mRobotContainer.mIntake.onDisable();
   }
 
   @Override
