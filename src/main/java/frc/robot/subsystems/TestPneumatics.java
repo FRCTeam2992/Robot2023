@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.PneumaticHub;
+import edu.wpi.first.wpilibj.PneumaticsControlModule;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -12,13 +13,11 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class TestPneumatics extends SubsystemBase {
   /** Creates a new TestPnuematics. */
 
-  private PneumaticHub pneumaticHub;
+  private PneumaticsControlModule pneumaticsControlModule;
 
-  private Solenoid clawTester;
   public TestPneumatics() {
-    pneumaticHub = new PneumaticHub(1);
+    pneumaticsControlModule = new PneumaticsControlModule(0);
 
-    clawTester = new Solenoid(PneumaticsModuleType.REVPH, 0);
   }
 
   @Override

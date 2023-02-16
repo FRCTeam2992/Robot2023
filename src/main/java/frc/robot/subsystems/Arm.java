@@ -29,30 +29,31 @@ public class Arm extends SubsystemBase {
     armEncoder = new CANCoder(Constants.ArmConstants.DeviceIDs.armEncoder);
     armEncoder.configAbsoluteSensorRange(AbsoluteSensorRange.Signed_PlusMinus180);
 
-
   }
 
   @Override
   public void periodic() {
-    if(dashboardCounter++ >= 5){
+    if (dashboardCounter++ >= 5) {
 
       dashboardCounter = 0;
     }
     // This method will be called once per scheduler run
   }
-  public void setArmPosition(double position){
+
+  public void setArmPosition(double position) {
     armMotor.set(ControlMode.Position, position);
   }
-  
-  public double getArmPosition(){
+
+  public double getArmPosition() {
     return armMotor.getSensorCollection().getIntegratedSensorPosition();
   }
 
-  public void setArmSpeed(double speed){
+  public void setArmSpeed(double speed) {
     armMotor.set(ControlMode.PercentOutput, speed);
   }
 
+  public double getArmCANCoderPosition() {
+    return armEncoder.getAbsolutePosition();
+  }
 
 }
-
-
