@@ -20,7 +20,7 @@ import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Spindexer;
 import frc.robot.subsystems.TestPneumatics;
-import frc.robot.subsystems.Elevator.ElevatorStates;
+import frc.robot.subsystems.Elevator.ElevatorState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -99,11 +99,11 @@ public class RobotContainer {
     // cancelling on release.
     // controller0.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
 
-    controller0.a().onTrue(new DeployElevator(mElevator, ElevatorStates.Loading, false));
-    controller0.b().onTrue(new DeployElevator(mElevator, ElevatorStates.Scoring, true));
+    controller0.a().onTrue(new DeployElevator(mElevator, ElevatorState.Undeployed));
+    controller0.b().onTrue(new DeployElevator(mElevator, ElevatorState.Deployed));
 
-    SmartDashboard.putData("Scoring", new DeployElevator(mElevator, ElevatorStates.Scoring, true));
-    SmartDashboard.putData("Loading", new DeployElevator(mElevator, ElevatorStates.Loading, false));
+    SmartDashboard.putData("Scoring", new DeployElevator(mElevator, ElevatorState.Undeployed));
+    SmartDashboard.putData("Loading", new DeployElevator(mElevator, ElevatorState.Deployed));
     
 
   }

@@ -26,9 +26,15 @@ public class Elevator extends SubsystemBase {
 
   private int dashboardCounter = 0;
 
-  public enum ElevatorStates{
-    Loading,
-    Scoring
+  public enum ElevatorState{
+    Undeployed(false),
+    Deployed(true);
+
+    public final boolean solenoidSetting;
+
+    private ElevatorState(boolean solenoidSetting){
+      this.solenoidSetting = solenoidSetting;
+    }
   }
 
   /** Creates a new Elevator. */
@@ -69,15 +75,8 @@ public class Elevator extends SubsystemBase {
     elevatorMotorLead.set(ControlMode.MotionMagic, position);
   }
 
-  public void setElevatorState(ElevatorStates state){
-    switch(state){
-      case Loading:
-        elevatorSolenoid.set(false);
-        break;
-      case Scoring:
-        elevatorSolenoid.set(true);
-        break;
-    }
+  public void setElevatorState(ElevatorState state){
+    elevatorSolenoid.set(state.solenoidSetting);
   }
 
   public void deployElevator(boolean toggle){
@@ -86,5 +85,9 @@ public class Elevator extends SubsystemBase {
 
   public boolean getElevatorSolenoidState(){
     return elevatorSolenoid.get();
+  }
+
+  public void onDisable(){
+    setElevatorState(ElevatorState.Undeployed);
   }
 }
