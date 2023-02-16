@@ -41,14 +41,14 @@ public class RobotContainer {
       new CommandXboxController(0);
 
 
-  // public final Drivetrain mDrivetrain;
+  public final Drivetrain mDrivetrain;
 
-  // public final Intake mIntake;
-  // public final Spindexer mSpindexer;
+  public final Intake mIntake;
+  public final Spindexer mSpindexer;
 
   public final Elevator mElevator;
-  // public final Arm mArm;
-  // public final Claw mClaw;
+  public final Arm mArm;
+  public final Claw mClaw;
 
 
   public final TestPneumatics mTestPneumatics;
@@ -56,22 +56,22 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
-    // mDrivetrain = new Drivetrain();
-    // mDrivetrain.setDefaultCommand(new DriveSticks(mDrivetrain));
+    mDrivetrain = new Drivetrain();
+    mDrivetrain.setDefaultCommand(new DriveSticks(mDrivetrain));
 
-    // mIntake = new Intake();
-    // mIntake.setDefaultCommand(new StopIntake(mIntake));
+    mIntake = new Intake();
+    mIntake.setDefaultCommand(new StopIntake(mIntake));
 
-    // mSpindexer = new Spindexer();
-    // mSpindexer.setDefaultCommand(new StopSpindexer(mSpindexer));
+    mSpindexer = new Spindexer();
+    mSpindexer.setDefaultCommand(new StopSpindexer(mSpindexer));
 
     mElevator = new Elevator();
-    // mElevator.setDefaultCommand(new StopElevator(mElevator));
+    mElevator.setDefaultCommand(new StopElevator(mElevator));
 
-    // mArm = new Arm();
-    // mArm.setDefaultCommand(new StopArm(mArm));
+    mArm = new Arm();
+    mArm.setDefaultCommand(new StopArm(mArm));
 
-    // mClaw = new Claw();
+    mClaw = new Claw();
   
 
 

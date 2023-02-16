@@ -39,24 +39,24 @@ public class Elevator extends SubsystemBase {
 
   /** Creates a new Elevator. */
   public Elevator() {
-    // elevatorMotorLead = new TalonFX(Constants.ElevatorConstants.DeviceIDs.elevatorMotorLead);
-    // elevatorMotorLead.setInverted(false);
-    // elevatorMotorLead.setNeutralMode(NeutralMode.Brake);
+    elevatorMotorLead = new TalonFX(Constants.ElevatorConstants.DeviceIDs.elevatorMotorLead);
+    elevatorMotorLead.setInverted(false);
+    elevatorMotorLead.setNeutralMode(NeutralMode.Brake);
 
-    // elevatorMotorFollow = new TalonFX(Constants.ElevatorConstants.DeviceIDs.elevatorMotorFollow);
-    // elevatorMotorFollow.setInverted(false);
-    // elevatorMotorFollow.follow(elevatorMotorLead);
+    elevatorMotorFollow = new TalonFX(Constants.ElevatorConstants.DeviceIDs.elevatorMotorFollow);
+    elevatorMotorFollow.setInverted(false);
+    elevatorMotorFollow.follow(elevatorMotorLead);
 
     elevatorSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.ElevatorConstants.DeviceIDs.elevatorSolenoid);
 
-    // elevatorLimitSwitch = new DigitalOutput(Constants.ElevatorConstants.DeviceIDs.elevatorLimitSwitch);
+    elevatorLimitSwitch = new DigitalOutput(Constants.ElevatorConstants.DeviceIDs.elevatorLimitSwitch);
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
     if(dashboardCounter++ >= 5){
-      // SmartDashboard.putNumber("Elevator Encoder", getElevatorPostion());
+      SmartDashboard.putNumber("Elevator Encoder", getElevatorPostion());
 
       dashboardCounter = 0;      
     }

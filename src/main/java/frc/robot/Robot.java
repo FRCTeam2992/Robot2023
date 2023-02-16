@@ -33,7 +33,7 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     mRobotContainer = new RobotContainer();
-    // mRobotContainer.mDrivetrain.navx.zeroYaw();
+    mRobotContainer.mDrivetrain.navx.zeroYaw();
 
     DataLogManager.start();
     DriverStation.startDataLog(DataLogManager.getLog());
@@ -59,8 +59,8 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
-    // mRobotContainer.mDrivetrain.setDriveNeutralMode(NeutralMode.Coast);
-    // mRobotContainer.mDrivetrain.setTurnNeutralMode(NeutralMode.Coast);
+    mRobotContainer.mDrivetrain.setDriveNeutralMode(NeutralMode.Coast);
+    mRobotContainer.mDrivetrain.setTurnNeutralMode(NeutralMode.Coast);
     mRobotContainer.mElevator.onDisable();
   }
 
@@ -72,14 +72,14 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     m_autonomousCommand = mRobotContainer.getAutonomousCommand();
 
-    // mRobotContainer.mDrivetrain.setDriveNeutralMode(NeutralMode.Brake);
-    // mRobotContainer.mDrivetrain.setTurnNeutralMode(NeutralMode.Brake);
+    mRobotContainer.mDrivetrain.setDriveNeutralMode(NeutralMode.Brake);
+    mRobotContainer.mDrivetrain.setTurnNeutralMode(NeutralMode.Brake);
 
-    // // Set the Drive Motors Current Limit
-    // mRobotContainer.mDrivetrain.setDriveCurrentLimit(60.0, 60.0);
+    // Set the Drive Motors Current Limit
+    mRobotContainer.mDrivetrain.setDriveCurrentLimit(60.0, 60.0);
 
-    // // Set the Drive Motors Ramp Rate
-    // mRobotContainer.mDrivetrain.setDriveRampRate(0.0);
+    // Set the Drive Motors Ramp Rate
+    mRobotContainer.mDrivetrain.setDriveRampRate(0.0);
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {

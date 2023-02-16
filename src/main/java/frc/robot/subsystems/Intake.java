@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
@@ -15,7 +16,7 @@ import frc.robot.Constants;
 
 public class Intake extends SubsystemBase {
   /** Creates a new Spindexer. */
-  private TalonSRX intakeMotor;
+  private VictorSPX intakeMotor;
 
   private Solenoid intakeSolenoid;
 
@@ -27,11 +28,11 @@ public class Intake extends SubsystemBase {
   }
 
   public Intake() {
-    intakeMotor = new TalonSRX(Constants.IntakeConstants.DeviceIDs.intakeMotor);
+    intakeMotor = new VictorSPX(Constants.IntakeConstants.DeviceIDs.intakeMotor);
     intakeMotor.setInverted(false);
     intakeMotor.setNeutralMode(NeutralMode.Coast);
 
-    intakeSolenoid = new Solenoid(PneumaticsModuleType.REVPH, 0);
+    intakeSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM, 0);
   }
 
   @Override
