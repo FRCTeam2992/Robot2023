@@ -122,7 +122,6 @@ public final class Constants {
       public static int intakeMotorBottom = 22;
 
       public static int intakeSolenoid = 0;
-
     }
   }
 
