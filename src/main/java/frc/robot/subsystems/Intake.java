@@ -22,8 +22,14 @@ public class Intake extends SubsystemBase {
   private int dashboardCounter = 0;
 
   public enum IntakeStates {
-    In,
-    Out
+    In(true),
+    Out(false);
+
+    public final boolean state;
+
+    private IntakeStates(boolean state){
+      this.state = state;
+    }
   }
 
   public Intake() {
@@ -57,13 +63,10 @@ public class Intake extends SubsystemBase {
   }
 
   public void setIntakeState(IntakeStates state) {
-    switch (state) {
-      case In:
-        intakeSolenoid.set(false);
-        break;
-      case Out:
-        intakeSolenoid.set(true);
-        break;
-    }
+    intakeSolenoid.set(state.state);
+  }
+
+  public void onDisable() {
+    setIntakeState(null);
   }
 }
