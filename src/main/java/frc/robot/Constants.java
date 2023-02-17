@@ -165,4 +165,10 @@ public static class SpindexerConstants {
 
     }
   }
+  public static class ButterflyWheelsConstants{
+    public static class DeviceIDs{
+      public static int ButterflyWheelsSolenoid = 10;
+    
+    }
+  }
 }
