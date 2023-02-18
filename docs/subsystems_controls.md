@@ -1,6 +1,9 @@
 # Subsystems & Controls
 
 [Back to Project Documentation](./)
+## Common Interface for All subsystems
+
+- `onDisable`: This method is used in the Robot disabledInit which is called when the Robot gets disabled.
 
 ## Drive train (on CANivore)
 
