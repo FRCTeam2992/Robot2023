@@ -8,6 +8,7 @@ import frc.robot.commands.Autos;
 import frc.robot.commands.DeployElevator;
 import frc.robot.commands.DriveSticks;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.MoveElevator;
 import frc.robot.commands.StopArm;
 import frc.robot.commands.StopElevator;
 import frc.robot.commands.StopIntake;
@@ -106,11 +107,15 @@ public class RobotContainer {
 
     controller0.a().onTrue(new DeployElevator(mElevator, ElevatorState.Undeployed));
     controller0.b().onTrue(new DeployElevator(mElevator, ElevatorState.Deployed));
+    controller0.povUp().onTrue(new MoveElevator(mElevator, 0.1));
+    controller0.povCenter().onTrue(new MoveElevator(mElevator, 0.0));
+    controller0.povDown().onTrue(new MoveElevator(mElevator, -0.1));
 
     SmartDashboard.putData("Scoring", new DeployElevator(mElevator, ElevatorState.Undeployed));
     SmartDashboard.putData("Loading", new DeployElevator(mElevator, ElevatorState.Deployed));
-    
-
+    SmartDashboard.putData("Move Elevator Down", new MoveElevator(mElevator, -0.1));
+    SmartDashboard.putData("Stop Elevator", new MoveElevator(mElevator, 0.0));
+    SmartDashboard.putData("Move Elevator Up", new MoveElevator(mElevator, 0.1));
   }
 
   /**
