@@ -13,6 +13,7 @@ import frc.robot.commands.StopElevator;
 import frc.robot.commands.StopIntake;
 import frc.robot.commands.StopSpindexer;
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.ButterflyWheels;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Elevator;
@@ -49,6 +50,8 @@ public class RobotContainer {
   public final Elevator mElevator;
   public final Arm mArm;
   public final Claw mClaw;
+  
+  public final ButterflyWheels mButterflyWheels;
 
 
   public final TestPneumatics mTestPneumatics;
@@ -72,6 +75,8 @@ public class RobotContainer {
     mArm.setDefaultCommand(new StopArm(mArm));
 
     mClaw = new Claw();
+
+    mButterflyWheels = new ButterflyWheels();
   
 
 

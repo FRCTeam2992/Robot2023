@@ -55,5 +55,8 @@ public class Arm extends SubsystemBase {
   public double getArmCANCoderPosition() {
     return armEncoder.getAbsolutePosition();
   }
+  public void onDisable() {
+    setArmSpeed(0.0);
+  }
 
 }

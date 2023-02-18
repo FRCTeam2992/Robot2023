@@ -385,4 +385,10 @@ public class Drivetrain extends SubsystemBase {
   public void setInSlowMode(boolean inSlowMode) {
     this.inSlowMode = inSlowMode;
   }
+
+  public void onDisable() {
+    setDriveNeutralMode(NeutralMode.Coast);
+    setTurnNeutralMode(NeutralMode.Coast);
+    stopDrive();
+  }
 }

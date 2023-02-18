@@ -59,9 +59,13 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
-    mRobotContainer.mDrivetrain.setDriveNeutralMode(NeutralMode.Coast);
-    mRobotContainer.mDrivetrain.setTurnNeutralMode(NeutralMode.Coast);
     mRobotContainer.mElevator.onDisable();
+    mRobotContainer.mArm.onDisable();
+    mRobotContainer.mClaw.onDisable();
+    mRobotContainer.mButterflyWheels.onDisable();
+    mRobotContainer.mSpindexer.onDisable();
+    mRobotContainer.mIntake.onDisable();
+    mRobotContainer.mDrivetrain.onDisable();
   }
 
   @Override

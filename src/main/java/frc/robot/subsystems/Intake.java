@@ -67,4 +67,9 @@ public class Intake extends SubsystemBase {
         break;
     }
   }
+  public void onDisable() {
+    setIntakeState (IntakeStates.In);
+    setIntakeBottomSpeed(0.0);
+    setIntakeTopSpeed(0.0);
+  }
 }
