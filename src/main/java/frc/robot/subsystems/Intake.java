@@ -67,4 +67,7 @@ public class Intake extends SubsystemBase {
         break;
     }
   }
+  public void onDisable() {
+    
+  }
 }

@@ -59,4 +59,7 @@ public class Claw extends SubsystemBase {
         break;
     } 
   }
+  public void onDisable() {
+    
+  }
 }

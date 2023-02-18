@@ -35,5 +35,7 @@ public class Spindexer extends SubsystemBase {
   public void setSpindexerSpeed(double speed){
     spindexerMotor.set(ControlMode.PercentOutput, speed);
   }
-
+public void onDisable() {
+  
+}
 }
