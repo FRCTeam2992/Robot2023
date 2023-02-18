@@ -71,6 +71,7 @@ public class RobotContainer {
 
     mElevator = new Elevator();
     mElevator.setDefaultCommand(new StopElevator(mElevator));
+    SmartDashboard.putData(mElevator);
 
     mArm = new Arm();
     mArm.setDefaultCommand(new StopArm(mArm));
@@ -107,9 +108,9 @@ public class RobotContainer {
 
     controller0.a().onTrue(new DeployElevator(mElevator, ElevatorState.Undeployed));
     controller0.b().onTrue(new DeployElevator(mElevator, ElevatorState.Deployed));
-    controller0.povUp().onTrue(new MoveElevator(mElevator, 0.1));
-    controller0.povCenter().onTrue(new MoveElevator(mElevator, 0.0));
-    controller0.povDown().onTrue(new MoveElevator(mElevator, -0.1));
+    controller0.povUp().whileTrue(new MoveElevator(mElevator, 0.1));
+    controller0.povCenter().onTrue(new StopElevator(mElevator));
+    controller0.povDown().whileTrue(new MoveElevator(mElevator, -0.1));
 
     SmartDashboard.putData("Scoring", new DeployElevator(mElevator, ElevatorState.Undeployed));
     SmartDashboard.putData("Loading", new DeployElevator(mElevator, ElevatorState.Deployed));
