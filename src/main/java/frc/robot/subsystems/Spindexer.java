@@ -36,6 +36,6 @@ public class Spindexer extends SubsystemBase {
     spindexerMotor.set(ControlMode.PercentOutput, speed);
   }
 public void onDisable() {
-  
+  setSpindexerSpeed (0.0);
 }
 }

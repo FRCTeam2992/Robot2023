@@ -89,5 +89,6 @@ public class Elevator extends SubsystemBase {
 
   public void onDisable(){
     setElevatorState(ElevatorState.Undeployed);
+    setElevatorSpeed(0.0);
   }
 }

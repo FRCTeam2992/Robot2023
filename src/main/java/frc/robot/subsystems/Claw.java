@@ -14,7 +14,6 @@ public class Claw extends SubsystemBase {
   private Solenoid armSolenoid60;
   private Solenoid armSolenoid40;
 
-
   private int dashboardCounter;
 
   public enum ClawStates {
@@ -57,9 +56,11 @@ public class Claw extends SubsystemBase {
         armSolenoid60.set(true);
         armSolenoid40.set(false);
         break;
-    } 
+    }
   }
+
   public void onDisable() {
-    
+   //Solenoid needs to be in false state when disabled.
+    setClawState(ClawStates.Closed_Cone);
   }
 }
