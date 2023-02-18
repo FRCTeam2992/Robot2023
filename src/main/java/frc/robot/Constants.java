@@ -109,7 +109,7 @@ public final class Constants {
       public static int rearRightTurn = 9;
 
       public static int frontLeftEncoder = 3;
-      public static int frontRightEncoder = 4;
+      public static int frontRightEncoder = 5;
       public static int rearLeftEncoder = 7;
       public static int rearRightEncoder = 9;
     }
@@ -118,7 +118,9 @@ public final class Constants {
 
   public static class IntakeConstants {
     public static class DeviceIDs{
-      public static int intakeMotor = 22;
+      public static int intakeMotorTop = 21;
+      public static int intakeMotorBottom = 22;
+
 
       public static int intakeSolenoid = 0;
 
@@ -161,6 +163,12 @@ public static class SpindexerConstants {
       public static int ClawSolenoid60 = 2;
       public static int ClawSolenoid40 = 3;
 
+    }
+  }
+  public static class ButterflyWheelsConstants{
+    public static class DeviceIDs{
+      public static int ButterflyWheelsSolenoid = 4;
+    
     }
   }
 }

@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.Elevator.ElevatorState;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -58,8 +59,13 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
-    mRobotContainer.mDrivetrain.setDriveNeutralMode(NeutralMode.Coast);
-    mRobotContainer.mDrivetrain.setTurnNeutralMode(NeutralMode.Coast);
+    mRobotContainer.mElevator.onDisable();
+    mRobotContainer.mArm.onDisable();
+    mRobotContainer.mClaw.onDisable();
+    mRobotContainer.mButterflyWheels.onDisable();
+    mRobotContainer.mSpindexer.onDisable();
+    mRobotContainer.mIntake.onDisable();
+    mRobotContainer.mDrivetrain.onDisable();
   }
 
   @Override
