@@ -47,7 +47,7 @@ public class Elevator extends SubsystemBase {
 
     elevatorMotorFollow = new TalonFX(Constants.ElevatorConstants.DeviceIDs.elevatorMotorFollow);
     elevatorMotorFollow.setNeutralMode(NeutralMode.Brake);
-    elevatorMotorFollow.follow(elevatorMotorLead);
+    elevatorMotorFollow.set(ControlMode.Follower, elevatorMotorLead.getDeviceID());
     elevatorMotorFollow.setInverted(TalonFXInvertType.OpposeMaster);
 
     elevatorSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.ElevatorConstants.DeviceIDs.elevatorSolenoid);
