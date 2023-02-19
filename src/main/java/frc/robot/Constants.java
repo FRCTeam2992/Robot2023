@@ -151,8 +151,8 @@ public static class SpindexerConstants {
 
   public static class ArmConstants {
     public static class DeviceIDs{
-      public static int armMotor = 26;
-      public static int armEncoder = 26;
+      public static int armMotor = 27;
+      public static int armEncoder = 27;
     }
 
   }
