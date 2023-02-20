@@ -150,6 +150,8 @@ public static class SpindexerConstants {
     public static double gearRatio = 6.0;
     public static double sprocketPitchDiameter = 1.751;
 
+    public static double encoderClicksPerInch = (encoderClicksPerRevolution * gearRatio) / (sprocketPitchDiameter * Math.PI);
+    
   }
 
   public static class ArmConstants {

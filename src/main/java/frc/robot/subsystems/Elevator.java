@@ -103,19 +103,11 @@ public class Elevator extends SubsystemBase {
     setElevatorSpeed(0.0);
   }
 
-  private double clicksToSprocketRevs(){
-    return Constants.ElevatorConstants.encoderClicksPerRevolution * Constants.ElevatorConstants.gearRatio;
-  }
-
-  private double sprocketTravel(){
-    return Constants.ElevatorConstants.sprocketPitchDiameter * Math.PI;
-  }
-
   private double encoderClicksToInches(double encoderClicks) {
-    return (encoderClicks / clicksToSprocketRevs()) * sprocketTravel();
+    return encoderClicks / Constants.ElevatorConstants.encoderClicksPerInch;
   }
 
   private double inchesToEncoderClicks(double inches) {
-    return (inches / sprocketTravel()) * clicksToSprocketRevs();
+    return inches * Constants.ElevatorConstants.encoderClicksPerInch;
   }
 }
