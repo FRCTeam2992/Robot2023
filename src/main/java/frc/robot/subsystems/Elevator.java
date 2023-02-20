@@ -27,13 +27,13 @@ public class Elevator extends SubsystemBase {
 
   private int dashboardCounter = 0;
 
-  public enum ElevatorState{
+  public enum ElevatorState {
     Undeployed(false),
     Deployed(true);
 
     public final boolean solenoidSetting;
 
-    private ElevatorState(boolean solenoidSetting){
+    private ElevatorState(boolean solenoidSetting) {
       this.solenoidSetting = solenoidSetting;
     }
   }
@@ -49,7 +49,8 @@ public class Elevator extends SubsystemBase {
     elevatorMotorFollow.set(TalonFXControlMode.Follower, elevatorMotorLead.getDeviceID());
     elevatorMotorFollow.setInverted(TalonFXInvertType.OpposeMaster);
 
-    elevatorSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.ElevatorConstants.DeviceIDs.elevatorSolenoid);
+    elevatorSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM,
+        Constants.ElevatorConstants.DeviceIDs.elevatorSolenoid);
 
     elevatorLimitSwitch = new DigitalOutput(Constants.ElevatorConstants.DeviceIDs.elevatorLimitSwitch);
   }
@@ -57,10 +58,11 @@ public class Elevator extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    if(dashboardCounter++ >= 5){
+    if (dashboardCounter++ >= 5) {
       SmartDashboard.putNumber("Elevator Encoder", getElevatorPostion());
+      SmartDashboard.putNumber("Elevator Inches", getElevatorInches());
 
-      dashboardCounter = 0;      
+      dashboardCounter = 0;
     }
   }
 
@@ -68,33 +70,52 @@ public class Elevator extends SubsystemBase {
     elevatorMotorFollow.set(TalonFXControlMode.Follower, elevatorMotorLead.getDeviceID());
   }
 
-  public double getElevatorPostion(){
+  public double getElevatorPostion() {
     return elevatorMotorLead.getSensorCollection().getIntegratedSensorPosition();
   }
 
-  public void setElevatorSpeed(double speed){
+  public double getElevatorInches(){
+    return encoderClicksToInches(getElevatorPostion());
+  }
+
+  public void setElevatorSpeed(double speed) {
     elevatorMotorLead.set(TalonFXControlMode.PercentOutput, speed);
   }
 
-
-  public void setElevatorPosition(double position){
-    elevatorMotorLead.set(TalonFXControlMode.MotionMagic, position);
+  public void setElevatorPosition(double inches) {
+    elevatorMotorLead.set(TalonFXControlMode.MotionMagic, inchesToEncoderClicks(inches));
   }
 
-  public void setElevatorState(ElevatorState state){
+  public void setElevatorState(ElevatorState state) {
     elevatorSolenoid.set(state.solenoidSetting);
   }
 
-  public void deployElevator(boolean toggle){
+  public void deployElevator(boolean toggle) {
     elevatorSolenoid.set(toggle);
   }
 
-  public boolean getElevatorSolenoidState(){
+  public boolean getElevatorSolenoidState() {
     return elevatorSolenoid.get();
   }
 
-  public void onDisable(){
+  public void onDisable() {
     setElevatorState(ElevatorState.Undeployed);
     setElevatorSpeed(0.0);
+  }
+
+  private double clicksToSprocketRevs(){
+    return Constants.ElevatorConstants.encoderClicksPerRevolution * Constants.ElevatorConstants.gearRatio;
+  }
+
+  private double sprocketTravel(){
+    return Constants.ElevatorConstants.sprocketPitchDiameter * Math.PI;
+  }
+
+  private double encoderClicksToInches(double encoderClicks) {
+    return (encoderClicks / clicksToSprocketRevs()) * sprocketTravel();
+  }
+
+  private double inchesToEncoderClicks(double inches) {
+    return (inches / sprocketTravel()) * clicksToSprocketRevs();
   }
 }
