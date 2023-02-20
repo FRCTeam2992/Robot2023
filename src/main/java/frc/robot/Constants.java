@@ -160,8 +160,7 @@ public static class SpindexerConstants {
 
   public static class ClawConstants{
     public static class DeviceIDs{
-      public static int ClawSolenoid60 = 2;
-      public static int ClawSolenoid40 = 3;
+      public static int clawSolenoid = 2;
 
     }
   }
