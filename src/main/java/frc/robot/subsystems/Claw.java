@@ -11,21 +11,23 @@ import frc.robot.Constants;
 
 public class Claw extends SubsystemBase {
   /** Creates a new Claw. */
-  private Solenoid armSolenoid60;
-  private Solenoid armSolenoid40;
+  private Solenoid clawSolenoid;
 
   private int dashboardCounter;
 
-  public enum ClawStates {
-    Opened,
-    Closed_Cone,
-    Closed_Cube,
-    Unused
+  public enum ClawState {
+    Opened(true),
+    Closed(false);
+  
+    public final boolean solenoidSetting;
+
+    private ClawState(boolean solenoidSetting){
+      this.solenoidSetting = solenoidSetting;
+    } 
   }
 
   public Claw() {
-    armSolenoid60 = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.ClawConstants.DeviceIDs.ClawSolenoid60);
-    armSolenoid40 = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.ClawConstants.DeviceIDs.ClawSolenoid40);
+    clawSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.ClawConstants.DeviceIDs.clawSolenoid);
 
   }
 
@@ -38,29 +40,12 @@ public class Claw extends SubsystemBase {
     }
   }
 
-  public void setClawState(ClawStates state) {
-    switch (state) {
-      case Opened:
-        armSolenoid60.set(true);
-        armSolenoid40.set(true);
-        break;
-      case Closed_Cone:
-        armSolenoid60.set(false);
-        armSolenoid40.set(false);
-        break;
-      case Closed_Cube:
-        armSolenoid60.set(false);
-        armSolenoid40.set(true);
-        break;
-      case Unused:
-        armSolenoid60.set(true);
-        armSolenoid40.set(false);
-        break;
-    }
+  public void setClawState(ClawState state) {
+    clawSolenoid.set(state.solenoidSetting);
   }
 
   public void onDisable() {
    //Solenoid needs to be in false state when disabled.
-    setClawState(ClawStates.Closed_Cone);
+    setClawState(ClawState.Closed);
   }
 }
