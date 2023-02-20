@@ -73,7 +73,6 @@ public class Elevator extends SubsystemBase {
   }
 
   public void setElevatorSpeed(double speed){
-    elevatorMotorFollow.set(TalonFXControlMode.Follower, elevatorMotorLead.getDeviceID());
     elevatorMotorLead.set(TalonFXControlMode.PercentOutput, speed);
   }
 
