@@ -54,6 +54,8 @@ public class Elevator extends SubsystemBase {
         Constants.ElevatorConstants.DeviceIDs.elevatorSolenoid);
 
     elevatorLimitSwitch = new DigitalOutput(Constants.ElevatorConstants.DeviceIDs.elevatorLimitSwitch);
+
+
   }
 
   @Override
@@ -125,5 +127,17 @@ public class Elevator extends SubsystemBase {
   public void zeroElevatorEncoders() {
     elevatorMotorLead.getSensorCollection().setIntegratedSensorPosition(0.0, 100);
     elevatorMotorFollow.getSensorCollection().setIntegratedSensorPosition(0.0, 100);
+  }
+
+  private void setPIDConstants(TalonFX motor){
+    motor.config_kP(0, Constants.ElevatorConstants.PIDConstants.P);
+    motor.config_kI(0, Constants.ElevatorConstants.PIDConstants.I);
+    motor.config_kD(0, Constants.ElevatorConstants.PIDConstants.D);
+    motor.config_kF(0, Constants.ElevatorConstants.PIDConstants.FF);
+
+    motor.configMotionCruiseVelocity(Constants.ElevatorConstants.PIDConstants.cruiseVelocity);
+    motor.configMotionAcceleration(Constants.ElevatorConstants.PIDConstants.acceleration);
+
+
   }
 }

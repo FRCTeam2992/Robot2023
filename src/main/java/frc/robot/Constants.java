@@ -149,7 +149,7 @@ public static class SpindexerConstants {
       public static double D = 0;
       public static double FF = 0;
       public static double cruiseVelocity = 0;
-      public static double maxAcceleration = 0;
+      public static double acceleration = 0;
     }    
     public static int encoderClicksPerRevolution = 2048; //clicks per revolution
     public static double gearRatio = 6.0; //6:1 ratio
