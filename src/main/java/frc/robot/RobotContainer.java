@@ -9,10 +9,12 @@ import frc.robot.commands.DeployElevator;
 import frc.robot.commands.DriveSticks;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.MoveElevator;
+import frc.robot.commands.SetElevatorPosition;
 import frc.robot.commands.StopArm;
 import frc.robot.commands.StopElevator;
 import frc.robot.commands.StopIntake;
 import frc.robot.commands.StopSpindexer;
+import frc.robot.commands.ZeroElevatorEncoders;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.ButterflyWheels;
 import frc.robot.subsystems.Claw;
@@ -120,6 +122,13 @@ public class RobotContainer {
     SmartDashboard.putData("Move Elevator Down", new MoveElevator(mElevator, -0.1));
     SmartDashboard.putData("Stop Elevator", new MoveElevator(mElevator, 0.0));
     SmartDashboard.putData("Move Elevator Up", new MoveElevator(mElevator, 0.1));
+
+    // SmartDashboard.putData("Elevator to 0 inches", new SetElevatorPosition(mElevator, 0));
+    SmartDashboard.putData("Elevator to 12 inches", new SetElevatorPosition(mElevator, 12));
+    SmartDashboard.putData("Elevator to 23 inches", new SetElevatorPosition(mElevator, 23));
+
+    SmartDashboard.putData("Zero Elevator Encoder", new ZeroElevatorEncoders(mElevator));
+
   }
 
   public void addSubsystemsToDashboard() {

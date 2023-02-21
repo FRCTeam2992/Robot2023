@@ -146,9 +146,9 @@ public static class SpindexerConstants {
     public static class PIDConstants{
 
     }    
-    public static int encoderClicksPerRevolution = 2048;
-    public static double gearRatio = 6.0;
-    public static double sprocketPitchDiameter = 1.751;
+    public static int encoderClicksPerRevolution = 2048; //clicks per revolution
+    public static double gearRatio = 6.0; //6:1 ratio
+    public static double sprocketPitchDiameter = 1.751; //inches
 
     public static double encoderClicksPerInch = (encoderClicksPerRevolution * gearRatio) / (sprocketPitchDiameter * Math.PI);
     

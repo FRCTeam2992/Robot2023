@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -41,7 +42,7 @@ public class Elevator extends SubsystemBase {
   /** Creates a new Elevator. */
   public Elevator() {
     elevatorMotorLead = new TalonFX(Constants.ElevatorConstants.DeviceIDs.elevatorMotorLead);
-    elevatorMotorLead.setInverted(TalonFXInvertType.Clockwise);
+    elevatorMotorLead.setInverted(TalonFXInvertType.CounterClockwise);
     elevatorMotorLead.setNeutralMode(NeutralMode.Brake);
 
     elevatorMotorFollow = new TalonFX(Constants.ElevatorConstants.DeviceIDs.elevatorMotorFollow);
@@ -59,7 +60,9 @@ public class Elevator extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     if (dashboardCounter++ >= 5) {
-      SmartDashboard.putNumber("Elevator Encoder", getElevatorPostion());
+      SmartDashboard.putNumber("Lead Elevator Encoder", getLeadElevatorPostion());
+      SmartDashboard.putNumber("Follow Elevator Encoder", getFollowElevatorPostion());
+
       SmartDashboard.putNumber("Elevator Inches", getElevatorInches());
 
       dashboardCounter = 0;
@@ -70,12 +73,17 @@ public class Elevator extends SubsystemBase {
     elevatorMotorFollow.set(TalonFXControlMode.Follower, elevatorMotorLead.getDeviceID());
   }
 
-  public double getElevatorPostion() {
+  public double getLeadElevatorPostion() {
     return elevatorMotorLead.getSensorCollection().getIntegratedSensorPosition();
   }
 
-  public double getElevatorInches(){
-    return encoderClicksToInches(getElevatorPostion());
+  public double getFollowElevatorPostion() {
+    return elevatorMotorFollow.getSensorCollection().getIntegratedSensorPosition();
+  }
+
+
+  public double getElevatorInches() {
+    return encoderClicksToInches(getLeadElevatorPostion());
   }
 
   public void setElevatorSpeed(double speed) {
@@ -83,7 +91,10 @@ public class Elevator extends SubsystemBase {
   }
 
   public void setElevatorPosition(double inches) {
+    inches = Math.min(inches, 28);
+    inches = Math.max(inches, 10);
     elevatorMotorLead.set(TalonFXControlMode.MotionMagic, inchesToEncoderClicks(inches));
+    System.out.println("MOVING: " + inchesToEncoderClicks(inches));
   }
 
   public void setElevatorState(ElevatorState state) {
@@ -109,5 +120,10 @@ public class Elevator extends SubsystemBase {
 
   private double inchesToEncoderClicks(double inches) {
     return inches * Constants.ElevatorConstants.encoderClicksPerInch;
+  }
+
+  public void zeroElevatorEncoders() {
+    elevatorMotorLead.getSensorCollection().setIntegratedSensorPosition(0.0, 100);
+    elevatorMotorFollow.getSensorCollection().setIntegratedSensorPosition(0.0, 100);
   }
 }
