@@ -144,7 +144,12 @@ public static class SpindexerConstants {
       public static int elevatorLimitSwitch = 0;
     }
     public static class PIDConstants{
-
+      public static double P = 0;
+      public static double I = 0;
+      public static double D = 0;
+      public static double FF = 0;
+      public static double cruiseVelocity = 0;
+      public static double maxAcceleration = 0;
     }    
     public static int encoderClicksPerRevolution = 2048; //clicks per revolution
     public static double gearRatio = 6.0; //6:1 ratio
@@ -159,6 +164,7 @@ public static class SpindexerConstants {
       public static int armMotor = 27;
       public static int armEncoder = 27;
     }
+    
 
   }
 
