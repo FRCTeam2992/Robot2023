@@ -9,10 +9,13 @@ import frc.robot.commands.DeployElevator;
 import frc.robot.commands.DriveSticks;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.MoveSpindexer;
+import frc.robot.commands.ResetGyro;
+import frc.robot.commands.SetSwerveAngle;
 import frc.robot.commands.StopArm;
 import frc.robot.commands.StopElevator;
 import frc.robot.commands.StopIntake;
 import frc.robot.commands.StopSpindexer;
+import frc.robot.commands.groups.FollowTrajectoryCommand;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.ButterflyWheels;
 import frc.robot.subsystems.Claw;
@@ -142,6 +145,12 @@ public class RobotContainer {
   
 
     SmartDashboard.putData("Spin Intake", new MoveSpindexer(mSpindexer, .5));
+
+    SmartDashboard.putData("Reset Odometry", mDrivetrain.ResetOdometry());
+    SmartDashboard.putData("0 Wheels", new SetSwerveAngle(mDrivetrain, 0, 0, 0, 0));
+
+    SmartDashboard.putData("Test Path Planner Path", new FollowTrajectoryCommand(mDrivetrain, mDrivetrain.driveStraight, true));
+
   }   
 
   public void addSubsystemsToDashboard() {
