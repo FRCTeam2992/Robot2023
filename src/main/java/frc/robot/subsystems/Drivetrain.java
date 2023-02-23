@@ -233,8 +233,10 @@ public class Drivetrain extends SubsystemBase {
         Constants.DrivetrainConstants.swerveMaxSpeed);
 
     // Swerve Controller
-    swerveController = new SwerveController(Constants.DrivetrainConstants.swerveLength,
-        Constants.DrivetrainConstants.swerveWidth);
+    swerveController = new SwerveController(
+      Constants.DrivetrainConstants.swerveLength,
+      Constants.DrivetrainConstants.swerveWidth
+    );
 
     //Load Motion Paths
     loadMotionPaths();
@@ -269,9 +271,12 @@ public class Drivetrain extends SubsystemBase {
     swerveDriveModulePositions[3] = rearRightModule.getPosition();
 
     // Swerve Drive Kinematics
-    swerveDriveKinematics = new SwerveDriveKinematics(Constants.DrivetrainConstants.frontLeftLocation,
-        Constants.DrivetrainConstants.frontRightLocation,
-        Constants.DrivetrainConstants.rearLeftLocation, Constants.DrivetrainConstants.rearRightLocation);
+    swerveDriveKinematics = new SwerveDriveKinematics(
+      Constants.DrivetrainConstants.frontLeftLocation,
+      Constants.DrivetrainConstants.frontRightLocation,
+      Constants.DrivetrainConstants.rearLeftLocation,
+      Constants.DrivetrainConstants.rearRightLocation
+    );
 
     // Serve Drive Odometry
     swerveDriveOdometry = new SwerveDriveOdometry(
@@ -298,7 +303,9 @@ public class Drivetrain extends SubsystemBase {
     swerveDriveModulePositions[3] = rearRightModule.getPosition();
 
     latestSwervePose = swerveDriveOdometry.update(
-        Rotation2d.fromDegrees(-getGyroYaw()), swerveDriveModulePositions);
+      Rotation2d.fromDegrees(-getGyroYaw()),
+      swerveDriveModulePositions
+    );
 
     if (Constants.dataLogging) {
       limelight11JsonLog.append(limeLightCamera11.getLimelightJson());
