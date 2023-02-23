@@ -161,8 +161,8 @@ public static class SpindexerConstants {
 
   public static class ArmConstants {
     public static class DeviceIDs{
-      public static int armMotor = 26;
-      public static int armEncoder = 26;
+      public static int armMotor = 27;
+      public static int armEncoder = 27;
     }
 
   }
@@ -170,14 +170,13 @@ public static class SpindexerConstants {
 
   public static class ClawConstants{
     public static class DeviceIDs{
-      public static int ClawSolenoid60 = 2;
-      public static int ClawSolenoid40 = 3;
+      public static int clawSolenoid = 2;
 
     }
   }
   public static class ButterflyWheelsConstants{
     public static class DeviceIDs{
-      public static int ButterflyWheelsSolenoid = 4;
+      public static int butterflyWheelsSolenoid = 4;
     
     }
   }

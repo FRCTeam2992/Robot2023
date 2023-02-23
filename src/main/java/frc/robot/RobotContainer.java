@@ -7,10 +7,10 @@ package frc.robot;
 import frc.robot.commands.Autos;
 import frc.robot.commands.DeployElevator;
 import frc.robot.commands.DriveSticks;
-import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.MoveSpindexer;
 import frc.robot.commands.ResetGyro;
 import frc.robot.commands.SetSwerveAngle;
+import frc.robot.commands.MoveElevator;
 import frc.robot.commands.StopArm;
 import frc.robot.commands.StopElevator;
 import frc.robot.commands.StopIntake;
@@ -28,7 +28,6 @@ import frc.robot.subsystems.TestPneumatics;
 import frc.robot.subsystems.Elevator.ElevatorState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -64,7 +63,6 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-
     mDrivetrain = new Drivetrain();
     mDrivetrain.setDefaultCommand(new DriveSticks(mDrivetrain));
 
@@ -139,9 +137,17 @@ public class RobotContainer {
 
     // controller0.a().onTrue(new DeployElevator(mElevator, ElevatorState.Undeployed));
     // controller0.b().onTrue(new DeployElevator(mElevator, ElevatorState.Deployed));
+    controller0.a().onTrue(new DeployElevator(mElevator, ElevatorState.Undeployed));
+    controller0.b().onTrue(new DeployElevator(mElevator, ElevatorState.Deployed));
+    controller0.povUp().whileTrue(new MoveElevator(mElevator, 0.1));
+    controller0.povCenter().onTrue(new StopElevator(mElevator));
+    controller0.povDown().whileTrue(new MoveElevator(mElevator, -0.1));
 
     SmartDashboard.putData("Scoring", new DeployElevator(mElevator, ElevatorState.Undeployed));
     SmartDashboard.putData("Loading", new DeployElevator(mElevator, ElevatorState.Deployed));
+    SmartDashboard.putData("Move Elevator Down", new MoveElevator(mElevator, -0.1));
+    SmartDashboard.putData("Stop Elevator", new MoveElevator(mElevator, 0.0));
+    SmartDashboard.putData("Move Elevator Up", new MoveElevator(mElevator, 0.1));
   
 
     SmartDashboard.putData("Spin Intake", new MoveSpindexer(mSpindexer, .5));
