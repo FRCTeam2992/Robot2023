@@ -25,8 +25,12 @@ public class FollowTrajectoryCommand extends SequentialCommandGroup {
         // Reset odometry for the first path you run during auto
         if(isFirstPath){
           mDrivetrain.resetOdometryToPose(traj.getInitialHolonomicPose());
-          System.out.println("DEBUG LOG: initial holonomic pose = " + traj.getInitialHolonomicPose());
+          System.out.println("DEBUG LOG: First path! Pose reset!");
         }
+      }),
+      new InstantCommand(() -> {
+        System.out.println("DEBUG LOG: initial holonomic pose = " + traj.getInitialHolonomicPose());
+        System.out.println("DEBUG LOG: initial gyro yaw (adj) = " + mDrivetrain.getGyroYaw());
       }),
       new PPSwerveControllerCommand(
           traj, 
@@ -38,7 +42,11 @@ public class FollowTrajectoryCommand extends SequentialCommandGroup {
           mDrivetrain::setModuleStates, // Module states consumer
           true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
           mDrivetrain // Requires this drive subsystem
-      )
+      ),
+      new InstantCommand(() -> {
+        System.out.println("DEBUG LOG: completed holonomic pose = " + traj.getInitialHolonomicPose());
+        System.out.println("DEBUG LOG: completed gyro yaw (adj) = " + mDrivetrain.getGyroYaw());
+      })
     );
   }
 }
