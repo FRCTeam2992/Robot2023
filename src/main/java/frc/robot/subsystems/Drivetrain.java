@@ -280,9 +280,12 @@ public class Drivetrain extends SubsystemBase {
 
     // Serve Drive Odometry
     swerveDriveOdometry = new SwerveDriveOdometry(
-        swerveDriveKinematics, Rotation2d.fromDegrees(navx.getYaw()),
-        swerveDriveModulePositions,
-        new Pose2d(0.0, 0.0, new Rotation2d()));
+      swerveDriveKinematics,
+      // Rotation2d.fromDegrees(navx.getYaw()),
+      Rotation2d.fromDegrees(getGyroYaw()),
+      swerveDriveModulePositions,
+      new Pose2d(0.0, 0.0, new Rotation2d())
+    );
   }
 
   private void initTalonFX(TalonFX motorContollerName, boolean isInverted) {
