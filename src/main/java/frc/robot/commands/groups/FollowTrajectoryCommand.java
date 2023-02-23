@@ -25,7 +25,7 @@ public class FollowTrajectoryCommand extends SequentialCommandGroup {
         // Reset odometry for the first path you run during auto
         if(isFirstPath){
           mDrivetrain.resetOdometryToPose(traj.getInitialHolonomicPose());
-          System.out.println(traj.getInitialHolonomicPose());
+          System.out.println("DEBUG LOG: initial holonomic pose = " + traj.getInitialHolonomicPose());
         }
       }),
       new PPSwerveControllerCommand(
@@ -39,7 +39,7 @@ public class FollowTrajectoryCommand extends SequentialCommandGroup {
           true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
           mDrivetrain // Requires this drive subsystem
       )
-  );
-}
+    );
+  }
 }
 

@@ -156,7 +156,6 @@ public class RobotContainer {
     SmartDashboard.putData("0 Wheels", new SetSwerveAngle(mDrivetrain, 0, 0, 0, 0));
 
     SmartDashboard.putData("Test Path Planner Path", new FollowTrajectoryCommand(mDrivetrain, mDrivetrain.driveStraight, true));
-
   }   
 
   public void addSubsystemsToDashboard() {

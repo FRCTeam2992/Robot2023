@@ -94,10 +94,7 @@ public class Drivetrain extends SubsystemBase {
   public AHRS navx;
   public double gyroOffset = 0.0;
 
-  public Pose2d priorSwervePose; // The pose from prior cycle
   public Pose2d latestSwervePose = new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0.0));
-  private double distanceTraveled; // How far we moved this cycle (meters)
-  public double angleTurned; // How much did we rotate this cycle (degrees)
 
   // Swerve Drive Kinematics
   public final SwerveDriveKinematics swerveDriveKinematics;
@@ -295,9 +292,6 @@ public class Drivetrain extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-
-    priorSwervePose = latestSwervePose;
-
     swerveDriveModulePositions[0] = frontLeftModule.getPosition();
     swerveDriveModulePositions[1] = frontRightModule.getPosition();
     swerveDriveModulePositions[2] = rearLeftModule.getPosition();
@@ -305,20 +299,6 @@ public class Drivetrain extends SubsystemBase {
 
     latestSwervePose = swerveDriveOdometry.update(
         Rotation2d.fromDegrees(-getGyroYaw()), swerveDriveModulePositions);
-
-    moved = latestSwervePose.minus(priorSwervePose);
-
-    distanceTraveled = Math.sqrt(moved.getX() * moved.getX() + moved.getY() * moved.getY());
-    angleTurned = Math.abs(moved.getRotation().getDegrees());
-
-    // Display Odometry
-    SmartDashboard.putNumber("Odometry Rotation",
-        latestSwervePose.getRotation().getDegrees());
-    SmartDashboard.putNumber("Odometry X", (latestSwervePose.getX() * (100 /
-        2.54)));
-    SmartDashboard.putNumber("Odometry Y", (latestSwervePose.getY() * (100 /
-        2.54)));
-    SmartDashboard.putNumber("Distance traveled", distanceTraveled);
 
     if (Constants.dataLogging) {
       limelight11JsonLog.append(limeLightCamera11.getLimelightJson());
@@ -340,11 +320,14 @@ public class Drivetrain extends SubsystemBase {
       SmartDashboard.putNumber("back left encoder", rearLeftModule.getEncoderAngle());
       SmartDashboard.putNumber("back right encoder", rearRightModule.getEncoderAngle());
 
-      SmartDashboard.putNumber("gyro y", navx.getYaw());
-      SmartDashboard.putNumber("gyro y", getGyroYaw());
+      SmartDashboard.putNumber("Gyro Yaw (raw deg)", navx.getYaw());
+      SmartDashboard.putNumber("Gyro Yaw (adj deg)", getGyroYaw());
 
-      SmartDashboard.putNumber("x odometry", latestSwervePose.getX());
-      SmartDashboard.putNumber("y odometry", latestSwervePose.getY());
+      SmartDashboard.putNumber("Odometry Rotation (deg)", latestSwervePose.getRotation().getDegrees());
+      SmartDashboard.putNumber("Odometry X (in)", (latestSwervePose.getX() * (100 / 2.54)));
+      SmartDashboard.putNumber("Odometry Y (in)", (latestSwervePose.getY() * (100 / 2.54)));
+      SmartDashboard.putNumber("Odometry X (m)", latestSwervePose.getX());
+      SmartDashboard.putNumber("Odometry Y (m)", latestSwervePose.getY());
 
       dashboardCounter = 0;
     }
