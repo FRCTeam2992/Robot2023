@@ -114,6 +114,12 @@ public final class Constants {
       public static int rearRightEncoder = 9;
     }
 
+
+    // Field Coordinates
+    public static class FieldSize {
+      public static double FIELD_WIDTH_METERS = 8.02;
+      public static double FIELD_LENGTH_METERS = 16.04;
+    }
   }
 
   public static class IntakeConstants {
