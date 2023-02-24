@@ -8,6 +8,7 @@ import frc.robot.commands.Autos;
 import frc.robot.commands.DeployElevator;
 import frc.robot.commands.DriveSticks;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.SetClawState;
 import frc.robot.commands.StopArm;
 import frc.robot.commands.StopElevator;
 import frc.robot.commands.StopIntake;
@@ -21,6 +22,7 @@ import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Spindexer;
 import frc.robot.subsystems.TestPneumatics;
+import frc.robot.subsystems.Claw.ClawState;
 import frc.robot.subsystems.Elevator.ElevatorState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -114,6 +116,10 @@ public class RobotContainer {
 
     SmartDashboard.putData("Scoring", new DeployElevator(mElevator, ElevatorState.Undeployed));
     SmartDashboard.putData("Loading", new DeployElevator(mElevator, ElevatorState.Deployed));
+
+    SmartDashboard.putData("Open Claw", new SetClawState(mClaw, ClawState.Opened));
+    SmartDashboard.putData("Close Claw", new SetClawState(mClaw, ClawState.Closed));
+
   }
 
   public void addSubsystemsToDashboard() {
