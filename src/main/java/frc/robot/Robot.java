@@ -109,10 +109,10 @@ public class Robot extends TimedRobot {
     mRobotContainer.mDrivetrain.navx.zeroYaw();
 
     mRobotContainer.mDrivetrain.setDriveNeutralMode(NeutralMode.Brake);
-        mRobotContainer.mDrivetrain.setTurnNeutralMode(NeutralMode.Brake);
+    mRobotContainer.mDrivetrain.setTurnNeutralMode(NeutralMode.Brake);
 
-        mRobotContainer.mDrivetrain.setDriveCurrentLimit(40.0, 40.0);
-        mRobotContainer.mDrivetrain.setDriveRampRate(0.25);
+    mRobotContainer.mDrivetrain.setDriveCurrentLimit(40.0, 40.0);
+    mRobotContainer.mDrivetrain.setDriveRampRate(0.25);
   }
 
   /** This function is called periodically during operator control. */
