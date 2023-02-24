@@ -155,7 +155,7 @@ public class RobotContainer {
     SmartDashboard.putData("Reset Odometry", mDrivetrain.ResetOdometry());
     SmartDashboard.putData("0 Wheels", new SetSwerveAngle(mDrivetrain, 0, 0, 0, 0));
 
-    SmartDashboard.putData("Test Path Planner Path", new FollowTrajectoryCommand(mDrivetrain, mDrivetrain.driveStraight, true));
+    SmartDashboard.putData("Test Path Planner Path", new FollowTrajectoryCommand(mDrivetrain, mDrivetrain.testPath, true));
   }   
 
   public void addSubsystemsToDashboard() {

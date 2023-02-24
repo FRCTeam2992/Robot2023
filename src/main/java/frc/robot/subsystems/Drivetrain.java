@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import java.nio.file.Path;
+
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
@@ -112,6 +114,8 @@ public class Drivetrain extends SubsystemBase {
 
   // public PathPlannerTrajectory testPath;
   public PathPlannerTrajectory driveStraight;
+  public PathPlannerTrajectory curvePath;
+  public PathPlannerTrajectory testPath;
 
   // Slowmode
   private boolean inSlowMode = false;
@@ -445,6 +449,8 @@ public class Drivetrain extends SubsystemBase {
   private void loadMotionPaths() {
     // testPath = PathPlanner.loadPath("Test Path", new PathConstraints(2, 1.5));
     driveStraight = PathPlanner.loadPath("DriveStraight", new PathConstraints(.5, .5));
+    curvePath = PathPlanner.loadPath("CurvePath", new PathConstraints(.5, .5));
+    testPath = PathPlanner.loadPath("TestPath", new PathConstraints(.5, .5));
   }
 
   public CommandBase ResetOdometry(){
