@@ -32,8 +32,8 @@ public final class Constants {
     public static double joystickRotationInverseDeadband = 0.14;
 
     // Length and Width of the Robot in Meters (Inches: 22.0 x 24.5)
-    public static final double swerveWidth = 0.6604;
-    public static final double swerveLength = 0.6604;
+    public static final double swerveWidth = 0.578;
+    public static final double swerveLength = 0.667;
 
     // Max Swerve Speed (Velocity Control)
     public static final double swerveMaxSpeed = 4.5; // (Meters per Second)(2 Slow, 4.5 normal)
@@ -66,10 +66,10 @@ public final class Constants {
     public static final double driveGyroP = 0.005;
 
     // Swerve Module Translations x=.591/2 y=.654/2
-    public static final Translation2d frontLeftLocation = new Translation2d(0.2955, 0.327);
-    public static final Translation2d frontRightLocation = new Translation2d(0.2955, -0.327);
-    public static final Translation2d rearLeftLocation = new Translation2d(-0.2955, 0.327);
-    public static final Translation2d rearRightLocation = new Translation2d(-0.2955, -0.327);
+    public static final Translation2d frontLeftLocation = new Translation2d(0.289, 0.3335);
+    public static final Translation2d frontRightLocation = new Translation2d(0.289, -0.3335);
+    public static final Translation2d rearLeftLocation = new Translation2d(-0.289, 0.3335);
+    public static final Translation2d rearRightLocation = new Translation2d(-0.289, -0.3335);
 
     // Swerve X Axis Correction PID (Path Following)
     public static final double xCorrectionP = 5.0;
@@ -121,9 +121,7 @@ public final class Constants {
       public static int intakeMotorTop = 21;
       public static int intakeMotorBottom = 22;
 
-
       public static int intakeSolenoid = 0;
-
     }
   }
 
@@ -164,7 +162,6 @@ public static class SpindexerConstants {
       public static int armMotor = 27;
       public static int armEncoder = 27;
     }
-
   }
 
 
@@ -176,8 +173,7 @@ public static class SpindexerConstants {
   }
   public static class ButterflyWheelsConstants{
     public static class DeviceIDs{
-      public static int butterflyWheelsSolenoid = 4;
-    
+      public static int butterflyWheelsSolenoid = 3;
     }
   }
 }
