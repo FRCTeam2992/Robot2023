@@ -402,6 +402,7 @@ public class Drivetrain extends SubsystemBase {
 
   public void resetOdometryToPose(Pose2d initialPose) {
     swerveDriveOdometry.resetPosition(Rotation2d.fromDegrees(-getGyroYaw()), swerveDriveModulePositions, initialPose);
+    latestSwervePose = initialPose;
   }
 
   public double getGyroYaw() {
