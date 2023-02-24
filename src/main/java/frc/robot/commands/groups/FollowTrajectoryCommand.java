@@ -4,13 +4,18 @@
 
 package frc.robot.commands.groups;
 
+import java.io.Console;
+
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.Constants;
 import frc.robot.subsystems.Drivetrain;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -24,8 +29,13 @@ public class FollowTrajectoryCommand extends SequentialCommandGroup {
     addCommands(
       new InstantCommand(() -> {
         // Reset odometry for the first path you run during auto
+        Pose2d startPose = traj.getInitialHolonomicPose();
         if(isFirstPath){
-          mDrivetrain.resetOdometryToPose(traj.getInitialHolonomicPose());
+          if (DriverStation.getAlliance() == DriverStation.Alliance.Red) {
+            startPose = new Pose2d(startPose.getX(), Constants.DrivetrainConstants.FieldSize.FIELD_WIDTH_METERS - startPose.getY(),
+            startPose.getRotation());
+          }
+          mDrivetrain.resetOdometryToPose(startPose);
           System.out.println("DEBUG LOG: First path! Pose reset!");
           SmartDashboard.putNumber("POST RESET: Odom X", mDrivetrain.getLatestSwervePose().getTranslation().getX());
           SmartDashboard.putNumber("POST RESET: Odom Y", mDrivetrain.getLatestSwervePose().getTranslation().getY());
@@ -44,7 +54,7 @@ public class FollowTrajectoryCommand extends SequentialCommandGroup {
           new PIDController(1, 0, 0), // Y controller (usually the same values as X controller)
           new PIDController(0.5, 0, 0), // Rotation controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
           mDrivetrain::setModuleStates, // Module states consumer
-          false, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
+          true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
           mDrivetrain // Requires this drive subsystem
       ),
       new InstantCommand(() -> {
