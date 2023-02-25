@@ -5,11 +5,13 @@
 package frc.robot;
 
 import frc.robot.commands.DeployElevator;
+import frc.robot.commands.DeployIntake;
 import frc.robot.commands.DriveSticks;
 import frc.robot.commands.MoveSpindexer;
 import frc.robot.commands.ResetGyro;
 import frc.robot.commands.SetSwerveAngle;
 import frc.robot.commands.MoveElevator;
+import frc.robot.commands.MoveIntake;
 import frc.robot.commands.StopArm;
 import frc.robot.commands.StopElevator;
 import frc.robot.commands.StopIntake;
@@ -23,6 +25,7 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Spindexer;
 import frc.robot.subsystems.Elevator.ElevatorState;
+import frc.robot.subsystems.Intake.IntakeStates;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -99,13 +102,22 @@ public class RobotContainer {
     // Trigger Example (Left Trigger at 30%, When Pressed)
     // controller0.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, .3).onTrue(new ExampleCommand(m_exampleSubsystem));
 
-    controller0.leftBumper().onTrue(new MoveSpindexer(mSpindexer, -1));
+    controller0.leftBumper().onTrue(new MoveSpindexer(mSpindexer, -.33));
     controller0.leftBumper().onFalse(new MoveSpindexer(mSpindexer, 0));
 
-    controller0.rightBumper().onTrue(new MoveSpindexer(mSpindexer, .85));
+    controller0.rightBumper().onTrue(new MoveSpindexer(mSpindexer, .33));
     controller0.rightBumper().onFalse(new MoveSpindexer(mSpindexer, 0));
 
     controller0.start().onTrue(new ResetGyro(mDrivetrain));
+
+    controller0.a().whileTrue(new MoveIntake(mIntake, 1, 1));
+    controller0.a().onFalse(new MoveIntake(mIntake, 0, 0));
+
+    controller0.x().whileTrue(new MoveIntake(mIntake, -1, -1));
+
+    controller0.b().onTrue(new DeployIntake(mIntake, IntakeStates.In));
+    controller0.y().onTrue(new DeployIntake(mIntake, IntakeStates.Out));
+    
 
 
     // controller0.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, .1).onTrue(new MoveSpindexer(mSpindexer, -controller0.getLeftTriggerAxis()));
@@ -126,11 +138,11 @@ public class RobotContainer {
 
     // controller0.a().onTrue(new DeployElevator(mElevator, ElevatorState.Undeployed));
     // controller0.b().onTrue(new DeployElevator(mElevator, ElevatorState.Deployed));
-    controller0.a().onTrue(new DeployElevator(mElevator, ElevatorState.Undeployed));
-    controller0.b().onTrue(new DeployElevator(mElevator, ElevatorState.Deployed));
-    controller0.povUp().whileTrue(new MoveElevator(mElevator, 0.1));
-    controller0.povCenter().onTrue(new StopElevator(mElevator));
-    controller0.povDown().whileTrue(new MoveElevator(mElevator, -0.1));
+    // controller0.a().onTrue(new DeployElevator(mElevator, ElevatorState.Undeployed));
+    // controller0.b().onTrue(new DeployElevator(mElevator, ElevatorState.Deployed));
+    // controller0.povUp().whileTrue(new MoveElevator(mElevator, 0.1));
+    // controller0.povCenter().onTrue(new StopElevator(mElevator));
+    // controller0.povDown().whileTrue(new MoveElevator(mElevator, -0.1));
 
     SmartDashboard.putData("Scoring", new DeployElevator(mElevator, ElevatorState.Undeployed));
     SmartDashboard.putData("Loading", new DeployElevator(mElevator, ElevatorState.Deployed));

@@ -25,23 +25,23 @@ public class Intake extends SubsystemBase {
     In(true),
     Out(false);
 
-    public final boolean solenoidSeting;
+    public final boolean solenoidSetting;
 
-    private IntakeStates(boolean solenoidSeting){
-      this.solenoidSeting = solenoidSeting;
+    private IntakeStates(boolean solenoidSetting){
+      this.solenoidSetting = solenoidSetting;
     }
   }
 
   public Intake() {
     intakeMotorTop = new CANSparkMax(Constants.IntakeConstants.DeviceIDs.intakeMotorTop, MotorType.kBrushless);
-    intakeMotorTop.setInverted(false);
+    intakeMotorTop.setInverted(true);
     intakeMotorTop.setIdleMode(IdleMode.kCoast);
 
     intakeMotorBottom = new CANSparkMax(Constants.IntakeConstants.DeviceIDs.intakeMotorBottom, MotorType.kBrushless);
-    intakeMotorBottom.setInverted(false);
+    intakeMotorBottom.setInverted(true);
     intakeMotorBottom.setIdleMode(IdleMode.kCoast);
 
-    intakeSolenoid = new Solenoid(PneumaticsModuleType.REVPH, Constants.IntakeConstants.DeviceIDs.intakeSolenoid);
+    intakeSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.IntakeConstants.DeviceIDs.intakeSolenoid);
 
   }
 
@@ -63,12 +63,10 @@ public class Intake extends SubsystemBase {
   }
 
   public void setIntakeState(IntakeStates state) {
-    intakeSolenoid.set(state.solenoidSeting);
+    intakeSolenoid.set(state.solenoidSetting);
   }
 
-  public void onDisable() {
-    setIntakeState(IntakeStates.In);
-  }
+  
   public void onDisable() {
     setIntakeState (IntakeStates.In);
     setIntakeBottomSpeed(0.0);
