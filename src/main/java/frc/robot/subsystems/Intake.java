@@ -27,7 +27,7 @@ public class Intake extends SubsystemBase {
 
     public final boolean solenoidSetting;
 
-    private IntakeStates(boolean solenoidSetting){
+    private IntakeStates(boolean solenoidSetting) {
       this.solenoidSetting = solenoidSetting;
     }
   }
@@ -66,9 +66,8 @@ public class Intake extends SubsystemBase {
     intakeSolenoid.set(state.solenoidSetting);
   }
 
-  
   public void onDisable() {
-    setIntakeState (IntakeStates.In);
+    setIntakeState(IntakeStates.In);
     setIntakeBottomSpeed(0.0);
     setIntakeTopSpeed(0.0);
   }
