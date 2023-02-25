@@ -9,7 +9,7 @@ import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
-// import edu.wpi.first.wpilibj.DigitalOutput;
+import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -24,7 +24,7 @@ public class Elevator extends SubsystemBase {
 
   private Solenoid elevatorSolenoid;
 
-  // private DigitalOutput elevatorLimitSwitch;
+  private DigitalOutput elevatorLimitSwitch;
 
   private int dashboardCounter = 0;
 
@@ -81,7 +81,6 @@ public class Elevator extends SubsystemBase {
     return elevatorMotorFollow.getSensorCollection().getIntegratedSensorPosition();
   }
 
-
   public double getElevatorInches() {
     return encoderClicksToInches(getLeadElevatorPostion());
   }
@@ -127,7 +126,7 @@ public class Elevator extends SubsystemBase {
     elevatorMotorFollow.getSensorCollection().setIntegratedSensorPosition(0.0, 100);
   }
 
-  private void setPIDConstants(TalonFX motor){
+  private void setPIDConstants(TalonFX motor) {
     motor.config_kP(0, Constants.ElevatorConstants.PIDConstants.P);
     motor.config_kI(0, Constants.ElevatorConstants.PIDConstants.I);
     motor.config_kD(0, Constants.ElevatorConstants.PIDConstants.D);
@@ -135,7 +134,6 @@ public class Elevator extends SubsystemBase {
 
     motor.configMotionCruiseVelocity(Constants.ElevatorConstants.PIDConstants.cruiseVelocity);
     motor.configMotionAcceleration(Constants.ElevatorConstants.PIDConstants.acceleration);
-
 
   }
 }
