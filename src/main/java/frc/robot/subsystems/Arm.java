@@ -26,23 +26,24 @@ public class Arm extends SubsystemBase {
     BOTTOM_HARD_STOP(0.1),
     TOP_HARD_STOP(212.9),
     BOTTOM_SOFT_STOP(10.1),
-    TOP_SOFT_STOP(202.9),
+    TOP_SOFT_STOP(207.9),
     PARALLEL_TO_ELEVATOR(45.0),
-    // The following are all guesses and need to be updated.
-    NO_MOVE_BOTTOM(45.0),
-    NO_MOVE_TOP(45.0),
-    CONE_SCORE_TOP_ROW(180.0),
-    CONE_SCORE_MID_ROW(150.0),
-    CUBE_SCORE_TOP_ROW(170.0),
-    CUBE_SCORE_MID_ROW(140.0),
-    SPINDEXER_GRAB(30.0),
-    FLOOR_GRAB(65.0),
-    INTAKE_BACKSTOP(35.0),
-    ;
+    CONE_SCORE_TOP(190.0),
+    CONE_SCORE_MID(207.9),
+    CONE_SCORE_LOW(130.0),
+    CUBE_SCORE_TOP(190.0),
+    CUBE_SCORE_MID(190.0),
+    CUBE_SCORE_LOW(130.0),
+    SPINDEXER_GRAB(10.0),
+    FLOOR_GRAB(90.0),
+    INTAKE_BACKSTOP(39.0),
+    MOVEMENT_THRESHOLD_2(15.0),
+    MOVEMENT_THRESHOLD_6(27.0),
+    MOVEMENT_THRESHOLD_9(90.0);
 
     public final double positionDegrees;
 
-    private ArmPosition(double positionDegrees){
+    private ArmPosition(double positionDegrees) {
       this.positionDegrees = positionDegrees;
     }
   }
@@ -64,7 +65,7 @@ public class Arm extends SubsystemBase {
   public void periodic() {
     if (dashboardCounter++ >= 5) {
 
-      if (hasArmMotorReset()){
+      if (hasArmMotorReset()) {
         setArmMotorEncoder();
       }
 
@@ -72,7 +73,6 @@ public class Arm extends SubsystemBase {
       SmartDashboard.putNumber("Arm Motor Encoder Raw", getArmMotorPositionRaw());
 
       SmartDashboard.putNumber("Arm Motor Encoder Degrees", getArmMotorPositionDeg());
-
 
       dashboardCounter = 0;
     }
@@ -88,7 +88,7 @@ public class Arm extends SubsystemBase {
     return armMotor.getSensorCollection().getIntegratedSensorPosition();
   }
 
-  public double getArmMotorPositionDeg(){
+  public double getArmMotorPositionDeg() {
     return getArmMotorPositionRaw() / Constants.ArmConstants.motorEncoderClicksPerDegree;
   }
 
@@ -122,7 +122,7 @@ public class Arm extends SubsystemBase {
     return armMotor.hasResetOccurred();
   }
 
-  public void setPIDConstants(){
+  public void setPIDConstants() {
     armMotor.config_kP(0, Constants.ArmConstants.PIDConstants.P);
     armMotor.config_kI(0, Constants.ArmConstants.PIDConstants.I);
     armMotor.config_kD(0, Constants.ArmConstants.PIDConstants.D);

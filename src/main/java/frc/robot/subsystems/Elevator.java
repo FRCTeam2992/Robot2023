@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -36,6 +35,27 @@ public class Elevator extends SubsystemBase {
 
     private ElevatorState(boolean solenoidSetting) {
       this.solenoidSetting = solenoidSetting;
+    }
+  }
+
+  public enum ElevatorPosition {
+    HARD_STOP_TOP(32.25),
+    HARD_STOP_BOTTOM(0.0),
+    SOFT_STOP_TOP(31.75),
+    SOFT_STOP_BOTTOM(0.5),
+    CUBE_LOW(0.5),
+    CUBE_MID(1.5),
+    CUBE_TOP(16.5),
+    CONE_LOW(0.5),
+    CONE_MID(0.5),
+    CONE_TOP(27.7),
+    INTAKE_BACKSTOP(6.0),
+    SPINDEXER_GRAB(3.0);
+
+    public final double positionInches;
+
+    private ElevatorPosition(double positionInches) {
+      this.positionInches = positionInches;
     }
   }
 
@@ -86,12 +106,20 @@ public class Elevator extends SubsystemBase {
   }
 
   public void setElevatorSpeed(double speed) {
+    if (getElevatorInches() < ElevatorPosition.SOFT_STOP_BOTTOM.positionInches) {
+      speed = Math.max(0.0, speed);
+    } else if (getElevatorInches() > ElevatorPosition.SOFT_STOP_TOP.positionInches) {
+      speed = Math.min(0.0, speed);
+    }
     elevatorMotorLead.set(TalonFXControlMode.PercentOutput, speed);
   }
 
   public void setElevatorPosition(double inches) {
-    inches = Math.min(inches, 28);
-    inches = Math.max(inches, 10);
+    if (inches < ElevatorPosition.SOFT_STOP_BOTTOM.positionInches) {
+      inches = ElevatorPosition.SOFT_STOP_BOTTOM.positionInches;
+    } else if (inches > ElevatorPosition.SOFT_STOP_TOP.positionInches) {
+      inches = ElevatorPosition.SOFT_STOP_TOP.positionInches;
+    }
     elevatorMotorLead.set(TalonFXControlMode.MotionMagic, inchesToEncoderClicks(inches));
     System.out.println("MOVING: " + inchesToEncoderClicks(inches));
   }
