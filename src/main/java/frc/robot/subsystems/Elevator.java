@@ -4,11 +4,12 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
+import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
-import edu.wpi.first.wpilibj.DigitalOutput;
+// import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -22,7 +23,7 @@ public class Elevator extends SubsystemBase {
 
   private Solenoid elevatorSolenoid;
 
-  private DigitalOutput elevatorLimitSwitch;
+  // private DigitalOutput elevatorLimitSwitch;
 
   private int dashboardCounter = 0;
 
@@ -40,16 +41,17 @@ public class Elevator extends SubsystemBase {
   /** Creates a new Elevator. */
   public Elevator() {
     elevatorMotorLead = new TalonFX(Constants.ElevatorConstants.DeviceIDs.elevatorMotorLead);
-    elevatorMotorLead.setInverted(false);
+    elevatorMotorLead.setInverted(TalonFXInvertType.Clockwise);
     elevatorMotorLead.setNeutralMode(NeutralMode.Brake);
 
     elevatorMotorFollow = new TalonFX(Constants.ElevatorConstants.DeviceIDs.elevatorMotorFollow);
-    elevatorMotorFollow.setInverted(false);
-    elevatorMotorFollow.follow(elevatorMotorLead);
+    elevatorMotorFollow.setNeutralMode(NeutralMode.Brake);
+    elevatorMotorFollow.set(TalonFXControlMode.Follower, elevatorMotorLead.getDeviceID());
+    elevatorMotorFollow.setInverted(TalonFXInvertType.OpposeMaster);
 
     elevatorSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.ElevatorConstants.DeviceIDs.elevatorSolenoid);
 
-    elevatorLimitSwitch = new DigitalOutput(Constants.ElevatorConstants.DeviceIDs.elevatorLimitSwitch);
+    // elevatorLimitSwitch = new DigitalOutput(Constants.ElevatorConstants.DeviceIDs.elevatorLimitSwitch);
   }
 
   @Override
@@ -62,17 +64,21 @@ public class Elevator extends SubsystemBase {
     }
   }
 
+  public void configureMotorFollowing() {
+    elevatorMotorFollow.set(TalonFXControlMode.Follower, elevatorMotorLead.getDeviceID());
+  }
+
   public double getElevatorPostion(){
     return elevatorMotorLead.getSensorCollection().getIntegratedSensorPosition();
   }
 
   public void setElevatorSpeed(double speed){
-    elevatorMotorLead.set(ControlMode.PercentOutput, speed);
+    elevatorMotorLead.set(TalonFXControlMode.PercentOutput, speed);
   }
 
 
   public void setElevatorPosition(double position){
-    elevatorMotorLead.set(ControlMode.MotionMagic, position);
+    elevatorMotorLead.set(TalonFXControlMode.MotionMagic, position);
   }
 
   public void setElevatorState(ElevatorState state){

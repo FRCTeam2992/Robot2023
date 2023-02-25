@@ -28,7 +28,7 @@ public class ButterflyWheels extends SubsystemBase {
     /** Creates a new ButterflyWheels. */
     public ButterflyWheels() {
         butterflyWheelsSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM,
-                Constants.ButterflyWheelsConstants.DeviceIDs.ButterflyWheelsSolenoid);
+                Constants.ButterflyWheelsConstants.DeviceIDs.butterflyWheelsSolenoid);
     }
 
     @Override
