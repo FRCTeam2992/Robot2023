@@ -34,7 +34,7 @@ public class FollowTrajectoryCommand extends SequentialCommandGroup {
             if (DriverStation.getAlliance() == DriverStation.Alliance.Red) {
               startPose = new Pose2d(startPose.getX(),
                   Constants.DrivetrainConstants.FieldSize.FIELD_WIDTH_METERS - startPose.getY(),
-                  startPose.getRotation());
+                   startPose.getRotation().times(-1));
             }
             mDrivetrain.resetOdometryToPose(startPose);
             System.out.println("DEBUG LOG: First path! Pose reset!");
