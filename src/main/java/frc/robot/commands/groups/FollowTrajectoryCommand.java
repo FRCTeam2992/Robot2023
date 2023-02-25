@@ -27,41 +27,44 @@ public class FollowTrajectoryCommand extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new InstantCommand(() -> {
-        // Reset odometry for the first path you run during auto
-        Pose2d startPose = traj.getInitialHolonomicPose();
-        if(isFirstPath){
-          if (DriverStation.getAlliance() == DriverStation.Alliance.Red) {
-            startPose = new Pose2d(startPose.getX(), Constants.DrivetrainConstants.FieldSize.FIELD_WIDTH_METERS - startPose.getY(),
-            startPose.getRotation());
+        new InstantCommand(() -> {
+          // Reset odometry for the first path you run during auto
+          if (isFirstPath) {
+            Pose2d startPose = traj.getInitialHolonomicPose();
+            if (DriverStation.getAlliance() == DriverStation.Alliance.Red) {
+              startPose = new Pose2d(startPose.getX(),
+                  Constants.DrivetrainConstants.FieldSize.FIELD_WIDTH_METERS - startPose.getY(),
+                  startPose.getRotation());
+            }
+            mDrivetrain.resetOdometryToPose(startPose);
+            System.out.println("DEBUG LOG: First path! Pose reset!");
+            SmartDashboard.putNumber("POST RESET: Odom X", mDrivetrain.getLatestSwervePose().getTranslation().getX());
+            SmartDashboard.putNumber("POST RESET: Odom Y", mDrivetrain.getLatestSwervePose().getTranslation().getY());
+            SmartDashboard.putNumber("POST RESET: Odom Rot",
+                mDrivetrain.getLatestSwervePose().getRotation().getDegrees());
           }
-          mDrivetrain.resetOdometryToPose(startPose);
-          System.out.println("DEBUG LOG: First path! Pose reset!");
-          SmartDashboard.putNumber("POST RESET: Odom X", mDrivetrain.getLatestSwervePose().getTranslation().getX());
-          SmartDashboard.putNumber("POST RESET: Odom Y", mDrivetrain.getLatestSwervePose().getTranslation().getY());
-          SmartDashboard.putNumber("POST RESET: Odom Rot", mDrivetrain.getLatestSwervePose().getRotation().getDegrees());
-        }
-      }),
-      new InstantCommand(() -> {
-        System.out.println("DEBUG LOG: initial holonomic pose = " + traj.getInitialHolonomicPose());
-        System.out.println("DEBUG LOG: initial gyro yaw (adj) = " + mDrivetrain.getGyroYaw());
-      }),
-      new PPSwerveControllerCommand(
-          traj, 
-          mDrivetrain.swerveDriveOdometry::getPoseMeters, // Pose supplier
-          mDrivetrain.swerveDriveKinematics, // SwerveDriveKinematics
-          new PIDController(1, 0, 0), // X controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
-          new PIDController(1, 0, 0), // Y controller (usually the same values as X controller)
-          new PIDController(0.5, 0, 0), // Rotation controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
-          mDrivetrain::setModuleStates, // Module states consumer
-          true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
-          mDrivetrain // Requires this drive subsystem
-      ),
-      new InstantCommand(() -> {
-        System.out.println("DEBUG LOG: completed holonomic pose = " + mDrivetrain.getLatestSwervePose());
-        System.out.println("DEBUG LOG: completed gyro yaw (adj) = " + mDrivetrain.getGyroYaw());
-      })
-    );
+        }),
+        new InstantCommand(() -> {
+          System.out.println("DEBUG LOG: initial holonomic pose = " + traj.getInitialHolonomicPose());
+          System.out.println("DEBUG LOG: initial gyro yaw (adj) = " + mDrivetrain.getGyroYaw());
+        }),
+        new PPSwerveControllerCommand(
+            traj,
+            mDrivetrain.swerveDriveOdometry::getPoseMeters, // Pose supplier
+            mDrivetrain.swerveDriveKinematics, // SwerveDriveKinematics
+            new PIDController(1, 0, 0), // X controller. Tune these values for your robot. Leaving them 0 will only use
+                                        // feedforwards.
+            new PIDController(1, 0, 0), // Y controller (usually the same values as X controller)
+            new PIDController(0.5, 0, 0), // Rotation controller. Tune these values for your robot. Leaving them 0 will
+                                          // only use feedforwards.
+            mDrivetrain::setModuleStates, // Module states consumer
+            true, // Should the path be automatically mirrored depending on alliance color.
+                  // Optional, defaults to true
+            mDrivetrain // Requires this drive subsystem
+        ),
+        new InstantCommand(() -> {
+          System.out.println("DEBUG LOG: completed holonomic pose = " + mDrivetrain.getLatestSwervePose());
+          System.out.println("DEBUG LOG: completed gyro yaw (adj) = " + mDrivetrain.getGyroYaw());
+        }));
   }
 }
-
