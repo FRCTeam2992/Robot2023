@@ -9,7 +9,7 @@ import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
-import edu.wpi.first.wpilibj.DigitalOutput;
+// import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -24,7 +24,7 @@ public class Elevator extends SubsystemBase {
 
   private Solenoid elevatorSolenoid;
 
-  private DigitalOutput elevatorLimitSwitch;
+  // private DigitalOutput elevatorLimitSwitch;
 
   private int dashboardCounter = 0;
 
@@ -54,8 +54,6 @@ public class Elevator extends SubsystemBase {
         Constants.ElevatorConstants.DeviceIDs.elevatorSolenoid);
 
     elevatorLimitSwitch = new DigitalOutput(Constants.ElevatorConstants.DeviceIDs.elevatorLimitSwitch);
-
-
   }
 
   @Override
