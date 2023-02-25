@@ -12,7 +12,6 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 // import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -58,7 +57,7 @@ public class Elevator extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     if(dashboardCounter++ >= 5){
-      SmartDashboard.putNumber("Elevator Encoder", getElevatorPostion());
+      // SmartDashboard.putNumber("Elevator Encoder", getElevatorPostion());
 
       dashboardCounter = 0;      
     }

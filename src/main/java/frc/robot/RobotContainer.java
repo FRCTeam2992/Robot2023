@@ -139,6 +139,12 @@ public class RobotContainer {
     SmartDashboard.putData("Move Elevator Up", new MoveElevator(mElevator, 0.1));
   
 
+    // SmartDashboard.putData("Scoring", new DeployElevator(mElevator, ElevatorState.Undeployed));
+    // SmartDashboard.putData("Loading", new DeployElevator(mElevator, ElevatorState.Deployed));
+
+    SmartDashboard.putData("Spin Intakwe", new MoveSpindexer(mSpindexer, .5));
+    
+
     SmartDashboard.putData("Spin Intake", new MoveSpindexer(mSpindexer, .5));
 
     SmartDashboard.putData("Reset Odometry", mDrivetrain.ResetOdometry());

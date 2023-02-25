@@ -22,8 +22,14 @@ public class Intake extends SubsystemBase {
   private int dashboardCounter = 0;
 
   public enum IntakeStates {
-    In,
-    Out
+    In(true),
+    Out(false);
+
+    public final boolean solenoidSeting;
+
+    private IntakeStates(boolean solenoidSeting){
+      this.solenoidSeting = solenoidSeting;
+    }
   }
 
   public Intake() {
@@ -51,21 +57,17 @@ public class Intake extends SubsystemBase {
   public void setIntakeTopSpeed(double speed) {
     intakeMotorTop.set(speed);
   }
-  
 
   public void setIntakeBottomSpeed(double speed) {
     intakeMotorBottom.set(speed);
   }
 
   public void setIntakeState(IntakeStates state) {
-    switch (state) {
-      case In:
-        intakeSolenoid.set(false);
-        break;
-      case Out:
-        intakeSolenoid.set(true);
-        break;
-    }
+    intakeSolenoid.set(state.solenoidSeting);
+  }
+
+  public void onDisable() {
+    setIntakeState(IntakeStates.In);
   }
   public void onDisable() {
     setIntakeState (IntakeStates.In);
