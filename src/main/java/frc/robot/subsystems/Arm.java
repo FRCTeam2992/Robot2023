@@ -10,6 +10,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoder;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -55,6 +56,9 @@ public class Arm extends SubsystemBase {
     armEncoder = new CANCoder(Constants.ArmConstants.DeviceIDs.armEncoder);
     armEncoder.configSensorDirection(true);
     armEncoder.configAbsoluteSensorRange(AbsoluteSensorRange.Unsigned_0_to_360);
+
+    // Wait for CANCoder config to take effect
+    Timer.delay(0.5);
 
     setArmMotorEncoder();
     setPIDConstants();
