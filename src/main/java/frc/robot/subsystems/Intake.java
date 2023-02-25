@@ -66,9 +66,7 @@ public class Intake extends SubsystemBase {
     intakeSolenoid.set(state.solenoidSeting);
   }
 
-  public void onDisable() {
-    setIntakeState(IntakeStates.In);
-  }
+
   public void onDisable() {
     setIntakeState (IntakeStates.In);
     setIntakeBottomSpeed(0.0);
