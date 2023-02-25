@@ -6,6 +6,7 @@ package frc.robot;
 
 import frc.robot.commands.DeployElevator;
 import frc.robot.commands.DriveSticks;
+import frc.robot.commands.SetClawState;
 import frc.robot.commands.MoveSpindexer;
 import frc.robot.commands.ResetGyro;
 import frc.robot.commands.SetSwerveAngle;
@@ -22,6 +23,7 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Spindexer;
+import frc.robot.subsystems.Claw.ClawState;
 import frc.robot.subsystems.Elevator.ElevatorState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -134,6 +136,10 @@ public class RobotContainer {
 
     SmartDashboard.putData("Scoring", new DeployElevator(mElevator, ElevatorState.Undeployed));
     SmartDashboard.putData("Loading", new DeployElevator(mElevator, ElevatorState.Deployed));
+
+    SmartDashboard.putData("Open Claw", new SetClawState(mClaw, ClawState.Opened));
+    SmartDashboard.putData("Close Claw", new SetClawState(mClaw, ClawState.Closed));
+
     SmartDashboard.putData("Move Elevator Down", new MoveElevator(mElevator, -0.1));
     SmartDashboard.putData("Stop Elevator", new MoveElevator(mElevator, 0.0));
     SmartDashboard.putData("Move Elevator Up", new MoveElevator(mElevator, 0.1));
