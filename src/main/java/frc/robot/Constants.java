@@ -168,6 +168,21 @@ public static class SpindexerConstants {
       public static int armMotor = 27;
       public static int armEncoder = 27;
     }
+
+    public static class PIDConstants {
+      public static double P = 1;
+      public static double I = 0;
+      public static double D = 0;
+      public static double FF = 0;
+
+      public static double cruiseVelocity = 7280;
+      public static double acceleration = 29000;
+    }
+    public static double gearRatio = 128.0;
+    public static double motorEncoderClicksPerDegree = (2048.0 * gearRatio) / 360.0;
+
+    public static double CANCoderOffset = -77.96;
+
   }
 
 

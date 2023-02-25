@@ -10,6 +10,7 @@ import frc.robot.commands.MoveArm;
 import frc.robot.commands.SetClawState;
 import frc.robot.commands.MoveSpindexer;
 import frc.robot.commands.ResetGyro;
+import frc.robot.commands.SetArmPosition;
 import frc.robot.commands.SetSwerveAngle;
 import frc.robot.commands.MoveElevator;
 import frc.robot.commands.StopArm;
@@ -166,7 +167,14 @@ public class RobotContainer {
 
     SmartDashboard.putData("Test Path Planner Path", new FollowTrajectoryCommand(mDrivetrain, mDrivetrain.testPath, true));
 
+    SmartDashboard.putData("Arm to 30", new SetArmPosition(mArm, 30));
+    SmartDashboard.putData("Arm to 150", new SetArmPosition(mArm, 150)); 
+    SmartDashboard.putData("Arm to 90", new SetArmPosition(mArm, 90)); 
+    SmartDashboard.putData("Arm to 200", new SetArmPosition(mArm, 200)); 
     
+
+
+
   }   
 
   public void addSubsystemsToDashboard() {
