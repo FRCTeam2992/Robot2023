@@ -42,7 +42,7 @@ public class Arm extends SubsystemBase {
 
     public final double positionDegrees;
 
-    private ArmPosition(double positionDegrees){
+    private ArmPosition(double positionDegrees) {
       this.positionDegrees = positionDegrees;
     }
   }
@@ -64,7 +64,7 @@ public class Arm extends SubsystemBase {
   public void periodic() {
     if (dashboardCounter++ >= 5) {
 
-      if (hasArmMotorReset()){
+      if (hasArmMotorReset()) {
         setArmMotorEncoder();
       }
 
@@ -72,7 +72,6 @@ public class Arm extends SubsystemBase {
       SmartDashboard.putNumber("Arm Motor Encoder Raw", getArmMotorPositionRaw());
 
       SmartDashboard.putNumber("Arm Motor Encoder Degrees", getArmMotorPositionDeg());
-
 
       dashboardCounter = 0;
     }
@@ -88,7 +87,7 @@ public class Arm extends SubsystemBase {
     return armMotor.getSensorCollection().getIntegratedSensorPosition();
   }
 
-  public double getArmMotorPositionDeg(){
+  public double getArmMotorPositionDeg() {
     return getArmMotorPositionRaw() / Constants.ArmConstants.motorEncoderClicksPerDegree;
   }
 
@@ -122,7 +121,7 @@ public class Arm extends SubsystemBase {
     return armMotor.hasResetOccurred();
   }
 
-  public void setPIDConstants(){
+  public void setPIDConstants() {
     armMotor.config_kP(0, Constants.ArmConstants.PIDConstants.P);
     armMotor.config_kI(0, Constants.ArmConstants.PIDConstants.I);
     armMotor.config_kD(0, Constants.ArmConstants.PIDConstants.D);
