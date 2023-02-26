@@ -167,12 +167,6 @@ public class RobotContainer {
     SmartDashboard.putData("Move Elevator Down", new MoveElevator(mElevator, -0.1));
     SmartDashboard.putData("Stop Elevator", new MoveElevator(mElevator, 0.0));
     SmartDashboard.putData("Move Elevator Up", new MoveElevator(mElevator, 0.1));
-
-    // SmartDashboard.putData("Elevator to 0 inches", new
-    // SetElevatorPosition(mElevator, 0));
-    SmartDashboard.putData("Elevator to 12 inches", new SetElevatorPosition(mElevator, 12));
-    SmartDashboard.putData("Elevator to 23 inches", new SetElevatorPosition(mElevator, 23));
-
     SmartDashboard.putData("Zero Elevator Encoder", new ZeroElevatorEncoders(mElevator));
 
     SmartDashboard.putData("Spin Intake", new MoveSpindexer(mSpindexer, .5));
