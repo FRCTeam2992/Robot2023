@@ -94,19 +94,19 @@ public class RobotContainer {
    */
   private void configureBindings() {
     // Based off of a boolean in ExampleSubsystem
-    // new Trigger(m_exampleSubsystem::exampleCondition).onTrue(new ExampleCommand(m_exampleSubsystem));
+    // new Trigger(m_exampleSubsystem::exampleCondition).onTrue(new
+    // ExampleCommand(m_exampleSubsystem));
 
     // Button Example (B, While Held)
     // controller0.b().whileTrue(new ExampleCommand(m_exampleSubsystem));
 
     // Trigger Example (Left Trigger at 30%, When Pressed)
-    // controller0.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, .3).onTrue(new ExampleCommand(m_exampleSubsystem));
+    // controller0.axisGreaterThan(XboxController.Axis.kLeftTrigger.value,
+    // .3).onTrue(new ExampleCommand(m_exampleSubsystem));
 
-    controller0.leftBumper().onTrue(new MoveSpindexer(mSpindexer, -.33));
-    controller0.leftBumper().onFalse(new MoveSpindexer(mSpindexer, 0));
+    controller0.leftBumper().whileTrue(new MoveSpindexer(mSpindexer, -.33));
 
-    controller0.rightBumper().onTrue(new MoveSpindexer(mSpindexer, .33));
-    controller0.rightBumper().onFalse(new MoveSpindexer(mSpindexer, 0));
+    controller0.rightBumper().whileTrue(new MoveSpindexer(mSpindexer, .33));
 
     controller0.start().onTrue(new ResetGyro(mDrivetrain));
 
@@ -117,29 +117,34 @@ public class RobotContainer {
 
     controller0.b().onTrue(new DeployIntake(mIntake, IntakeStates.In));
     controller0.y().onTrue(new DeployIntake(mIntake, IntakeStates.Out));
-    
 
+    // controller0.axisGreaterThan(XboxController.Axis.kLeftTrigger.value,
+    // .1).onTrue(new MoveSpindexer(mSpindexer, -controller0.getLeftTriggerAxis()));
+    // controller0.axisGreaterThan(XboxController.Axis.kLeftTrigger.value,
+    // .1).onFalse(new MoveSpindexer(mSpindexer, 0.0));
 
-    // controller0.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, .1).onTrue(new MoveSpindexer(mSpindexer, -controller0.getLeftTriggerAxis()));
-    // controller0.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, .1).onFalse(new MoveSpindexer(mSpindexer, 0.0));
-
-    // controller0.axisGreaterThan(XboxController.Axis.kRightTrigger.value, .1).onTrue(new MoveSpindexer(mSpindexer, controller0.getRightTriggerAxis()));
-    // controller0.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, .1).onFalse(new MoveSpindexer(mSpindexer, 0.0));
-
-
+    // controller0.axisGreaterThan(XboxController.Axis.kRightTrigger.value,
+    // .1).onTrue(new MoveSpindexer(mSpindexer, controller0.getRightTriggerAxis()));
+    // controller0.axisGreaterThan(XboxController.Axis.kLeftTrigger.value,
+    // .1).onFalse(new MoveSpindexer(mSpindexer, 0.0));
 
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     // new Trigger(m_exampleSubsystem::exampleCondition)
-    //     .onTrue(new ExampleCommand(m_exampleSubsystem));
+    // .onTrue(new ExampleCommand(m_exampleSubsystem));
 
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
+    // Schedule `exampleMethodCommand` when the Xbox controller's B button is
+    // pressed,
     // cancelling on release.
     // controller0.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
 
-    // controller0.a().onTrue(new DeployElevator(mElevator, ElevatorState.Undeployed));
-    // controller0.b().onTrue(new DeployElevator(mElevator, ElevatorState.Deployed));
-    // controller0.a().onTrue(new DeployElevator(mElevator, ElevatorState.Undeployed));
-    // controller0.b().onTrue(new DeployElevator(mElevator, ElevatorState.Deployed));
+    // controller0.a().onTrue(new DeployElevator(mElevator,
+    // ElevatorState.Undeployed));
+    // controller0.b().onTrue(new DeployElevator(mElevator,
+    // ElevatorState.Deployed));
+    // controller0.a().onTrue(new DeployElevator(mElevator,
+    // ElevatorState.Undeployed));
+    // controller0.b().onTrue(new DeployElevator(mElevator,
+    // ElevatorState.Deployed));
     // controller0.povUp().whileTrue(new MoveElevator(mElevator, 0.1));
     // controller0.povCenter().onTrue(new StopElevator(mElevator));
     // controller0.povDown().whileTrue(new MoveElevator(mElevator, -0.1));
@@ -149,21 +154,22 @@ public class RobotContainer {
     SmartDashboard.putData("Move Elevator Down", new MoveElevator(mElevator, -0.1));
     SmartDashboard.putData("Stop Elevator", new MoveElevator(mElevator, 0.0));
     SmartDashboard.putData("Move Elevator Up", new MoveElevator(mElevator, 0.1));
-  
 
-    // SmartDashboard.putData("Scoring", new DeployElevator(mElevator, ElevatorState.Undeployed));
-    // SmartDashboard.putData("Loading", new DeployElevator(mElevator, ElevatorState.Deployed));
+    // SmartDashboard.putData("Scoring", new DeployElevator(mElevator,
+    // ElevatorState.Undeployed));
+    // SmartDashboard.putData("Loading", new DeployElevator(mElevator,
+    // ElevatorState.Deployed));
 
     SmartDashboard.putData("Spin Intakwe", new MoveSpindexer(mSpindexer, .5));
-    
 
     SmartDashboard.putData("Spin Intake", new MoveSpindexer(mSpindexer, .5));
 
     SmartDashboard.putData("Reset Odometry", mDrivetrain.ResetOdometry());
     SmartDashboard.putData("0 Wheels", new SetSwerveAngle(mDrivetrain, 0, 0, 0, 0));
 
-    SmartDashboard.putData("Test Path Planner Path", new FollowTrajectoryCommand(mDrivetrain, mDrivetrain.testPath, true));
-  }   
+    SmartDashboard.putData("Test Path Planner Path",
+        new FollowTrajectoryCommand(mDrivetrain, mDrivetrain.testPath, true));
+  }
 
   public void addSubsystemsToDashboard() {
     SmartDashboard.putData("Drivetrain", mDrivetrain);
@@ -181,8 +187,8 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   // public Command getAutonomousCommand() {
-  //   // An example command will be run in autonomous
-  //   return Autos.exampleAuto(m_exampleSubsystem);
+  // // An example command will be run in autonomous
+  // return Autos.exampleAuto(m_exampleSubsystem);
   // }
 
   public CommandXboxController getController0() {
