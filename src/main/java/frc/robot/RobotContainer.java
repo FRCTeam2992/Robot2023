@@ -5,7 +5,6 @@
 package frc.robot;
 
 import frc.robot.commands.DeployElevator;
-import frc.robot.commands.DeployIntake;
 import frc.robot.commands.DriveSticks;
 import frc.robot.commands.MoveSpindexer;
 import frc.robot.commands.ResetGyro;
@@ -25,7 +24,6 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Spindexer;
 import frc.robot.subsystems.Elevator.ElevatorState;
-import frc.robot.subsystems.Intake.IntakeStates;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -114,9 +112,6 @@ public class RobotContainer {
     controller0.a().onFalse(new MoveIntake(mIntake, 0, 0));
 
     controller0.x().whileTrue(new MoveIntake(mIntake, -1, -1));
-
-    controller0.b().onTrue(new DeployIntake(mIntake, IntakeStates.In));
-    controller0.y().onTrue(new DeployIntake(mIntake, IntakeStates.Out));
 
     // controller0.axisGreaterThan(XboxController.Axis.kLeftTrigger.value,
     // .1).onTrue(new MoveSpindexer(mSpindexer, -controller0.getLeftTriggerAxis()));

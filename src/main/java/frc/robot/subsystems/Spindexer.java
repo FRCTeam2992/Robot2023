@@ -66,6 +66,5 @@ public class Spindexer extends SubsystemBase {
     spindexerMotor.getPIDController().setI(Constants.SpindexerConstants.PIDConstants.I);
     spindexerMotor.getPIDController().setD(Constants.SpindexerConstants.PIDConstants.D);
     spindexerMotor.getPIDController().setFF(Constants.SpindexerConstants.PIDConstants.FF);
-
   }
 }

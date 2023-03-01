@@ -130,11 +130,24 @@ public final class Constants {
     }
   }
 
+  public static class IntakeDeployConstants {
+    public static class DeviceIDs {
+      public static int intakeDeployMotor = 23;
+
+      public static int intakeDeployLimitSwitch = 0;
+    }
+
+    public static class PIDConstants {
+      public static double P = 0;
+      public static double I = 0;
+      public static double D = 0;
+      public static double FF = 0;
+    }
+  }
+
   public static class SpindexerConstants {
     public static class DeviceIDs {
       public static int spindexerMotor = 24;
-
-      public static int spindexerLimitSwitch = 0;
     }
 
     public static class PIDConstants {
@@ -145,7 +158,6 @@ public final class Constants {
     }
 
     public static double gearRatio = 116.0 + (2 / 3);
-
   }
 
   public static class ElevatorConstants {
@@ -154,8 +166,6 @@ public final class Constants {
       public static int elevatorMotorFollow = 26;
 
       public static int elevatorSolenoid = 1;
-
-      public static int elevatorLimitSwitch = 0;
     }
 
     public static class PIDConstants {
