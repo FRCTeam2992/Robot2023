@@ -117,7 +117,18 @@ public class Arm extends SubsystemBase {
   }
 
   public void setArmMotorEncoder() {
-    double value = getArmCANCoderPositionCorrected() * Constants.ArmConstants.motorEncoderClicksPerDegree;
+    double value = getArmCANCoderPositionCorrected();
+
+    // If arm stowed at top of range, we have to adjust for mechanical chain slop
+    if (value > Constants.ArmConstants.ArmSlopConstants.topZoneEdge) {
+      value -= Constants.ArmConstants.ArmSlopConstants.topZoneAdjustment;
+    } else if (value < Constants.ArmConstants.ArmSlopConstants.bottomZoneEdge) {
+      value -= Constants.ArmConstants.ArmSlopConstants.bottomZoneAdjustment;
+    }
+
+    // Convert from degrees to encoder clicks
+    value *= Constants.ArmConstants.motorEncoderClicksPerDegree;
+
     armMotor.setSelectedSensorPosition(value);
   }
 
