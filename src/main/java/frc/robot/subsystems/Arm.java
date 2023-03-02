@@ -24,10 +24,10 @@ public class Arm extends SubsystemBase {
   private int dashboardCounter;
 
   public enum ArmPosition {
-    BOTTOM_HARD_STOP(0.1),
-    TOP_HARD_STOP(212.9),
-    BOTTOM_SOFT_STOP(10.1),
-    TOP_SOFT_STOP(202.9),
+    BOTTOM_HARD_STOP(-9.0),
+    TOP_HARD_STOP(221.0),
+    BOTTOM_SOFT_STOP(-4.0),
+    TOP_SOFT_STOP(216.0),
     PARALLEL_TO_ELEVATOR(45.0),
     // The following are all guesses and need to be updated.
     NO_MOVE_BOTTOM(45.0),
@@ -96,9 +96,9 @@ public class Arm extends SubsystemBase {
   }
 
   public void setArmSpeed(double speed) {
-    if (getArmCANCoderPositionCorrected() > ArmPosition.TOP_SOFT_STOP.positionDegrees) {
+    if (getArmMotorPositionDeg() > ArmPosition.TOP_SOFT_STOP.positionDegrees) {
       speed = Math.min(0.0, speed);
-    } else if (getArmCANCoderPositionCorrected() < ArmPosition.BOTTOM_SOFT_STOP.positionDegrees) {
+    } else if (getArmMotorPositionDeg() < ArmPosition.BOTTOM_SOFT_STOP.positionDegrees) {
       speed = Math.max(0.0, speed);
     }
     armMotor.set(ControlMode.PercentOutput, speed);
