@@ -186,6 +186,15 @@ public final class Constants {
 
     public static double CANCoderOffset = -77.96;
 
+    public static class ArmSlopConstants {
+      // All of these constants need to be validated!
+      public static double topZoneEdge = 200; // Higher angle than this assume arm slop, adjust encoder by slop amount
+      public static double topZoneAdjustment = 9; // True encoder arm position this much lower than Cancoder in this
+                                                  // zone
+      public static double bottomZoneEdge = 30; // If lower angle than this assume arm slop, adjust encoder by slop
+                                                // amount
+      public static double bottomZoneAdjustment = 9;
+    }
 
   }
 
