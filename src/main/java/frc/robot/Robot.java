@@ -100,6 +100,9 @@ public class Robot extends TimedRobot {
     // Set the Drive Motors Ramp Rate
     mRobotContainer.mDrivetrain.setDriveRampRate(0.0);
 
+    // Arm make sure encoders are current
+    mRobotContainer.mArm.setArmMotorEncoder(); // Reset each time we enter Teleop or Auto
+
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
@@ -129,6 +132,9 @@ public class Robot extends TimedRobot {
 
     mRobotContainer.mDrivetrain.setDriveCurrentLimit(40.0, 40.0);
     mRobotContainer.mDrivetrain.setDriveRampRate(0.25);
+
+    // Arm make sure encoders are current
+    mRobotContainer.mArm.setArmMotorEncoder(); // Reset each time we enter Teleop or Auto
   }
 
   /** This function is called periodically during operator control. */
