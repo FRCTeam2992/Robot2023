@@ -45,6 +45,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController controller0 = new CommandXboxController(0);
+  private final CommandXboxController controller1 = new CommandXboxController(1);
+  private final CommandXboxController controller2 = new CommandXboxController(2);
 
   public final Drivetrain mDrivetrain;
 
@@ -80,10 +82,12 @@ public class RobotContainer {
 
     mButterflyWheels = new ButterflyWheels();
 
-    // Add subsystems to the dashboard
+    // Add dashboard things
     addSubsystemsToDashboard();
     // Configure the trigger bindings
-    configureBindings();
+    configureShuffleboardBindings();
+    // configRealButtonBindings();
+    configTestButtonBindings();
   }
 
   /**
@@ -96,81 +100,42 @@ public class RobotContainer {
    * PS4} controllers or {@link
    * edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight joysticks}.
    */
-  private void configureBindings() {
-    // Based off of a boolean in ExampleSubsystem
-    // new Trigger(m_exampleSubsystem::exampleCondition).onTrue(new
-    // ExampleCommand(m_exampleSubsystem));
 
-    // Button Example (B, While Held)
-    // controller0.b().whileTrue(new ExampleCommand(m_exampleSubsystem));
+  private void configRealButtonBindings() {
+    /*
+     * DO NOT PUT TEST BUTTONS IN THIS
+     * ONLY REAL BUTTONS FOR COMPETITION
+     */
+  }
 
-    // Trigger Example (Left Trigger at 30%, When Pressed)
-    // controller0.axisGreaterThan(XboxController.Axis.kLeftTrigger.value,
-    // .3).onTrue(new ExampleCommand(m_exampleSubsystem));
+  private void configTestButtonBindings() {
+    /*
+     * DO NOT USE "controller0" or "controller1" here
+     */
+    controller2.povUp().whileTrue(new MoveElevator(mElevator, .1));
+    controller2.povDown().whileTrue(new MoveElevator(mElevator, -.1));
 
-    // controller0.leftBumper().onTrue(new MoveSpindexer(mSpindexer, -1));
-    // controller0.leftBumper().onFalse(new MoveSpindexer(mSpindexer, 0));
+    controller2.povLeft().whileTrue(new MoveArm(mArm, .1));
+    controller2.povRight().whileTrue(new MoveArm(mArm, -.1));
 
-    // controller0.rightBumper().onTrue(new MoveSpindexer(mSpindexer, .85));
-    // controller0.rightBumper().onFalse(new MoveSpindexer(mSpindexer, 0));
+    controller2.a().onTrue(new DeployElevator(mElevator, ElevatorState.Deployed));
+    controller2.b().onTrue(new DeployElevator(mElevator, ElevatorState.Undeployed));
 
-    // controller0.povUp().whileTrue(new MoveArm(mArm, .1));
-    // controller0.povUp().whileFalse(new MoveArm(mArm, 0));
-
-    // controller0.povCenter().whileTrue(new MoveArm(mArm, 0));
-
-    // controller0.povDown().whileTrue(new MoveArm(mArm, -.1));
-    // controller0.povDown().whileFalse(new MoveArm(mArm, 0));
-
-    // controller0.axisGreaterThan(XboxController.Axis.kRightTrigger.value, .3)
-    // .onTrue(new SetClawState(mClaw, ClawState.Closed));
-    // controller0.axisGreaterThan(XboxController.Axis.kRightTrigger.value, .3)
-    // .onFalse(new SetClawState(mClaw, ClawState.Opened));
-
-    controller0.start().onTrue(new ResetGyro(mDrivetrain));
-
-    controller0.x().whileTrue(new SetSwerveAngle(mDrivetrain, 45.0, -45.0, -45.0, 45.0));
-
-    controller0.a().onTrue(new DeployButterflyWheels(mButterflyWheels));
-
-    controller0.leftBumper().onTrue(new InstantCommand(() -> {
+    controller2.leftBumper().onTrue(new InstantCommand(() -> {
       mDrivetrain.setInSlowMode(true);
     }));
-    controller0.leftBumper().onFalse(new InstantCommand(() -> {
+    controller2.leftBumper().onFalse(new InstantCommand(() -> {
       mDrivetrain.setInSlowMode(false);
     }));
 
-    // controller0.axisGreaterThan(XboxController.Axis.kLeftTrigger.value,
-    // .1).onTrue(new MoveSpindexer(mSpindexer, -controller0.getLeftTriggerAxis()));
-    // controller0.axisGreaterThan(XboxController.Axis.kLeftTrigger.value,
-    // .1).onFalse(new MoveSpindexer(mSpindexer, 0.0));
+    controller2.axisGreaterThan(XboxController.Axis.kRightTrigger.value, .3)
+        .onTrue(new SetClawState(mClaw, ClawState.Closed));
+    controller2.axisGreaterThan(XboxController.Axis.kRightTrigger.value, .3)
+        .onFalse(new SetClawState(mClaw, ClawState.Opened));
 
-    // controller0.axisGreaterThan(XboxController.Axis.kRightTrigger.value,
-    // .1).onTrue(new MoveSpindexer(mSpindexer, controller0.getRightTriggerAxis()));
-    // controller0.axisGreaterThan(XboxController.Axis.kLeftTrigger.value,
-    // .1).onFalse(new MoveSpindexer(mSpindexer, 0.0));
+  }
 
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    // new Trigger(m_exampleSubsystem::exampleCondition)
-    // .onTrue(new ExampleCommand(m_exampleSubsystem));
-
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is
-    // pressed,
-    // cancelling on release.
-    // controller0.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
-
-    // controller0.b().onTrue(new DeployElevator(mElevator,
-    // ElevatorState.Undeployed));
-    // controller0.a().onTrue(new DeployElevator(mElevator,
-    // ElevatorState.Deployed));
-    // controller0.a().onTrue(new DeployElevator(mElevator,
-    // ElevatorState.Undeployed));
-    // controller0.b().onTrue(new DeployElevator(mElevator,
-    // ElevatorState.Deployed));
-    // controller0.povUp().whileTrue(new MoveElevator(mElevator, 0.1));
-    // controller0.povCenter().onTrue(new StopElevator(mElevator));
-    // controller0.povDown().whileTrue(new MoveElevator(mElevator, -0.1));
-
+  private void configureShuffleboardBindings() {
     SmartDashboard.putData("Scoring", new DeployElevator(mElevator, ElevatorState.Undeployed));
     SmartDashboard.putData("Loading", new DeployElevator(mElevator, ElevatorState.Deployed));
 
