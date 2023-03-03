@@ -170,7 +170,6 @@ public final class Constants {
       public static int armMotor = 27;
       public static int armEncoder = 27;
     }
-    
 
     public static class PIDConstants {
       public static double P = 1;
@@ -185,7 +184,7 @@ public final class Constants {
     public static double gearRatio = 128.0;
     public static double motorEncoderClicksPerDegree = (2048.0 * gearRatio) / 360.0;
 
-    public static double CANCoderOffset = -69.7;
+    public static double CANCoderOffset = -67.9;
 
     public static class ArmSlopConstants {
       // All of these constants need to be validated!
