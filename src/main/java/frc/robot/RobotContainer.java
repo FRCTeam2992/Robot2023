@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import frc.robot.commands.DeployButterflyWheels;
 import frc.robot.commands.DeployElevator;
 import frc.robot.commands.DriveSticks;
 import frc.robot.commands.MoveArm;
@@ -33,6 +34,7 @@ import frc.robot.subsystems.Elevator.ElevatorPosition;
 import frc.robot.subsystems.Elevator.ElevatorState;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -118,8 +120,10 @@ public class RobotContainer {
 
     controller0.povRight().whileTrue(new MoveArm(mArm, .1));
     controller0.povRight().whileFalse(new MoveArm(mArm, 0));
+    // controller0.povUp().whileTrue(new MoveArm(mArm, .1));
+    // controller0.povUp().whileFalse(new MoveArm(mArm, 0));
 
-    controller0.povCenter().whileTrue(new MoveArm(mArm, 0));
+    // controller0.povCenter().whileTrue(new MoveArm(mArm, 0));
 
     controller0.povLeft().whileTrue(new MoveArm(mArm, -.1));
     controller0.povLeft().whileFalse(new MoveArm(mArm, 0));
@@ -129,7 +133,31 @@ public class RobotContainer {
     controller0.axisGreaterThan(XboxController.Axis.kRightTrigger.value, .3)
         .onFalse(new SetClawState(mClaw, ClawState.Opened));
 
+    // controller0.axisGreaterThan(XboxController.Axis.kLeftTrigger.value,
+    // .1).onTrue(new MoveSpindexer(mSpindexer, -controller0.getLeftTriggerAxis()));
+    // controller0.axisGreaterThan(XboxController.Axis.kLeftTrigger.value,
+    // .1).onFalse(new MoveSpindexer(mSpindexer, 0.0));
+
+    // controller0.povDown().whileTrue(new MoveArm(mArm, -.1));
+    // controller0.povDown().whileFalse(new MoveArm(mArm, 0));
+
+    // controller0.axisGreaterThan(XboxController.Axis.kRightTrigger.value, .3)
+    // .onTrue(new SetClawState(mClaw, ClawState.Closed));
+    // controller0.axisGreaterThan(XboxController.Axis.kRightTrigger.value, .3)
+    // .onFalse(new SetClawState(mClaw, ClawState.Opened));
+
     controller0.start().onTrue(new ResetGyro(mDrivetrain));
+
+    controller0.x().whileTrue(new SetSwerveAngle(mDrivetrain, 45.0, -45.0, -45.0, 45.0));
+
+    controller0.a().onTrue(new DeployButterflyWheels(mButterflyWheels));
+
+    controller0.leftBumper().onTrue(new InstantCommand(() -> {
+      mDrivetrain.setInSlowMode(true);
+    }));
+    controller0.leftBumper().onFalse(new InstantCommand(() -> {
+      mDrivetrain.setInSlowMode(false);
+    }));
 
     // controller0.axisGreaterThan(XboxController.Axis.kLeftTrigger.value,
     // .1).onTrue(new MoveSpindexer(mSpindexer, -controller0.getLeftTriggerAxis()));
@@ -150,11 +178,15 @@ public class RobotContainer {
     // cancelling on release.
     // controller0.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
 
-    controller0.b().onTrue(new DeployElevator(mElevator, ElevatorState.Undeployed));
-    controller0.a().onTrue(new DeployElevator(mElevator, ElevatorState.Deployed));
-    controller0.x().onTrue(new SetClawState(mClaw, ClawState.Closed));
-    controller0.y().onTrue(new SetClawState(mClaw, ClawState.Opened));
-    controller0.povUp().whileTrue(new MoveElevator(mElevator, 0.1));
+    // controller0.b().onTrue(new DeployElevator(mElevator,
+    // ElevatorState.Undeployed));
+    // controller0.a().onTrue(new DeployElevator(mElevator,
+    // ElevatorState.Deployed));
+    // controller0.a().onTrue(new DeployElevator(mElevator,
+    // ElevatorState.Undeployed));
+    // controller0.b().onTrue(new DeployElevator(mElevator,
+    // ElevatorState.Deployed));
+    // controller0.povUp().whileTrue(new MoveElevator(mElevator, 0.1));
     // controller0.povCenter().onTrue(new StopElevator(mElevator));
     controller0.povDown().whileTrue(new MoveElevator(mElevator, -0.1));
 
@@ -193,6 +225,9 @@ public class RobotContainer {
     SmartDashboard.putData("Arm Cube Mid", new SetArmPosition(mArm, ArmPosition.CUBE_SCORE_MID.positionDegrees));
     SmartDashboard.putData("Arm Cone Top", new SetArmPosition(mArm, ArmPosition.CONE_SCORE_TOP.positionDegrees));
     SmartDashboard.putData("Arm Cone Mid", new SetArmPosition(mArm, ArmPosition.CONE_SCORE_MID.positionDegrees));
+    SmartDashboard.putData("Deploy Butterfly Wheels", new DeployButterflyWheels(mButterflyWheels));
+    SmartDashboard.putData("Test Path Planner Path",
+        new FollowTrajectoryCommand(mDrivetrain, mDrivetrain.testPath, true));
   }
 
   public void addSubsystemsToDashboard() {
