@@ -126,7 +126,7 @@ public final class Constants {
       public static int intakeMotorTop = 21;
       public static int intakeMotorBottom = 22;
 
-      public static int intakeSolenoid = 0;
+      public static int intakeSolenoid = 4;
     }
   }
 
@@ -184,7 +184,17 @@ public final class Constants {
     public static double gearRatio = 128.0;
     public static double motorEncoderClicksPerDegree = (2048.0 * gearRatio) / 360.0;
 
-    public static double CANCoderOffset = -77.96;
+    public static double CANCoderOffset = -69.7;
+
+    public static class ArmSlopConstants {
+      // All of these constants need to be validated!
+      public static double topZoneEdge = 207; // Higher angle than this assume arm slop, adjust encoder by slop amount
+      public static double topZoneAdjustment = 9.6; // True encoder arm position this much lower than Cancoder in this
+      // zone
+      public static double bottomZoneEdge = 40; // If lower angle than this assume arm slop, adjust encoder by slop
+                                                // amount
+      public static double bottomZoneAdjustment = 9.6;
+    }
 
   }
 
