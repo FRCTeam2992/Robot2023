@@ -1,7 +1,7 @@
 package frc.lib.manipulator;
 
 import java.util.ArrayList;
-import java.awt.geom.Line2D;
+// import java.awt.geom.Line2D;
 
 public class WaypointPath {
     private Waypoint _start;
@@ -25,17 +25,14 @@ public class WaypointPath {
         if (endpointInNoFlyZone()) {
             throw new Error("No available path: endpoints in no fly zone");
         }
-        int intersections = 0 | (
-            pathSegmentIntersectsBoundary(
+        int intersections = 0 | (pathSegmentIntersectsBoundary(
                 Constants.Boundaries.BOUNDARY_BASE,
-                this._start, this._end)
-        ) | (
-            pathSegmentIntersectsBoundary(
-                Constants.Boundaries.BOUNDARY_CROSSBAR,
-                this._start, this._end) << 1
-        );
+                this._start, this._end))
+                | (pathSegmentIntersectsBoundary(
+                        Constants.Boundaries.BOUNDARY_CROSSBAR,
+                        this._start, this._end) << 1);
 
-        switch(intersections) {
+        switch (intersections) {
             case 0b00001:
                 // B1 crossed
                 break;
@@ -64,23 +61,24 @@ public class WaypointPath {
                 // B4 and B5 crossed
                 break;
         }
-        
-        if () {
-            this._path.set(3, Constants.Waypoints.WAYPOINT_Z3TL);
-        }
+
+        // if () {
+        // this._path.set(3, Constants.Waypoints.WAYPOINT_Z3TL);
+        // }
 
         return this._path;
     }
 
     private boolean endpointInNoFlyZone() {
-        return (Constants.Zones.ZONE_1.contains(this._start) ||
-                Constants.Zones.ZONE_1.contains(this._end) ||
-                Constants.Zones.ZONE_2.contains(this._start) ||
-                Constants.Zones.ZONE_2.contains(this._end) ||
-                Constants.Zones.ZONE_3.contains(this._start) ||
-                Constants.Zones.ZONE_3.contains(this._end) ||
-                Constants.Zones.ZONE_4.contains(this._start) ||
-                Constants.Zones.ZONE_4.contains(this._end));
+        // return (Constants.Zones.ZONE_1.contains(this._start) ||
+        // Constants.Zones.ZONE_1.contains(this._end) ||
+        // Constants.Zones.ZONE_2.contains(this._start) ||
+        // Constants.Zones.ZONE_2.contains(this._end) ||
+        // Constants.Zones.ZONE_3.contains(this._start) ||
+        // Constants.Zones.ZONE_3.contains(this._end) ||
+        // Constants.Zones.ZONE_4.contains(this._start) ||
+        // Constants.Zones.ZONE_4.contains(this._end));
+        return false;
     }
 
     private int pathSegmentIntersectsBoundary(NoFlyBoundary boundary, Waypoint p1, Waypoint p2) {
