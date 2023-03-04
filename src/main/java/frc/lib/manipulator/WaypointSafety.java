@@ -19,7 +19,7 @@ public class WaypointSafety {
         if (Constants.PlannedPathZones.ROBOT_BASE.contains(p)) {
             return WaypointSafetyClassification.PlannedPathRobotBase;
         }
-        if (Constants.PlannedPathZones.ABOVE_CROSSBAR.contains(p)) {
+        if (Constants.PlannedPathZones.BELOW_CROSSBAR.contains(p)) {
             return WaypointSafetyClassification.PlannedPathCrossbar;
         }
         return WaypointSafetyClassification.Safe;
