@@ -183,7 +183,7 @@ public final class Constants {
       // public static double cruiseVelocity = 7280;
       // public static double acceleration = 29000;
       public static double cruiseVelocity = 3000;
-      public static double acceleration = 6 ys000;
+      public static double acceleration = 6000;
 
     }
 
