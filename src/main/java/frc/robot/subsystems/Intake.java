@@ -4,9 +4,13 @@
 
 package frc.robot.subsystems;
 
+import javax.swing.text.StyleContext.SmallAttributeSet;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -31,6 +35,8 @@ public class Intake extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     if (dashboardCounter++ >= 5) {
+      SmartDashboard.putNumber("Intake Top Motor RPM", intakeMotorTop.getEncoder().getVelocity());
+      SmartDashboard.putNumber("Intake Bottom Motor RPM", intakeMotorBottom.getEncoder().getVelocity());
 
       dashboardCounter = 0;
     }

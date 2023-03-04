@@ -55,6 +55,7 @@ public class IntakeDeploy extends SubsystemBase {
     if (dashboardCounter++ > 5) {
       SmartDashboard.putBoolean("Intake Deploy Limit Raw", getIntakeDeployLimitSwitchRaw());
       SmartDashboard.putBoolean("Intake Deploy Limit Db", getIntakeDeployLimitSwitchDebounced());
+
       dashboardCounter = 0;
     }
 

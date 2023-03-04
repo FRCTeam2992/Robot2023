@@ -195,7 +195,7 @@ public final class Constants {
 
   public static class ClawConstants {
     public static class DeviceIDs {
-      public static int clawSolenoid = 2;
+      public static int clawSolenoid = 0;
 
     }
   }
