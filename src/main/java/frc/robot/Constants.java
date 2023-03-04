@@ -135,6 +135,8 @@ public final class Constants {
       public static int intakeDeployMotor = 23;
 
       public static int intakeDeployLimitSwitch = 0;
+      public static int intakeDeployLimitSwitch2 = 1;
+
 
     }
 

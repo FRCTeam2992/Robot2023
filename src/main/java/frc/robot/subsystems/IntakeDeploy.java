@@ -20,7 +20,9 @@ public class IntakeDeploy extends SubsystemBase {
   private CANSparkMax intakeDeployMotor;
 
   private DigitalOutput intakeDeployLimitSwitch;
+  private DigitalOutput intakeDeployLimitSwitch2;
   private Debouncer intakeDeployDebouncer;
+  private Debouncer intakeDeployDebouncer2;
 
   private double dashboardCounter = 0;
 
@@ -48,6 +50,9 @@ public class IntakeDeploy extends SubsystemBase {
 
     intakeDeployLimitSwitch = new DigitalOutput(Constants.IntakeDeployConstants.DeviceIDs.intakeDeployLimitSwitch);
     intakeDeployDebouncer = new Debouncer(.01, DebounceType.kBoth);
+
+    intakeDeployLimitSwitch2 = new DigitalOutput(Constants.IntakeDeployConstants.DeviceIDs.intakeDeployLimitSwitch2);
+    intakeDeployDebouncer2 = new Debouncer(.01, DebounceType.kBoth);
   }
 
   @Override
@@ -55,6 +60,7 @@ public class IntakeDeploy extends SubsystemBase {
     // This method will be called once per scheduler run
     if (dashboardCounter++ > 5) {
       SmartDashboard.putBoolean("Intake Deploy Limit Raw", getIntakeDeployLimitSwitchRaw());
+      SmartDashboard.putBoolean("Intake Deploy Limit Raw 2", getIntakeDeployLimitSwitch2Raw());
       SmartDashboard.putNumber("Intake Deploy Encoder", getIntakeDeployEncoderPosition());
       dashboardCounter = 0;
     }
@@ -68,6 +74,10 @@ public class IntakeDeploy extends SubsystemBase {
 
   public boolean getIntakeDeployLimitSwitchRaw() {
     return !intakeDeployLimitSwitch.get();
+  }
+
+  public boolean getIntakeDeployLimitSwitch2Raw() {
+    return !intakeDeployLimitSwitch2.get();
   }
 
   // public boolean getIntakeDeployLimitSwitchDebounced() {
