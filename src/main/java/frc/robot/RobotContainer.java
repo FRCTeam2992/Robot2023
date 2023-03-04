@@ -7,19 +7,23 @@ package frc.robot;
 import frc.robot.commands.DeployButterflyWheels;
 import frc.robot.commands.DeployElevator;
 import frc.robot.commands.DriveSticks;
+import frc.robot.commands.HomeIntakeDeploy;
 import frc.robot.commands.MoveArm;
 import frc.robot.commands.MoveSpindexer;
 import frc.robot.commands.ResetGyro;
 import frc.robot.commands.SetSwerveAngle;
 import frc.robot.commands.MoveElevator;
 import frc.robot.commands.MoveIntake;
+import frc.robot.commands.MoveIntakeDeploy;
 import frc.robot.commands.SetClawState;
 import frc.robot.commands.SetArmPosition;
 import frc.robot.commands.MoveElevator;
 import frc.robot.commands.SetElevatorPosition;
+import frc.robot.commands.SetIntakeSpeed;
 import frc.robot.commands.StopArm;
 import frc.robot.commands.StopElevator;
 import frc.robot.commands.StopIntake;
+import frc.robot.commands.StopIntakeDeploy;
 import frc.robot.commands.StopSpindexer;
 import frc.robot.commands.ZeroElevatorEncoders;
 import frc.robot.commands.groups.FollowTrajectoryCommand;
@@ -29,6 +33,7 @@ import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.IntakeDeploy;
 import frc.robot.subsystems.Spindexer;
 import frc.robot.subsystems.Arm.ArmPosition;
 import frc.robot.subsystems.Claw.ClawState;
@@ -57,6 +62,7 @@ public class RobotContainer {
 
   public final Intake mIntake;
   public final Spindexer mSpindexer;
+  public final IntakeDeploy mIntakeDeploy;
 
   public final Elevator mElevator;
   public final Arm mArm;
@@ -76,6 +82,9 @@ public class RobotContainer {
 
     mSpindexer = new Spindexer();
     mSpindexer.setDefaultCommand(new StopSpindexer(mSpindexer));
+
+    mIntakeDeploy = new IntakeDeploy();
+    mIntakeDeploy.setDefaultCommand(new StopIntakeDeploy(mIntakeDeploy));
 
     mElevator = new Elevator();
     mElevator.setDefaultCommand(new StopElevator(mElevator));
@@ -108,39 +117,14 @@ public class RobotContainer {
     // new Trigger(m_exampleSubsystem::exampleCondition).onTrue(new
     // ExampleCommand(m_exampleSubsystem));
 
-    // Button Example (B, While Held)
-    // controller0.b().whileTrue(new ExampleCommand(m_exampleSubsystem));
+    controller0.povUp().whileTrue(new MoveIntakeDeploy(mIntakeDeploy, 0.1));
+    controller0.povDown().whileTrue(new MoveIntakeDeploy(mIntakeDeploy, -0.30));
+    controller0.povRight().onTrue(new HomeIntakeDeploy(mIntakeDeploy));
 
-    // Trigger Example (Left Trigger at 30%, When Pressed)
-    // controller0.axisGreaterThan(XboxController.Axis.kLeftTrigger.value,
-    // .3).onTrue(new ExampleCommand(m_exampleSubsystem));
+    controller0.a().whileTrue(new SetIntakeSpeed(mIntake, 1, 1));
+    controller0.b().whileTrue(new SetIntakeSpeed(mIntake, .75, 0));
 
-    // controller0.axisGreaterThan(XboxController.Axis.kLeftTrigger.value,
-    // .1).onTrue(new MoveSpindexer(mSpindexer, -controller0.getLeftTriggerAxis()));
-    // controller0.axisGreaterThan(XboxController.Axis.kLeftTrigger.value,
-    // .1).onFalse(new MoveSpindexer(mSpindexer, 0.0));
-
-    // controller0.axisGreaterThan(XboxController.Axis.kRightTrigger.value,
-    // .1).onTrue(new MoveSpindexer(mSpindexer, controller0.getRightTriggerAxis()));
-    // controller0.axisGreaterThan(XboxController.Axis.kLeftTrigger.value,
-    // .1).onFalse(new MoveSpindexer(mSpindexer, 0.0));
-
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    // new Trigger(m_exampleSubsystem::exampleCondition)
-    // .onTrue(new ExampleCommand(m_exampleSubsystem));
-
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is
-    // pressed,
-    // cancelling on release.
-    // controller0.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
-
-    // ElevatorState.Deployed));
-    // controller0.a().onTrue(new DeployElevator(mElevator,
-    // ElevatorState.Undeployed));
-    // controller0.b().onTrue(new DeployElevator(mElevator,
-    // ElevatorState.Deployed));
-    // controller0.povUp().whileTrue(new MoveElevator(mElevator, 0.1));
-    // controller0.povCenter().onTrue(new StopElevator(mElevator));
+    controller0.start().onTrue(new ResetGyro(mDrivetrain));
 
     SmartDashboard.putData("Scoring", new DeployElevator(mElevator, ElevatorState.Undeployed));
     SmartDashboard.putData("Loading", new DeployElevator(mElevator, ElevatorState.Deployed));

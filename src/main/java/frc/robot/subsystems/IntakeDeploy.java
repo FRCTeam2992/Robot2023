@@ -53,26 +53,29 @@ public class IntakeDeploy extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     if (dashboardCounter++ > 5) {
-      SmartDashboard.putBoolean("Intake Deploy Limit Raw", getIntakeDeployLimitSwitchRaw());
-      SmartDashboard.putBoolean("Intake Deploy Limit Db", getIntakeDeployLimitSwitchDebounced());
+
+      // SmartDashboard.putBoolean("Intake Deploy Limit Db",
+      // getIntakeDeployLimitSwitchDebounced());
 
       dashboardCounter = 0;
     }
+    SmartDashboard.putBoolean("Intake Deploy Limit Raw",
+        getIntakeDeployLimitSwitchRaw());
+    // if (getIntakeDeployLimitSwitchRaw() && goingToHome) {
 
-    if (getIntakeDeployLimitSwitchDebounced() && goingToHome) {
-
-      goingToHome = false; // it has reached home
-    }
+    // goingToHome = false; // it has reached home
+    // }
 
   }
 
   public boolean getIntakeDeployLimitSwitchRaw() {
-    return intakeDeployLimitSwitch.get();
+    return !intakeDeployLimitSwitch.get();
   }
 
-  public boolean getIntakeDeployLimitSwitchDebounced() {
-    return intakeDeployDebouncer.calculate(getIntakeDeployLimitSwitchDebounced());
-  }
+  // public boolean getIntakeDeployLimitSwitchDebounced() {
+  // return
+  // intakeDeployDebouncer.calculate(getIntakeDeployLimitSwitchDebounced());
+  // }
 
   public void setIntakeDeploySpeed(double speed) {
     intakeDeployMotor.set(speed);
