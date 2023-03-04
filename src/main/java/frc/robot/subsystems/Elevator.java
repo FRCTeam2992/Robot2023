@@ -27,6 +27,8 @@ public class Elevator extends SubsystemBase {
 
   private int dashboardCounter = 0;
 
+  private double targetHeightInch = 0;
+
   public enum ElevatorState {
     Undeployed(false),
     Deployed(true);
@@ -120,6 +122,7 @@ public class Elevator extends SubsystemBase {
     } else if (inches > ElevatorPosition.SOFT_STOP_TOP.positionInches) {
       inches = ElevatorPosition.SOFT_STOP_TOP.positionInches;
     }
+    targetHeightInch = inches;
     elevatorMotorLead.set(TalonFXControlMode.MotionMagic, inchesToEncoderClicks(inches));
     System.out.println("MOVING: " + inchesToEncoderClicks(inches));
   }
@@ -147,6 +150,10 @@ public class Elevator extends SubsystemBase {
 
   private double inchesToEncoderClicks(double inches) {
     return inches * Constants.ElevatorConstants.encoderClicksPerInch;
+  }
+
+  public boolean atPosition() {
+    return (Math.abs(targetHeightInch - getElevatorInches()) < Constants.ElevatorConstants.elevatorHeightToleranceInch);
   }
 
   public void zeroElevatorEncoders() {

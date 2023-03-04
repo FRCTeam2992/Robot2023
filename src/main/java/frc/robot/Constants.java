@@ -159,6 +159,7 @@ public final class Constants {
     public static int encoderClicksPerRevolution = 2048; // clicks per revolution
     public static double gearRatio = 6.0; // 6:1 ratio
     public static double sprocketPitchDiameter = 1.751; // inches
+    public static double elevatorHeightToleranceInch = 0.5; // Moves within .5 inch are "close enough
 
     public static double encoderClicksPerInch = (encoderClicksPerRevolution * gearRatio)
         / (sprocketPitchDiameter * Math.PI);
@@ -183,6 +184,7 @@ public final class Constants {
 
     public static double gearRatio = 128.0;
     public static double motorEncoderClicksPerDegree = (2048.0 * gearRatio) / 360.0;
+    public static double armAngleToleranceDeg = 1.0; // Moves within 1 degree are "close enough"
 
     public static double CANCoderOffset = -67.9;
 
