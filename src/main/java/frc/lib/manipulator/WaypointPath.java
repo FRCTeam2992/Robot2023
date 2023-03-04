@@ -27,24 +27,12 @@ public class WaypointPath {
         }
         int intersections = 0 | (
             pathSegmentIntersectsBoundary(
-                Constants.Boundaries.BOUNDARY_Z2L,
+                Constants.Boundaries.BOUNDARY_BASE,
                 this._start, this._end)
         ) | (
             pathSegmentIntersectsBoundary(
-                Constants.Boundaries.BOUNDARY_Z3L,
+                Constants.Boundaries.BOUNDARY_CROSSBAR,
                 this._start, this._end) << 1
-        ) | (
-            pathSegmentIntersectsBoundary(
-                Constants.Boundaries.BOUNDARY_Z3L,
-                this._start, this._end) << 2
-        ) | (
-            pathSegmentIntersectsBoundary(
-                Constants.Boundaries.BOUNDARY_Z3L,
-                this._start, this._end) << 3
-        ) | (
-            pathSegmentIntersectsBoundary(
-                Constants.Boundaries.BOUNDARY_Z3L,
-                this._start, this._end) << 4
         );
 
         switch(intersections) {
