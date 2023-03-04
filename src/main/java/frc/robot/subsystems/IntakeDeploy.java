@@ -61,6 +61,8 @@ public class IntakeDeploy extends SubsystemBase {
     if (dashboardCounter++ > 5) {
       SmartDashboard.putBoolean("Intake Deploy Limit Raw", getIntakeDeployLimitSwitchRaw());
       SmartDashboard.putBoolean("Intake Deploy Limit Raw 2", getIntakeDeployLimitSwitch2Raw());
+      SmartDashboard.putBoolean("Intake Deploy Limit Debounced", getIntakeDeployLimitSwitchDebounced());
+      SmartDashboard.putBoolean("Intake Deploy Limit Debounced 2", getIntakeDeployLimitSwitch2Debounced());
       SmartDashboard.putNumber("Intake Deploy Encoder", getIntakeDeployEncoderPosition());
       dashboardCounter = 0;
     }
@@ -80,10 +82,13 @@ public class IntakeDeploy extends SubsystemBase {
     return !intakeDeployLimitSwitch2.get();
   }
 
-  // public boolean getIntakeDeployLimitSwitchDebounced() {
-  // return
-  // intakeDeployDebouncer.calculate(getIntakeDeployLimitSwitchDebounced());
-  // }
+  public boolean getIntakeDeployLimitSwitchDebounced() {
+    return intakeDeployDebouncer.calculate(getIntakeDeployLimitSwitchRaw());
+  }
+
+  public boolean getIntakeDeployLimitSwitch2Debounced() {
+    return intakeDeployDebouncer2.calculate(getIntakeDeployLimitSwitch2Raw());
+  }
 
   public void setIntakeDeploySpeed(double speed) {
     intakeDeployMotor.set(speed);
