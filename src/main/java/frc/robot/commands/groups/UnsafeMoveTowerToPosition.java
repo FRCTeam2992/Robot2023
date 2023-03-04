@@ -5,6 +5,8 @@
 package frc.robot.commands.groups;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.lib.manipulator.Waypoint;
 import frc.robot.commands.SetArmPosition;
 import frc.robot.commands.SetElevatorPosition;
@@ -16,11 +18,13 @@ import frc.robot.subsystems.Elevator;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class UnsafeMoveTowerToPosition extends ParallelCommandGroup {
   /** Creates a new UnsafeMoveTowerToPosition. */
-  public UnsafeMoveTowerToPosition(Elevator mElevator, Arm mArm, Waypoint point) {
+
+  public UnsafeMoveTowerToPosition(Elevator mElevator, Arm mArm, Waypoint point, boolean hold) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-        new SetElevatorPosition(mElevator, point.height()),
-        new SetArmPosition(mArm, point.angle()));
+        new SetElevatorPosition(mElevator, point.height(), hold),
+        new SetArmPosition(mArm, point.angle(), hold),
+        new PrintCommand("UnsafeTowerMove to (" + point.height() + "," + point.angle() + ")"));
   }
 }

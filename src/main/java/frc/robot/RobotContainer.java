@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import frc.lib.manipulator.Waypoint;
 import frc.robot.commands.DeployButterflyWheels;
 import frc.robot.commands.DeployElevator;
 import frc.robot.commands.DriveSticks;
@@ -19,8 +20,10 @@ import frc.robot.commands.StopArm;
 import frc.robot.commands.StopElevator;
 import frc.robot.commands.StopIntake;
 import frc.robot.commands.StopSpindexer;
+import frc.robot.commands.TestTowerSafeMove;
 import frc.robot.commands.ZeroElevatorEncoders;
 import frc.robot.commands.groups.FollowTrajectoryCommand;
+import frc.robot.commands.groups.SafeDumbTowerToPosition;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.ButterflyWheels;
 import frc.robot.subsystems.Claw;
@@ -119,14 +122,14 @@ public class RobotContainer {
     // controller0.rightBumper().onFalse(new MoveSpindexer(mSpindexer, 0));
 
     controller0.povRight().whileTrue(new MoveArm(mArm, .1));
-    controller0.povRight().whileFalse(new MoveArm(mArm, 0));
+    // controller0.povRight().whileFalse(new MoveArm(mArm, 0));
     // controller0.povUp().whileTrue(new MoveArm(mArm, .1));
     // controller0.povUp().whileFalse(new MoveArm(mArm, 0));
 
     // controller0.povCenter().whileTrue(new MoveArm(mArm, 0));
 
     controller0.povLeft().whileTrue(new MoveArm(mArm, -.1));
-    controller0.povLeft().whileFalse(new MoveArm(mArm, 0));
+    // controller0.povLeft().whileFalse(new MoveArm(mArm, 0));
 
     controller0.axisGreaterThan(XboxController.Axis.kRightTrigger.value, .3)
         .onTrue(new SetClawState(mClaw, ClawState.Closed));
@@ -186,7 +189,7 @@ public class RobotContainer {
     // ElevatorState.Undeployed));
     // controller0.b().onTrue(new DeployElevator(mElevator,
     // ElevatorState.Deployed));
-    // controller0.povUp().whileTrue(new MoveElevator(mElevator, 0.1));
+    controller0.povUp().whileTrue(new MoveElevator(mElevator, 0.1));
     // controller0.povCenter().onTrue(new StopElevator(mElevator));
     controller0.povDown().whileTrue(new MoveElevator(mElevator, -0.1));
 
@@ -228,6 +231,11 @@ public class RobotContainer {
     SmartDashboard.putData("Deploy Butterfly Wheels", new DeployButterflyWheels(mButterflyWheels));
     SmartDashboard.putData("Test Path Planner Path",
         new FollowTrajectoryCommand(mDrivetrain, mDrivetrain.testPath, true));
+
+    SmartDashboard.putNumber("ElevTestMoveHeight", 20.0);
+    SmartDashboard.putNumber("ArmTestMoveAngle", 150);
+    SmartDashboard.putData("TestSafeDumbPath", new TestTowerSafeMove(mElevator, mArm));
+
   }
 
   public void addSubsystemsToDashboard() {
