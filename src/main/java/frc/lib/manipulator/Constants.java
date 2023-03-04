@@ -20,7 +20,7 @@ public final class Constants {
 
         public static final class NoFlyZones {
                 // Corner x, corner y, width, height
-                public static final NoFlyZone INSIDE_ROBOT_1 = new NoFlyZone(-10.0, -20.0, 2.0, 15.0);
+                public static final NoFlyZone INSIDE_ROBOT_1 = new NoFlyZone(-10.0, -20.0, -0.1, 15.0);
                 public static final NoFlyZone INSIDE_ROBOT_2 = new NoFlyZone(-10.0, 15.0, 6.0, 27.0);
                 public static final NoFlyZone INSIDE_ROBOT_3 = new NoFlyZone(-10.0, 27.0, 9.0, 90.0);
                 public static final NoFlyZone ELEVATOR_CROSSBAR = new NoFlyZone(
