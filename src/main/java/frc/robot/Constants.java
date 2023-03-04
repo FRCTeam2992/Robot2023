@@ -138,7 +138,6 @@ public final class Constants {
       public static int intakeDeployLimitSwitch = 0;
       public static int intakeDeployLimitSwitch2 = 1;
 
-
     }
 
     public static class PIDConstants {
@@ -170,7 +169,7 @@ public final class Constants {
     public static Waypoint scoreConeHigh = new Waypoint(23.5, 199.0);
     public static Waypoint scoreCubeMid = new Waypoint(0.0, 199.0);
     public static Waypoint scoreCubeHigh = new Waypoint(27.25, 166.0);
-    public static Waypoint intakeBackstop = new Waypoint(9.75, 38);
+    public static Waypoint intakeBackstop = new Waypoint(9.75, 35);
     public static Waypoint intakeGrab = new Waypoint(0.0, -4.0);
     public static Waypoint intakeRegrab = new Waypoint(7.75, 5.0);
     public static Waypoint floorGrab = new Waypoint(0.0, 92.0);

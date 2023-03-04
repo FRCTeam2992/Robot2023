@@ -24,6 +24,8 @@ import frc.robot.commands.StopIntakeDeploy;
 import frc.robot.commands.StopSpindexer;
 import frc.robot.commands.TestTowerSafeMove;
 import frc.robot.commands.ZeroElevatorEncoders;
+import frc.robot.commands.groups.AutoGroundIntakeCone;
+import frc.robot.commands.groups.AutoGroundIntakeCube;
 import frc.robot.commands.groups.FollowTrajectoryCommand;
 import frc.robot.commands.groups.SafeDumbTowerToPosition;
 import frc.robot.subsystems.Arm;
@@ -129,9 +131,9 @@ public class RobotContainer {
     // controller0.x().whileTrue(new MoveIntake(mIntake, 1, 1));// cones
 
     // A-Cube Intake
-    // controller0.a().onTrue(null);// Intakedeploy go to gorund spot
-    // controller0.a().whileTrue(new MoveIntake(mIntake, 1, 0));// cubes
 
+    controller0.a().onTrue(new AutoGroundIntakeCube(mElevator, mArm, mClaw, mIntake, mIntakeDeploy));// cubes
+    controller0.b().onTrue(new AutoGroundIntakeCone(mElevator, mArm, mClaw, mIntake, mIntakeDeploy));// cone
     // B-Retract Intake to Normal Spot(Inside Bumpers)
     // controller0.b().onTrue(null);// Retract intake
 
