@@ -10,7 +10,9 @@ public class WaypointSafety {
     }
 
     static public WaypointSafetyClassification nonSafeZones(Waypoint p) {
-        if (Constants.NoFlyZones.INSIDE_ROBOT.contains(p)) {
+        if (Constants.NoFlyZones.INSIDE_ROBOT_1.contains(p) ||
+                Constants.NoFlyZones.INSIDE_ROBOT_2.contains(p) ||
+                Constants.NoFlyZones.INSIDE_ROBOT_3.contains(p)) {
             return WaypointSafetyClassification.NoFlyRobotBase;
         }
         if (Constants.NoFlyZones.ELEVATOR_CROSSBAR.contains(p)) {
