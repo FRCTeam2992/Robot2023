@@ -46,7 +46,8 @@ public class RobotContainer {
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController controller0 = new CommandXboxController(0);
   private final CommandXboxController controller1 = new CommandXboxController(1);
-  private final CommandXboxController controller2 = new CommandXboxController(2);
+  private final CommandXboxController testController0 = new CommandXboxController(2);
+  private final CommandXboxController testController1 = new CommandXboxController(3);
 
   public final Drivetrain mDrivetrain;
 
@@ -106,31 +107,56 @@ public class RobotContainer {
      * DO NOT PUT TEST BUTTONS IN THIS
      * ONLY REAL BUTTONS FOR COMPETITION
      */
+    // -----------------------controller0-----------------------
+    // ABXY
+
+    // D-Pad
+    controller0.povDown().whileTrue(new SetSwerveAngle(mDrivetrain, 45, -45, -45, 45));
+    controller0.povLeft().whileTrue(new SetSwerveAngle(mDrivetrain, 45, -45, -45, 45));
+    controller0.povUp().whileTrue(new SetSwerveAngle(mDrivetrain, 45, -45, -45, 45));
+
+    controller0.povRight().onTrue(null);// HomeIntakeDeploy
+    // Bumper/Trigger
+    controller0.leftBumper().whileTrue(null);// Align while driving
+    // Back and Start
+
+    // Joysticks and Buttons
+
+    // -----------------------controller1-----------------------
+    // ABXY
+
+    // D-Pad
+
+    // Bumper/Trigger
+
+    // Back and Start
+
+    // Joysticks and Buttons
   }
 
   private void configTestButtonBindings() {
     /*
      * DO NOT USE "controller0" or "controller1" here
      */
-    controller2.povUp().whileTrue(new MoveElevator(mElevator, .1));
-    controller2.povDown().whileTrue(new MoveElevator(mElevator, -.1));
+    testController1.povUp().whileTrue(new MoveElevator(mElevator, .1));
+    testController1.povDown().whileTrue(new MoveElevator(mElevator, -.1));
 
-    controller2.povLeft().whileTrue(new MoveArm(mArm, .1));
-    controller2.povRight().whileTrue(new MoveArm(mArm, -.1));
+    testController1.povLeft().whileTrue(new MoveArm(mArm, .1));
+    testController1.povRight().whileTrue(new MoveArm(mArm, -.1));
 
-    controller2.a().onTrue(new DeployElevator(mElevator, ElevatorState.Deployed));
-    controller2.b().onTrue(new DeployElevator(mElevator, ElevatorState.Undeployed));
+    testController1.a().onTrue(new DeployElevator(mElevator, ElevatorState.Deployed));
+    testController1.b().onTrue(new DeployElevator(mElevator, ElevatorState.Undeployed));
 
-    controller2.leftBumper().onTrue(new InstantCommand(() -> {
+    testController1.leftBumper().onTrue(new InstantCommand(() -> {
       mDrivetrain.setInSlowMode(true);
     }));
-    controller2.leftBumper().onFalse(new InstantCommand(() -> {
+    testController1.leftBumper().onFalse(new InstantCommand(() -> {
       mDrivetrain.setInSlowMode(false);
     }));
 
-    controller2.axisGreaterThan(XboxController.Axis.kRightTrigger.value, .3)
+    testController1.axisGreaterThan(XboxController.Axis.kRightTrigger.value, .3)
         .onTrue(new SetClawState(mClaw, ClawState.Closed));
-    controller2.axisGreaterThan(XboxController.Axis.kRightTrigger.value, .3)
+    testController1.axisGreaterThan(XboxController.Axis.kRightTrigger.value, .3)
         .onFalse(new SetClawState(mClaw, ClawState.Opened));
 
   }
