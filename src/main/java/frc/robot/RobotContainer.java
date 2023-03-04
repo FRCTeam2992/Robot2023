@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import frc.lib.manipulator.Waypoint;
 import frc.robot.commands.DeployButterflyWheels;
 import frc.robot.commands.DeployElevator;
 import frc.robot.commands.DriveSticks;
@@ -21,6 +22,7 @@ import frc.robot.commands.StopIntake;
 import frc.robot.commands.StopSpindexer;
 import frc.robot.commands.ZeroElevatorEncoders;
 import frc.robot.commands.groups.FollowTrajectoryCommand;
+import frc.robot.commands.groups.SafeDumbTowerToPosition;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.ButterflyWheels;
 import frc.robot.subsystems.Claw;
@@ -228,6 +230,10 @@ public class RobotContainer {
     SmartDashboard.putData("Deploy Butterfly Wheels", new DeployButterflyWheels(mButterflyWheels));
     SmartDashboard.putData("Test Path Planner Path",
         new FollowTrajectoryCommand(mDrivetrain, mDrivetrain.testPath, true));
+
+    SmartDashboard.putNumber("ElevTestMoveHeight", 10.0);
+    SmartDashboard.putNumber("ArmTestMoveAngle", 100);
+
   }
 
   public void addSubsystemsToDashboard() {
