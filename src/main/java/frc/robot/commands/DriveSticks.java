@@ -99,12 +99,14 @@ public class DriveSticks extends CommandBase {
 
       if (x2 >= 0.0) {
         x2 = tempInverseDeadband
-            + (1.0 - tempInverseDeadband) * ((Constants.DrivetrainConstants.joystickRotationSmoothFactor * Math.pow(x2, 3.0))
-                + ((1.0 - Constants.DrivetrainConstants.joystickRotationSmoothFactor) * x2));
+            + (1.0 - tempInverseDeadband)
+                * ((Constants.DrivetrainConstants.joystickRotationSmoothFactor * Math.pow(x2, 3.0))
+                    + ((1.0 - Constants.DrivetrainConstants.joystickRotationSmoothFactor) * x2));
       } else {
         x2 = -tempInverseDeadband
-            + (1.0 - tempInverseDeadband) * ((Constants.DrivetrainConstants.joystickRotationSmoothFactor * Math.pow(x2, 3.0))
-                + ((1.0 - Constants.DrivetrainConstants.joystickRotationSmoothFactor) * x2));
+            + (1.0 - tempInverseDeadband)
+                * ((Constants.DrivetrainConstants.joystickRotationSmoothFactor * Math.pow(x2, 3.0))
+                    + ((1.0 - Constants.DrivetrainConstants.joystickRotationSmoothFactor) * x2));
       }
     }
 
@@ -147,12 +149,14 @@ public class DriveSticks extends CommandBase {
       // Gyro Input (-180 to 180)
       double gyroValue = mDriveTrain.getGyroYaw();
 
-      if (Math.abs(x1) <= Constants.DrivetrainConstants.joystickDeadband && Math.abs(y1) <= Constants.DrivetrainConstants.joystickDeadband) {
+      if (Math.abs(x1) <= Constants.DrivetrainConstants.joystickDeadband
+          && Math.abs(y1) <= Constants.DrivetrainConstants.joystickDeadband) {
         gyroTargetRecorded = false;
       }
 
       // Gyro Correction
-      if (Math.abs(x2) <= Constants.DrivetrainConstants.joystickDeadband && Constants.DrivetrainConstants.isGyroCorrected) {
+      if (Math.abs(x2) <= Constants.DrivetrainConstants.joystickDeadband
+          && Constants.DrivetrainConstants.isGyroCorrected) {
 
         // Check for Recorded Value
         if (gyroTargetRecorded) {
@@ -199,7 +203,7 @@ public class DriveSticks extends CommandBase {
       double[] swerveStates;
 
       // Check for Field Centric Enabled
-      if (Constants.DrivetrainConstants.isFieldCentric) {
+      if (Constants.DrivetrainConstants.isFieldCentric && mDriveTrain.getDoFieldOreint()) {
         swerveStates = mDriveTrain.swerveController.calculate(x1, y1, x2, gyroValue);
         // SmartDashboard.putBoolean("Is Field Oriented", true);
       } else {

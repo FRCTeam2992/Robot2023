@@ -11,6 +11,8 @@ public class SetArmPosition extends CommandBase {
   /** Creates a new SetArmPosition. */
   private Arm mArm;
   private double mAngle;
+  private boolean holdPosition = true; // By default command stays running and holds position unless constructer called
+                                       // with false here
 
   public SetArmPosition(Arm subsystem, double angle) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -20,9 +22,18 @@ public class SetArmPosition extends CommandBase {
     addRequirements(mArm);
   }
 
+  public SetArmPosition(Arm subsystem, double angle, boolean hold) {
+    mArm = subsystem;
+    mAngle = angle;
+    holdPosition = hold;
+
+    addRequirements(mArm);
+  }
+
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -32,11 +43,16 @@ public class SetArmPosition extends CommandBase {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    if (holdPosition) {
+      return false;
+    } else {
+      return mArm.atPosition();
+    }
   }
 }

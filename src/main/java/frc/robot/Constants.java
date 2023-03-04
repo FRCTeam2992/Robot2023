@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.math.geometry.Translation2d;
+import frc.lib.manipulator.Waypoint;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -163,6 +164,18 @@ public final class Constants {
     public static double gearRatio = 116.0 + (2 / 3);
   }
 
+  public static class TowerConstants {
+    public static Waypoint scoreFloor = new Waypoint(0.0, 117.0);
+    public static Waypoint scoreConeMid = new Waypoint(0.0, 219.0);
+    public static Waypoint scoreConeHigh = new Waypoint(23.5, 199.0);
+    public static Waypoint scoreCubeMid = new Waypoint(0.0, 199.0);
+    public static Waypoint scoreCubeHigh = new Waypoint(27.25, 166.0);
+    public static Waypoint intakeBackstop = new Waypoint(9.75, 38);
+    public static Waypoint intakeGrab = new Waypoint(0.0, -4.0);
+    public static Waypoint intakeRegrab = new Waypoint(7.75, 5.0);
+    public static Waypoint floorGrab = new Waypoint(0.0, 92.0);
+  }
+
   public static class ElevatorConstants {
     public static class DeviceIDs {
       public static int elevatorMotorLead = 25;
@@ -172,17 +185,27 @@ public final class Constants {
     }
 
     public static class PIDConstants {
-      public static double P = 0;
+      public static double P = 0.4;
       public static double I = 0;
-      public static double D = 0;
-      public static double FF = 0;
-      public static double cruiseVelocity = 0;
-      public static double acceleration = 0;
+      public static double D = 0.5;
+      public static double FF = 0.1;
+      // public static double cruiseVelocity = 13200;
+      public static double cruiseVelocity = 1000;
+      // public static double acceleration = 26400;
+      public static double acceleration = 2000;
+    }
+
+    public static class Limits {
+      public static double hardStopTop = 32.25;
+      public static double hardStopBottom = 0.0;
+      public static double softStopTop = 31.75;
+      public static double softStopBottom = 0.5;
     }
 
     public static int encoderClicksPerRevolution = 2048; // clicks per revolution
     public static double gearRatio = 6.0; // 6:1 ratio
     public static double sprocketPitchDiameter = 1.751; // inches
+    public static double elevatorHeightToleranceInch = 0.5; // Moves within .5 inch are "close enough
 
     public static double encoderClicksPerInch = (encoderClicksPerRevolution * gearRatio)
         / (sprocketPitchDiameter * Math.PI);
@@ -201,12 +224,23 @@ public final class Constants {
       public static double D = 0;
       public static double FF = 0;
 
-      public static double cruiseVelocity = 7280;
-      public static double acceleration = 29000;
+      // public static double cruiseVelocity = 7280;
+      // public static double acceleration = 29000;
+      public static double cruiseVelocity = 3000;
+      public static double acceleration = 6000;
+
+    }
+
+    public static class Limits {
+      public static double hardStopTop = 221.0;
+      public static double hardStopBottom = -9.0;
+      public static double softStopTop = 216.0;
+      public static double softStopBottom = -4.0;
     }
 
     public static double gearRatio = 128.0;
     public static double motorEncoderClicksPerDegree = (2048.0 * gearRatio) / 360.0;
+    public static double armAngleToleranceDeg = 1.0; // Moves within 1 degree are "close enough"
 
     public static double CANCoderOffset = -67.9;
 

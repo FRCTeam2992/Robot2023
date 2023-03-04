@@ -23,21 +23,10 @@ public class Arm extends SubsystemBase {
 
   private int dashboardCounter;
 
+  private double targetAngleDeg = 0;
+
   public enum ArmPosition {
-    BOTTOM_HARD_STOP(-9.0),
-    TOP_HARD_STOP(221.0),
-    BOTTOM_SOFT_STOP(-4.0),
-    TOP_SOFT_STOP(216.0),
     PARALLEL_TO_ELEVATOR(45.0),
-    CONE_SCORE_TOP(190.0),
-    CONE_SCORE_MID(207.9),
-    CONE_SCORE_LOW(130.0),
-    CUBE_SCORE_TOP(190.0),
-    CUBE_SCORE_MID(190.0),
-    CUBE_SCORE_LOW(130.0),
-    SPINDEXER_GRAB(10.0),
-    FLOOR_GRAB(90.0),
-    INTAKE_BACKSTOP(39.0),
     MOVEMENT_THRESHOLD_2(15.0),
     MOVEMENT_THRESHOLD_6(27.0),
     MOVEMENT_THRESHOLD_9(90.0);
@@ -84,6 +73,7 @@ public class Arm extends SubsystemBase {
   }
 
   public void setArmPosition(double angle) {
+    targetAngleDeg = angle;
     double position = angle * Constants.ArmConstants.motorEncoderClicksPerDegree;
     armMotor.set(ControlMode.MotionMagic, position);
   }
@@ -97,9 +87,9 @@ public class Arm extends SubsystemBase {
   }
 
   public void setArmSpeed(double speed) {
-    if (getArmMotorPositionDeg() > ArmPosition.TOP_SOFT_STOP.positionDegrees) {
+    if (getArmMotorPositionDeg() > Constants.ArmConstants.Limits.softStopTop) {
       speed = Math.min(0.0, speed);
-    } else if (getArmMotorPositionDeg() < ArmPosition.BOTTOM_SOFT_STOP.positionDegrees) {
+    } else if (getArmMotorPositionDeg() < Constants.ArmConstants.Limits.softStopBottom) {
       speed = Math.max(0.0, speed);
     }
     armMotor.set(ControlMode.PercentOutput, speed);
@@ -111,6 +101,10 @@ public class Arm extends SubsystemBase {
 
   public double getArmCANCoderPositionCorrected() {
     return armEncoder.getAbsolutePosition() + Constants.ArmConstants.CANCoderOffset;
+  }
+
+  public boolean atPosition() {
+    return (Math.abs(targetAngleDeg - getArmMotorPositionDeg()) < Constants.ArmConstants.armAngleToleranceDeg);
   }
 
   public void onDisable() {
