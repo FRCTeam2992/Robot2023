@@ -126,7 +126,7 @@ public final class Constants {
       public static int intakeMotorTop = 21;
       public static int intakeMotorBottom = 22;
 
-      public static int intakeSolenoid = 0;
+      public static int intakeSolenoid = 4;
     }
   }
 
@@ -191,6 +191,32 @@ public final class Constants {
       public static int armMotor = 27;
       public static int armEncoder = 27;
     }
+
+    public static class PIDConstants {
+      public static double P = 1;
+      public static double I = 0;
+      public static double D = 0;
+      public static double FF = 0;
+
+      public static double cruiseVelocity = 7280;
+      public static double acceleration = 29000;
+    }
+
+    public static double gearRatio = 128.0;
+    public static double motorEncoderClicksPerDegree = (2048.0 * gearRatio) / 360.0;
+
+    public static double CANCoderOffset = -67.9;
+
+    public static class ArmSlopConstants {
+      // All of these constants need to be validated!
+      public static double topZoneEdge = 207; // Higher angle than this assume arm slop, adjust encoder by slop amount
+      public static double topZoneAdjustment = 9.6; // True encoder arm position this much lower than Cancoder in this
+      // zone
+      public static double bottomZoneEdge = 40; // If lower angle than this assume arm slop, adjust encoder by slop
+                                                // amount
+      public static double bottomZoneAdjustment = 9.6;
+    }
+
   }
 
   public static class ClawConstants {
@@ -202,7 +228,7 @@ public final class Constants {
 
   public static class ButterflyWheelsConstants {
     public static class DeviceIDs {
-      public static int butterflyWheelsSolenoid = 3;
+      public static int butterflyWheelsSolenoid = 2;
     }
   }
 }
