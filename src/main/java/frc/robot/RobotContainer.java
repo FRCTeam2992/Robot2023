@@ -115,22 +115,22 @@ public class RobotContainer {
 
     // ABXY
     // X-Cone Intake
-    controller0.x().onTrue(null); // Intakedeploy go to gorund spot
+    // controller0.x().onTrue(null); // Intakedeploy go to gorund spot
     controller0.x().whileTrue(new MoveIntake(mIntake, 1, 1));// cones
 
     // A-Cube Intake
-    controller0.a().onTrue(null);// Intakedeploy go to gorund spot
+    // controller0.a().onTrue(null);// Intakedeploy go to gorund spot
     controller0.a().whileTrue(new MoveIntake(mIntake, 1, 0));// cubes
 
     // B-Retract Intake to Normal Spot(Inside Bumpers)
-    controller0.b().onTrue(null);// Retract intake
+    // controller0.b().onTrue(null);// Retract intake
 
     // D-Pad
     controller0.povDown().whileTrue(new SetSwerveAngle(mDrivetrain, 45, -45, -45, 45));// X the wheels
     controller0.povLeft().whileTrue(new SetSwerveAngle(mDrivetrain, 45, -45, -45, 45));// X the wheels
     controller0.povUp().whileTrue(new SetSwerveAngle(mDrivetrain, 45, -45, -45, 45));// X the wheels
 
-    controller0.povRight().onTrue(null);// HomeIntakeDeploy
+    // controller0.povRight().onTrue(null);// HomeIntakeDeploy
 
     // Bumpers/Triggers
     controller0.leftBumper().onTrue(new InstantCommand(
@@ -151,9 +151,11 @@ public class RobotContainer {
           mDrivetrain.setInSlowMode(false);
         })); // Slow Mode
 
-    controller0.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, .60).whileTrue(null);// Auto align for scoring
+    // controller0.axisGreaterThan(XboxController.Axis.kLeftTrigger.value,
+    // .60).whileTrue(null);// Auto align for scoring
 
-    controller0.axisGreaterThan(XboxController.Axis.kRightTrigger.value, .60).onTrue(null);// Toggle claw state
+    // controller0.axisGreaterThan(XboxController.Axis.kRightTrigger.value,
+    // .60).onTrue(null);// Toggle claw state
 
     // Back and Start
 
