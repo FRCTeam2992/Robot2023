@@ -95,7 +95,7 @@ public class RobotContainer {
     addSubsystemsToDashboard();
     // Configure the trigger bindings
     configureShuffleboardBindings();
-    // configRealButtonBindings();
+    configRealButtonBindings();
     configTestButtonBindings();
   }
 
@@ -166,10 +166,38 @@ public class RobotContainer {
 
     // -----------------------controller1-----------------------
     // ABXY
+    controller1.y().onTrue(
+      new SafeDumbTowerToPosition(mElevator, mArm, Constants.TowerConstants.intakeBackstop);
+)
 
-    // D-Pad
+    // Score on hybrid level
+    controller1.povDown().and(controller1.leftTrigger(0.6).onTrue(
+      new SafeDumbTowerToPosition(mElevator, mArm, Constants.TowerConstants.scoreFloor));
+    controller1.povDownLeft().and(controller1.leftTrigger(0.6).onTrue(
+      new SafeDumbTowerToPosition(mElevator, mArm, Constants.TowerConstants.scoreFloor));
+    controller1.povDownRight().and(controller1.leftTrigger(0.6).onTrue(
+      new SafeDumbTowerToPosition(mElevator, mArm, Constants.TowerConstants.scoreFloor));
+    
+    // Score mid level
+    controller1.povLeft().and(controller1.leftTrigger(0.6)).onTrue(
+      new SafeDumbTowerToPosition(mElevator, mArm, Constants.TowerConstants.scoreConeMid));
+    controller1.povCenter().and(controller1.leftTrigger(0.6)).onTrue(
+      new SafeDumbTowerToPosition(mElevator, mArm, Constants.TowerConstants.scoreCubeMid));
+    controller1.povRight().and(controller1.leftTrigger(0.6)).onTrue(
+      new SafeDumbTowerToPosition(mElevator, mArm, Constants.TowerConstants.scoreConeMid));
+
+    // Score top level
+    controller1.povUpLeft().and(controller1.leftTrigger(0.6)).onTrue(
+      new SafeDumbTowerToPosition(mElevator, mArm, Constants.TowerConstants.scoreConeHigh));
+    controller1.povUp().and(controller1.leftTrigger(0.6)).onTrue(
+      new SafeDumbTowerToPosition(mElevator, mArm, Constants.TowerConstants.scoreCubeHigh));
+    controller1.povUpRight().and(controller1.leftTrigger(0.6)).onTrue(
+      new SafeDumbTowerToPosition(mElevator, mArm, Constants.TowerConstants.scoreConeHigh));
 
     // Bumper/Trigger
+    controller1.rightTrigger(0.6).onTrue(
+      new SafeDumbTowerToPosition(mElevator, mArm, Constants.TowerConstants.intakeGrab));
+    )
 
     // Back and Start
 
