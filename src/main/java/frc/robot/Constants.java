@@ -148,17 +148,20 @@ public final class Constants {
     }
 
     public static class PIDConstants {
-      public static double P = 0;
+      public static double P = 0.4;
       public static double I = 0;
-      public static double D = 0;
-      public static double FF = 0;
-      public static double cruiseVelocity = 0;
-      public static double acceleration = 0;
+      public static double D = 0.5;
+      public static double FF = 0.1;
+      // public static double cruiseVelocity = 13200;
+      public static double cruiseVelocity = 1000;
+      // public static double acceleration = 26400;
+      public static double acceleration = 2000;
     }
 
     public static int encoderClicksPerRevolution = 2048; // clicks per revolution
     public static double gearRatio = 6.0; // 6:1 ratio
     public static double sprocketPitchDiameter = 1.751; // inches
+    public static double elevatorHeightToleranceInch = 0.5; // Moves within .5 inch are "close enough
 
     public static double encoderClicksPerInch = (encoderClicksPerRevolution * gearRatio)
         / (sprocketPitchDiameter * Math.PI);
@@ -177,14 +180,18 @@ public final class Constants {
       public static double D = 0;
       public static double FF = 0;
 
-      public static double cruiseVelocity = 7280;
-      public static double acceleration = 29000;
+      // public static double cruiseVelocity = 7280;
+      // public static double acceleration = 29000;
+      public static double cruiseVelocity = 3000;
+      public static double acceleration = 6000;
+
     }
 
     public static double gearRatio = 128.0;
     public static double motorEncoderClicksPerDegree = (2048.0 * gearRatio) / 360.0;
+    public static double armAngleToleranceDeg = 1.0; // Moves within 1 degree are "close enough"
 
-    public static double CANCoderOffset = -69.7;
+    public static double CANCoderOffset = -67.9;
 
     public static class ArmSlopConstants {
       // All of these constants need to be validated!
