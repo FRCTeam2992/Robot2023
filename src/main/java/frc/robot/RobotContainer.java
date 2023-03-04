@@ -14,6 +14,7 @@ import frc.robot.commands.ResetGyro;
 import frc.robot.commands.SetArmPosition;
 import frc.robot.commands.SetSwerveAngle;
 import frc.robot.commands.MoveElevator;
+import frc.robot.commands.MoveIntake;
 import frc.robot.commands.StopArm;
 import frc.robot.commands.StopElevator;
 import frc.robot.commands.StopIntake;
@@ -107,17 +108,52 @@ public class RobotContainer {
      * DO NOT PUT TEST BUTTONS IN THIS
      * ONLY REAL BUTTONS FOR COMPETITION
      */
-    // -----------------------controller0-----------------------
-    // ABXY
 
+    // -----------------------controller0-----------------------
+
+    // ABXY
+    // X-Cone Intake
+    controller0.x().onTrue(null); // Intakedeploy go to gorund spot
+    controller0.x().whileTrue(new MoveIntake(mIntake, 1, 1));// cones
+
+    // A-Cube Intake
+    controller0.a().onTrue(null);// Intakedeploy go to gorund spot
+    controller0.a().whileTrue(new MoveIntake(mIntake, 1, 0));// cubes
+
+    // B-Retract Intake to Normal Spot(Inside Bumpers)
+    controller0.b().onTrue(null);// Retract intake
+
+    //
     // D-Pad
-    controller0.povDown().whileTrue(new SetSwerveAngle(mDrivetrain, 45, -45, -45, 45));
-    controller0.povLeft().whileTrue(new SetSwerveAngle(mDrivetrain, 45, -45, -45, 45));
-    controller0.povUp().whileTrue(new SetSwerveAngle(mDrivetrain, 45, -45, -45, 45));
+    controller0.povDown().whileTrue(new SetSwerveAngle(mDrivetrain, 45, -45, -45, 45));// X the wheels
+    controller0.povLeft().whileTrue(new SetSwerveAngle(mDrivetrain, 45, -45, -45, 45));// X the wheels
+    controller0.povUp().whileTrue(new SetSwerveAngle(mDrivetrain, 45, -45, -45, 45));// X the wheels
 
     controller0.povRight().onTrue(null);// HomeIntakeDeploy
-    // Bumper/Trigger
-    controller0.leftBumper().whileTrue(null);// Align while driving
+
+    // Bumpers/Triggers
+    controller0.leftBumper().onTrue(new InstantCommand(
+        () -> {
+          mDrivetrain.setDoFieldOreint(false);
+        }));// Disable Field Orient
+    controller0.leftBumper().onFalse(new InstantCommand(
+        () -> {
+          mDrivetrain.setDoFieldOreint(true);
+        }));// Disable Field Orient
+
+    controller0.rightBumper().onTrue(new InstantCommand(
+        () -> {
+          mDrivetrain.setInSlowMode(true);
+        })); // Slow Mode
+    controller0.rightBumper().onFalse(new InstantCommand(
+        () -> {
+          mDrivetrain.setInSlowMode(false);
+        })); // Slow Mode
+
+    controller0.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, .60).whileTrue(null);// Auto align for scoring
+
+    controller0.axisGreaterThan(XboxController.Axis.kRightTrigger.value, .60).onTrue(null);// Toggle claw state
+
     // Back and Start
 
     // Joysticks and Buttons

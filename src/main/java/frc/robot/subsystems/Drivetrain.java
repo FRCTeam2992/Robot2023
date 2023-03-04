@@ -120,6 +120,8 @@ public class Drivetrain extends SubsystemBase {
   // Slowmode
   private boolean inSlowMode = false;
 
+  private boolean doFieldOreint = true;
+
   private int dashboardCounter = 0;
 
   public Drivetrain() {
@@ -434,6 +436,14 @@ public class Drivetrain extends SubsystemBase {
 
   public void setInSlowMode(boolean inSlowMode) {
     this.inSlowMode = inSlowMode;
+  }
+
+  public boolean getDoFieldOreint() {
+    return doFieldOreint;
+  }
+
+  public void setDoFieldOreint(boolean disableFieldOreint) {
+    this.doFieldOreint = disableFieldOreint;
   }
 
   public void onDisable() {
