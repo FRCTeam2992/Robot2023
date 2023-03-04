@@ -191,12 +191,24 @@ public class RobotContainer {
         new SafeDumbTowerToPosition(mElevator, mArm, Constants.TowerConstants.scoreConeHigh));
 
     // Bumper/Trigger
+    controller1.leftBumper().whileTrue(new MoveSpindexer(mSpindexer, -0.3));
+    controller1.rightBumper().whileTrue(new MoveSpindexer(mSpindexer, 0.3));
     controller1.rightTrigger(0.6).onTrue(
         new SafeDumbTowerToPosition(mElevator, mArm, Constants.TowerConstants.intakeGrab));
 
     // Back and Start
 
     // Joysticks and Buttons
+    controller1.axisLessThan(XboxController.Axis.kLeftY.value, -0.6).whileTrue(
+        new MoveArm(mArm, 0.1));
+    controller1.axisGreaterThan(XboxController.Axis.kLeftY.value, 0.6).whileTrue(
+        new MoveArm(mArm, -0.1));
+
+    controller1.axisLessThan(XboxController.Axis.kRightY.value, -0.6).whileTrue(
+        new MoveElevator(mElevator, 0.1));
+    controller1.axisGreaterThan(XboxController.Axis.kRightY.value, 0.6).whileTrue(
+        new MoveElevator(mElevator, -0.1));
+
   }
 
   private void configTestButtonBindings() {
