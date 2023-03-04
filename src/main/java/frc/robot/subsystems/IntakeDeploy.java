@@ -27,7 +27,7 @@ public class IntakeDeploy extends SubsystemBase {
   public enum IntakeDeployState {
     GroundIntake(22.0), // dummy value
     LoadStation(10.0), // dummy value
-    Normal(5.0),
+    Normal(5.0), // dummy valure
     Homed(0.0);
 
     public final double intakeSpot;
