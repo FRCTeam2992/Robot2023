@@ -72,6 +72,8 @@ public class Elevator extends SubsystemBase {
     elevatorMotorFollow.set(TalonFXControlMode.Follower, elevatorMotorLead.getDeviceID());
     elevatorMotorFollow.setInverted(TalonFXInvertType.OpposeMaster);
 
+    setPIDConstants(elevatorMotorLead);
+
     elevatorSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM,
         Constants.ElevatorConstants.DeviceIDs.elevatorSolenoid);
 
@@ -124,7 +126,7 @@ public class Elevator extends SubsystemBase {
     }
     targetHeightInch = inches;
     elevatorMotorLead.set(TalonFXControlMode.MotionMagic, inchesToEncoderClicks(inches));
-    System.out.println("MOVING: " + inchesToEncoderClicks(inches));
+    // System.out.println("MOVING: " + inchesToEncoderClicks(inches));
   }
 
   public void setElevatorState(ElevatorState state) {
