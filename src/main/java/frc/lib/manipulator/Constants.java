@@ -1,16 +1,17 @@
 package frc.lib.manipulator;
 
-import frc.robot.subsystems.Arm;
-import frc.robot.subsystems.Elevator;
+import frc.robot.Constants.ArmConstants;
+import frc.robot.Constants.ElevatorConstants;
+import frc.robot.Constants.TowerConstants;;
 
 public final class Constants {
-        public static final double MAX_HEIGHT_INCHES = Elevator.ElevatorPosition.HARD_STOP_TOP.positionInches;
-        public static final double MAX_ANGLE_DEGREES = Arm.ArmPosition.TOP_HARD_STOP.positionDegrees;
+        public static final double MAX_HEIGHT_INCHES = ElevatorConstants.Limits.hardStopTop;
+        public static final double MAX_ANGLE_DEGREES = ArmConstants.Limits.hardStopTop;
         public static final double AVOID_HEIGHT_INCHES = 9.0;
         public static final double BASE_AVOID_INCHES = 10.0;
         public static final double BASE_AVOID_DEGREES = 150.0;
         public static final double BASE_ENTRY_INCHES = 10.0;
-        public static final double BASE_ENTRY_DEGREES = Arm.ArmPosition.SPINDEXER_GRAB.positionDegrees;
+        public static final double BASE_ENTRY_DEGREES = TowerConstants.intakeGrab.angle();
         public static final double CROSSBAR_ENTRY_INCHES = 3.0;
         public static final double CROSSBAR_ENTRY_DEGREES = 180.0;
         public static final double CROSSBAR_AVOID_BOTTOM_INCHES = 3.0;
@@ -19,7 +20,7 @@ public final class Constants {
 
         public static final class NoFlyZones {
                 // Corner x, corner y, width, height
-                public static final NoFlyZone INSIDE_ROBOT_1 = new NoFlyZone(-10.0, -20.0, 2.0, 15.0);
+                public static final NoFlyZone INSIDE_ROBOT_1 = new NoFlyZone(-10.0, -20.0, -0.1, 15.0);
                 public static final NoFlyZone INSIDE_ROBOT_2 = new NoFlyZone(-10.0, 15.0, 6.0, 27.0);
                 public static final NoFlyZone INSIDE_ROBOT_3 = new NoFlyZone(-10.0, 27.0, 9.0, 90.0);
                 public static final NoFlyZone ELEVATOR_CROSSBAR = new NoFlyZone(
