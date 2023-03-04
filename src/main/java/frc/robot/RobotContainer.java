@@ -11,12 +11,9 @@ import frc.robot.commands.DriveSticks;
 import frc.robot.commands.MoveArm;
 import frc.robot.commands.SetClawState;
 import frc.robot.commands.MoveSpindexer;
-import frc.robot.commands.ResetGyro;
-import frc.robot.commands.SetArmPosition;
 import frc.robot.commands.SetSwerveAngle;
 import frc.robot.commands.MoveElevator;
 import frc.robot.commands.MoveIntake;
-import frc.robot.commands.SetElevatorPosition;
 import frc.robot.commands.StopArm;
 import frc.robot.commands.StopElevator;
 import frc.robot.commands.StopIntake;
@@ -32,9 +29,7 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Spindexer;
-import frc.robot.subsystems.Arm.ArmPosition;
 import frc.robot.subsystems.Claw.ClawState;
-import frc.robot.subsystems.Elevator.ElevatorPosition;
 import frc.robot.subsystems.Elevator.ElevatorState;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -167,37 +162,35 @@ public class RobotContainer {
     // -----------------------controller1-----------------------
     // ABXY
     controller1.y().onTrue(
-      new SafeDumbTowerToPosition(mElevator, mArm, Constants.TowerConstants.intakeBackstop);
-)
+        new SafeDumbTowerToPosition(mElevator, mArm, Constants.TowerConstants.intakeBackstop));
 
     // Score on hybrid level
-    controller1.povDown().and(controller1.leftTrigger(0.6).onTrue(
-      new SafeDumbTowerToPosition(mElevator, mArm, Constants.TowerConstants.scoreFloor));
-    controller1.povDownLeft().and(controller1.leftTrigger(0.6).onTrue(
-      new SafeDumbTowerToPosition(mElevator, mArm, Constants.TowerConstants.scoreFloor));
-    controller1.povDownRight().and(controller1.leftTrigger(0.6).onTrue(
-      new SafeDumbTowerToPosition(mElevator, mArm, Constants.TowerConstants.scoreFloor));
-    
+    controller1.povDown().and(controller1.leftTrigger(0.6)).onTrue(
+        new SafeDumbTowerToPosition(mElevator, mArm, Constants.TowerConstants.scoreFloor));
+    controller1.povDownLeft().and(controller1.leftTrigger(0.6)).onTrue(
+        new SafeDumbTowerToPosition(mElevator, mArm, Constants.TowerConstants.scoreFloor));
+    controller1.povDownRight().and(controller1.leftTrigger(0.6)).onTrue(
+        new SafeDumbTowerToPosition(mElevator, mArm, Constants.TowerConstants.scoreFloor));
+
     // Score mid level
     controller1.povLeft().and(controller1.leftTrigger(0.6)).onTrue(
-      new SafeDumbTowerToPosition(mElevator, mArm, Constants.TowerConstants.scoreConeMid));
+        new SafeDumbTowerToPosition(mElevator, mArm, Constants.TowerConstants.scoreConeMid));
     controller1.povCenter().and(controller1.leftTrigger(0.6)).onTrue(
-      new SafeDumbTowerToPosition(mElevator, mArm, Constants.TowerConstants.scoreCubeMid));
+        new SafeDumbTowerToPosition(mElevator, mArm, Constants.TowerConstants.scoreCubeMid));
     controller1.povRight().and(controller1.leftTrigger(0.6)).onTrue(
-      new SafeDumbTowerToPosition(mElevator, mArm, Constants.TowerConstants.scoreConeMid));
+        new SafeDumbTowerToPosition(mElevator, mArm, Constants.TowerConstants.scoreConeMid));
 
     // Score top level
     controller1.povUpLeft().and(controller1.leftTrigger(0.6)).onTrue(
-      new SafeDumbTowerToPosition(mElevator, mArm, Constants.TowerConstants.scoreConeHigh));
+        new SafeDumbTowerToPosition(mElevator, mArm, Constants.TowerConstants.scoreConeHigh));
     controller1.povUp().and(controller1.leftTrigger(0.6)).onTrue(
-      new SafeDumbTowerToPosition(mElevator, mArm, Constants.TowerConstants.scoreCubeHigh));
+        new SafeDumbTowerToPosition(mElevator, mArm, Constants.TowerConstants.scoreCubeHigh));
     controller1.povUpRight().and(controller1.leftTrigger(0.6)).onTrue(
-      new SafeDumbTowerToPosition(mElevator, mArm, Constants.TowerConstants.scoreConeHigh));
+        new SafeDumbTowerToPosition(mElevator, mArm, Constants.TowerConstants.scoreConeHigh));
 
     // Bumper/Trigger
     controller1.rightTrigger(0.6).onTrue(
-      new SafeDumbTowerToPosition(mElevator, mArm, Constants.TowerConstants.intakeGrab));
-    )
+        new SafeDumbTowerToPosition(mElevator, mArm, Constants.TowerConstants.intakeGrab));
 
     // Back and Start
 
@@ -251,22 +244,6 @@ public class RobotContainer {
     SmartDashboard.putData("Test Path Planner Path",
         new FollowTrajectoryCommand(mDrivetrain, mDrivetrain.testPath, true));
 
-    SmartDashboard.putData("Elev Cube Top",
-        new SetElevatorPosition(mElevator,
-            ElevatorPosition.CUBE_TOP.positionInches));
-    SmartDashboard.putData("Elev Cube Mid",
-        new SetElevatorPosition(mElevator,
-            ElevatorPosition.CUBE_MID.positionInches));
-    SmartDashboard.putData("Elev Cone Top",
-        new SetElevatorPosition(mElevator,
-            ElevatorPosition.CONE_TOP.positionInches));
-    SmartDashboard.putData("Elev Cone Mid",
-        new SetElevatorPosition(mElevator,
-            ElevatorPosition.CONE_MID.positionInches));
-    SmartDashboard.putData("Arm Cube Top", new SetArmPosition(mArm, ArmPosition.CUBE_SCORE_TOP.positionDegrees));
-    SmartDashboard.putData("Arm Cube Mid", new SetArmPosition(mArm, ArmPosition.CUBE_SCORE_MID.positionDegrees));
-    SmartDashboard.putData("Arm Cone Top", new SetArmPosition(mArm, ArmPosition.CONE_SCORE_TOP.positionDegrees));
-    SmartDashboard.putData("Arm Cone Mid", new SetArmPosition(mArm, ArmPosition.CONE_SCORE_MID.positionDegrees));
     SmartDashboard.putData("Deploy Butterfly Wheels", new DeployButterflyWheels(mButterflyWheels));
     SmartDashboard.putData("Test Path Planner Path",
         new FollowTrajectoryCommand(mDrivetrain, mDrivetrain.testPath, true));
