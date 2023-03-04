@@ -23,6 +23,8 @@ public class Arm extends SubsystemBase {
 
   private int dashboardCounter;
 
+  private double targetAngleDeg = 0;
+
   public enum ArmPosition {
     BOTTOM_HARD_STOP(-9.0),
     TOP_HARD_STOP(221.0),
@@ -84,6 +86,7 @@ public class Arm extends SubsystemBase {
   }
 
   public void setArmPosition(double angle) {
+    targetAngleDeg = angle;
     double position = angle * Constants.ArmConstants.motorEncoderClicksPerDegree;
     armMotor.set(ControlMode.MotionMagic, position);
   }
@@ -111,6 +114,10 @@ public class Arm extends SubsystemBase {
 
   public double getArmCANCoderPositionCorrected() {
     return armEncoder.getAbsolutePosition() + Constants.ArmConstants.CANCoderOffset;
+  }
+
+  public boolean atPosition() {
+    return (Math.abs(targetAngleDeg - getArmMotorPositionDeg()) < Constants.ArmConstants.armAngleToleranceDeg);
   }
 
   public void onDisable() {

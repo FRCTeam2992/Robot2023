@@ -14,17 +14,30 @@ public class SetElevatorPosition extends CommandBase {
   private Elevator mElevator;
 
   private double mPosition;
+  private boolean holdPosition = true; // By default we hold the position and command doesnt end.
+
   public SetElevatorPosition(Elevator subsystem, double position) {
     // Use addRequirements() here to declare subsystem dependencies.
     mElevator = subsystem;
     mPosition = position;
+    holdPosition = true;
+
+    addRequirements(mElevator);
+  }
+
+  public SetElevatorPosition(Elevator subsystem, double position, boolean hold) {
+    // Use addRequirements() here to declare subsystem dependencies.
+    mElevator = subsystem;
+    mPosition = position;
+    holdPosition = hold;
 
     addRequirements(mElevator);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -34,11 +47,16 @@ public class SetElevatorPosition extends CommandBase {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    if (holdPosition) {
+      return false;
+    } else {
+      return mElevator.atPosition();
+    }
   }
 }
