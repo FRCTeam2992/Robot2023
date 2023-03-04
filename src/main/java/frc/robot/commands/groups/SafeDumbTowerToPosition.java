@@ -34,16 +34,19 @@ public class SafeDumbTowerToPosition extends SequentialCommandGroup {
                                                                 Map.entry(WaypointSafety.WaypointSafetyClassification.PlannedPathCrossbar,
                                                                                 new UnsafeMoveTowerToPosition(elevator,
                                                                                                 mArm,
-                                                                                                frc.lib.manipulator.Constants.Waypoints.WAYPOINT_CROSSBAR_ENTRY)),
+                                                                                                frc.lib.manipulator.Constants.Waypoints.WAYPOINT_CROSSBAR_ENTRY,
+                                                                                                false)),
                                                                 Map.entry(WaypointSafety.WaypointSafetyClassification.PlannedPathRobotBase,
                                                                                 new UnsafeMoveTowerToPosition(mElevator,
                                                                                                 mArm,
-                                                                                                frc.lib.manipulator.Constants.Waypoints.WAYPOINT_BASE_ENTRY))),
+                                                                                                frc.lib.manipulator.Constants.Waypoints.WAYPOINT_BASE_ENTRY,
+                                                                                                false))),
                                                 this::checkStart),
 
                                 // Next we move to our safe center waypoint
                                 new UnsafeMoveTowerToPosition(mElevator, mArm,
-                                                frc.lib.manipulator.Constants.Waypoints.WAYPOINT_BASE_AVOID),
+                                                frc.lib.manipulator.Constants.Waypoints.WAYPOINT_BASE_AVOID,
+                                                false),
 
                                 // Next we check if we are ending in a Path Plan only zone and add that waypoint
                                 // if required
@@ -58,11 +61,13 @@ public class SafeDumbTowerToPosition extends SequentialCommandGroup {
                                                                 Map.entry(WaypointSafety.WaypointSafetyClassification.PlannedPathCrossbar,
                                                                                 new UnsafeMoveTowerToPosition(elevator,
                                                                                                 mArm,
-                                                                                                frc.lib.manipulator.Constants.Waypoints.WAYPOINT_CROSSBAR_ENTRY)),
+                                                                                                frc.lib.manipulator.Constants.Waypoints.WAYPOINT_CROSSBAR_ENTRY,
+                                                                                                false)),
                                                                 Map.entry(WaypointSafety.WaypointSafetyClassification.PlannedPathRobotBase,
                                                                                 new UnsafeMoveTowerToPosition(mElevator,
                                                                                                 mArm,
-                                                                                                frc.lib.manipulator.Constants.Waypoints.WAYPOINT_BASE_ENTRY))),
+                                                                                                frc.lib.manipulator.Constants.Waypoints.WAYPOINT_BASE_ENTRY,
+                                                                                                false))),
                                                 this::checkEnd),
 
                                 // And now we can move into the final spot if it is safe
@@ -70,17 +75,17 @@ public class SafeDumbTowerToPosition extends SequentialCommandGroup {
                                                 Map.ofEntries(
                                                                 Map.entry(WaypointSafety.WaypointSafetyClassification.Safe,
                                                                                 new UnsafeMoveTowerToPosition(mElevator,
-                                                                                                mArm, mEnd)),
+                                                                                                mArm, mEnd, true)),
                                                                 Map.entry(WaypointSafety.WaypointSafetyClassification.NoFlyCrossbar,
                                                                                 new InstantCommand()),
                                                                 Map.entry(WaypointSafety.WaypointSafetyClassification.NoFlyRobotBase,
                                                                                 new InstantCommand()),
                                                                 Map.entry(WaypointSafety.WaypointSafetyClassification.PlannedPathCrossbar,
                                                                                 new UnsafeMoveTowerToPosition(elevator,
-                                                                                                mArm, mEnd)),
+                                                                                                mArm, mEnd, true)),
                                                                 Map.entry(WaypointSafety.WaypointSafetyClassification.PlannedPathRobotBase,
                                                                                 new UnsafeMoveTowerToPosition(mElevator,
-                                                                                                mArm, mEnd))),
+                                                                                                mArm, mEnd, true))),
                                                 this::checkEnd)
 
                 );
