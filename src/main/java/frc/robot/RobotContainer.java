@@ -126,11 +126,11 @@ public class RobotContainer {
     // ABXY
     // X-Cone Intake
     // controller0.x().onTrue(null); // Intakedeploy go to gorund spot
-    controller0.x().whileTrue(new MoveIntake(mIntake, 1, 1));// cones
+    // controller0.x().whileTrue(new MoveIntake(mIntake, 1, 1));// cones
 
     // A-Cube Intake
     // controller0.a().onTrue(null);// Intakedeploy go to gorund spot
-    controller0.a().whileTrue(new MoveIntake(mIntake, 1, 0));// cubes
+    // controller0.a().whileTrue(new MoveIntake(mIntake, 1, 0));// cubes
 
     // B-Retract Intake to Normal Spot(Inside Bumpers)
     // controller0.b().onTrue(null);// Retract intake
