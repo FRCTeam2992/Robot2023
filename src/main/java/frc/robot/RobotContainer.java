@@ -19,6 +19,7 @@ import frc.robot.commands.SetClawState;
 import frc.robot.commands.SetArmPosition;
 import frc.robot.commands.MoveElevator;
 import frc.robot.commands.SetElevatorPosition;
+import frc.robot.commands.SetIntakeDeployState;
 import frc.robot.commands.SetIntakeSpeed;
 import frc.robot.commands.StopArm;
 import frc.robot.commands.StopElevator;
@@ -39,6 +40,7 @@ import frc.robot.subsystems.Arm.ArmPosition;
 import frc.robot.subsystems.Claw.ClawState;
 import frc.robot.subsystems.Elevator.ElevatorPosition;
 import frc.robot.subsystems.Elevator.ElevatorState;
+import frc.robot.subsystems.IntakeDeploy.IntakeDeployState;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -126,27 +128,9 @@ public class RobotContainer {
 
     controller0.start().onTrue(new ResetGyro(mDrivetrain));
 
-    SmartDashboard.putData("Scoring", new DeployElevator(mElevator, ElevatorState.Undeployed));
-    SmartDashboard.putData("Loading", new DeployElevator(mElevator, ElevatorState.Deployed));
-
-    SmartDashboard.putData("Open Claw", new SetClawState(mClaw, ClawState.Opened));
-    SmartDashboard.putData("Close Claw", new SetClawState(mClaw, ClawState.Closed));
-
-    SmartDashboard.putData("Move Elevator Down", new MoveElevator(mElevator, -0.1));
-    SmartDashboard.putData("Stop Elevator", new MoveElevator(mElevator, 0.0));
-    SmartDashboard.putData("Move Elevator Up", new MoveElevator(mElevator, 0.1));
-
-    // SmartDashboard.putData("Scoring", new DeployElevator(mElevator,
-    // ElevatorState.Undeployed));
-    // SmartDashboard.putData("Loading", new DeployElevator(mElevator,
-    // ElevatorState.Deployed));
-
-    SmartDashboard.putData("Zero Elevator Encoder", new ZeroElevatorEncoders(mElevator));
-
-    SmartDashboard.putData("Spin Intake", new MoveSpindexer(mSpindexer, .5));
-
-    SmartDashboard.putData("Reset Odometry", mDrivetrain.ResetOdometry());
-    SmartDashboard.putData("0 Wheels", new SetSwerveAngle(mDrivetrain, 0, 0, 0, 0));
+    SmartDashboard.putData("Home Intake", new HomeIntakeDeploy(mIntakeDeploy));
+    SmartDashboard.putData("Intake to Ground", new SetIntakeDeployState(mIntakeDeploy, IntakeDeployState.GroundIntake));
+    SmartDashboard.putData("Intake to Normal", new SetIntakeDeployState(mIntakeDeploy, IntakeDeployState.LoadStation));
 
     SmartDashboard.putData("Test Path Planner Path",
         new FollowTrajectoryCommand(mDrivetrain, mDrivetrain.testPath, true));

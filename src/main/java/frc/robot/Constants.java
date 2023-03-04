@@ -139,7 +139,7 @@ public final class Constants {
     }
 
     public static class PIDConstants {
-      public static double P = 0;
+      public static double P = 0.01;
       public static double I = 0;
       public static double D = 0;
       public static double FF = 0;

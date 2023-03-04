@@ -27,6 +27,7 @@ public class IntakeDeploy extends SubsystemBase {
   public enum IntakeDeployState {
     GroundIntake(22.0), // dummy value
     LoadStation(10.0), // dummy value
+    Normal(5.0),
     Homed(0.0);
 
     public final double intakeSpot;
@@ -53,14 +54,11 @@ public class IntakeDeploy extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     if (dashboardCounter++ > 5) {
-
-      // SmartDashboard.putBoolean("Intake Deploy Limit Db",
-      // getIntakeDeployLimitSwitchDebounced());
-
+      SmartDashboard.putBoolean("Intake Deploy Limit Raw", getIntakeDeployLimitSwitchRaw());
+      SmartDashboard.putNumber("Intake Deploy Encoder", getIntakeDeployEncoderPosition());
       dashboardCounter = 0;
     }
-    SmartDashboard.putBoolean("Intake Deploy Limit Raw",
-        getIntakeDeployLimitSwitchRaw());
+
     // if (getIntakeDeployLimitSwitchRaw() && goingToHome) {
 
     // goingToHome = false; // it has reached home
@@ -83,6 +81,10 @@ public class IntakeDeploy extends SubsystemBase {
 
   public void setIntakeDeployEncoderPosition(double position) {
     intakeDeployMotor.getEncoder().setPosition(position);
+  }
+
+  public double getIntakeDeployEncoderPosition() {
+    return intakeDeployMotor.getEncoder().getPosition();
   }
 
   public void setIntakeDeployPosition(double position) {
