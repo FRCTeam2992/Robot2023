@@ -10,6 +10,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoder;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -23,10 +24,10 @@ public class Arm extends SubsystemBase {
   private int dashboardCounter;
 
   public enum ArmPosition {
-    BOTTOM_HARD_STOP(0.1),
-    TOP_HARD_STOP(212.9),
-    BOTTOM_SOFT_STOP(10.1),
-    TOP_SOFT_STOP(202.9),
+    BOTTOM_HARD_STOP(-9.0),
+    TOP_HARD_STOP(221.0),
+    BOTTOM_SOFT_STOP(-4.0),
+    TOP_SOFT_STOP(216.0),
     PARALLEL_TO_ELEVATOR(45.0),
     // The following are all guesses and need to be updated.
     NO_MOVE_BOTTOM(45.0),
@@ -42,7 +43,7 @@ public class Arm extends SubsystemBase {
 
     public final double positionDegrees;
 
-    private ArmPosition(double positionDegrees){
+    private ArmPosition(double positionDegrees) {
       this.positionDegrees = positionDegrees;
     }
   }
@@ -56,6 +57,9 @@ public class Arm extends SubsystemBase {
     armEncoder.configSensorDirection(true);
     armEncoder.configAbsoluteSensorRange(AbsoluteSensorRange.Unsigned_0_to_360);
 
+    // Wait for CANCoder config to take effect
+    Timer.delay(0.5);
+
     setArmMotorEncoder();
     setPIDConstants();
   }
@@ -64,7 +68,7 @@ public class Arm extends SubsystemBase {
   public void periodic() {
     if (dashboardCounter++ >= 5) {
 
-      if (hasArmMotorReset()){
+      if (hasArmMotorReset()) {
         setArmMotorEncoder();
       }
 
@@ -72,7 +76,6 @@ public class Arm extends SubsystemBase {
       SmartDashboard.putNumber("Arm Motor Encoder Raw", getArmMotorPositionRaw());
 
       SmartDashboard.putNumber("Arm Motor Encoder Degrees", getArmMotorPositionDeg());
-
 
       dashboardCounter = 0;
     }
@@ -88,14 +91,14 @@ public class Arm extends SubsystemBase {
     return armMotor.getSensorCollection().getIntegratedSensorPosition();
   }
 
-  public double getArmMotorPositionDeg(){
+  public double getArmMotorPositionDeg() {
     return getArmMotorPositionRaw() / Constants.ArmConstants.motorEncoderClicksPerDegree;
   }
 
   public void setArmSpeed(double speed) {
-    if (getArmCANCoderPositionCorrected() > ArmPosition.TOP_SOFT_STOP.positionDegrees) {
+    if (getArmMotorPositionDeg() > ArmPosition.TOP_SOFT_STOP.positionDegrees) {
       speed = Math.min(0.0, speed);
-    } else if (getArmCANCoderPositionCorrected() < ArmPosition.BOTTOM_SOFT_STOP.positionDegrees) {
+    } else if (getArmMotorPositionDeg() < ArmPosition.BOTTOM_SOFT_STOP.positionDegrees) {
       speed = Math.max(0.0, speed);
     }
     armMotor.set(ControlMode.PercentOutput, speed);
@@ -114,7 +117,18 @@ public class Arm extends SubsystemBase {
   }
 
   public void setArmMotorEncoder() {
-    double value = getArmCANCoderPositionCorrected() * Constants.ArmConstants.motorEncoderClicksPerDegree;
+    double value = getArmCANCoderPositionCorrected();
+
+    // If arm stowed at top of range, we have to adjust for mechanical chain slop
+    if (value > Constants.ArmConstants.ArmSlopConstants.topZoneEdge) {
+      value -= Constants.ArmConstants.ArmSlopConstants.topZoneAdjustment;
+    } else if (value < Constants.ArmConstants.ArmSlopConstants.bottomZoneEdge) {
+      value -= Constants.ArmConstants.ArmSlopConstants.bottomZoneAdjustment;
+    }
+
+    // Convert from degrees to encoder clicks
+    value *= Constants.ArmConstants.motorEncoderClicksPerDegree;
+
     armMotor.setSelectedSensorPosition(value);
   }
 
@@ -122,7 +136,7 @@ public class Arm extends SubsystemBase {
     return armMotor.hasResetOccurred();
   }
 
-  public void setPIDConstants(){
+  public void setPIDConstants() {
     armMotor.config_kP(0, Constants.ArmConstants.PIDConstants.P);
     armMotor.config_kI(0, Constants.ArmConstants.PIDConstants.I);
     armMotor.config_kD(0, Constants.ArmConstants.PIDConstants.D);

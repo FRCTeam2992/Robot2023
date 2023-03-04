@@ -238,11 +238,10 @@ public class Drivetrain extends SubsystemBase {
 
     // Swerve Controller
     swerveController = new SwerveController(
-      Constants.DrivetrainConstants.swerveLength,
-      Constants.DrivetrainConstants.swerveWidth
-    );
+        Constants.DrivetrainConstants.swerveLength,
+        Constants.DrivetrainConstants.swerveWidth);
 
-    //Load Motion Paths
+    // Load Motion Paths
     loadMotionPaths();
 
     // Limelight
@@ -276,20 +275,18 @@ public class Drivetrain extends SubsystemBase {
 
     // Swerve Drive Kinematics
     swerveDriveKinematics = new SwerveDriveKinematics(
-      Constants.DrivetrainConstants.frontLeftLocation,
-      Constants.DrivetrainConstants.frontRightLocation,
-      Constants.DrivetrainConstants.rearLeftLocation,
-      Constants.DrivetrainConstants.rearRightLocation
-    );
+        Constants.DrivetrainConstants.frontLeftLocation,
+        Constants.DrivetrainConstants.frontRightLocation,
+        Constants.DrivetrainConstants.rearLeftLocation,
+        Constants.DrivetrainConstants.rearRightLocation);
 
     // Serve Drive Odometry
     swerveDriveOdometry = new SwerveDriveOdometry(
-      swerveDriveKinematics,
-      // Rotation2d.fromDegrees(navx.getYaw()),
-      Rotation2d.fromDegrees(getGyroYaw()),
-      swerveDriveModulePositions,
-      new Pose2d(0.0, 0.0, new Rotation2d())
-    );
+        swerveDriveKinematics,
+        // Rotation2d.fromDegrees(navx.getYaw()),
+        Rotation2d.fromDegrees(getGyroYaw()),
+        swerveDriveModulePositions,
+        new Pose2d(0.0, 0.0, new Rotation2d()));
   }
 
   private void initTalonFX(TalonFX motorContollerName, boolean isInverted) {
@@ -310,9 +307,8 @@ public class Drivetrain extends SubsystemBase {
     swerveDriveModulePositions[3] = rearRightModule.getPosition();
 
     latestSwervePose = swerveDriveOdometry.update(
-      Rotation2d.fromDegrees(-getGyroYaw()),
-      swerveDriveModulePositions
-    );
+        Rotation2d.fromDegrees(-getGyroYaw()),
+        swerveDriveModulePositions);
 
     if (Constants.dataLogging) {
       limelight11JsonLog.append(limeLightCamera11.getLimelightJson());
@@ -453,7 +449,7 @@ public class Drivetrain extends SubsystemBase {
     testPath = PathPlanner.loadPath("TestPath", new PathConstraints(.5, .5));
   }
 
-  public CommandBase ResetOdometry(){
+  public CommandBase ResetOdometry() {
     return runOnce(() -> {
       resetOdometry();
     });
