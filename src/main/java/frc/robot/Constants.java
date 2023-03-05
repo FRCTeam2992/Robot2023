@@ -154,7 +154,7 @@ public final class Constants {
     }
 
     public static class AutoSpin {
-      public static double motorSpeed = 0.2; // percent output
+      public static double motorSpeed = 0.6; // percent output
       public static double timeoutForDirectionChange = 1.5; // seconds
     }
   }

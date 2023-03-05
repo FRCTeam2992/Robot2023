@@ -4,37 +4,30 @@
 
 package frc.robot.commands.groups;
 
-import java.io.Console;
-
-import edu.wpi.first.hal.simulation.ConstBufferCallback;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import frc.robot.Constants;
-import frc.robot.commands.SetClawState;
+import frc.robot.commands.MoveIntake;
 import frc.robot.commands.SetIntakeDeployState;
-import frc.robot.commands.SetIntakeSpeed;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.IntakeDeploy;
 import frc.robot.subsystems.Spindexer;
-import frc.robot.subsystems.Claw.ClawState;
 import frc.robot.subsystems.IntakeDeploy.IntakeDeployState;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class AutoGroundIntakeCube extends ParallelCommandGroup {
-  public AutoGroundIntakeCube(Elevator elevator, Arm arm, Claw claw, Intake intake,
-      IntakeDeploy intakeDeploy, Spindexer spindexer) {
-
+public class FinishIntakeSequence extends ParallelRaceGroup {
+  /** Creates a new FinishIntakeSequence. */
+  public FinishIntakeSequence(Elevator e, Arm a, Claw c, Intake i, IntakeDeploy id, Spindexer s) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-        new SafeDumbTowerToPosition(elevator, arm, Constants.TowerConstants.intakeBackstop),
-        new SetClawState(claw, ClawState.Closed),
-        new SetIntakeDeployState(intakeDeploy, IntakeDeployState.GroundIntake),
-        new SetIntakeSpeed(intake, 0.75, 0.0),
-        new AutoSpinSpindexer(spindexer).repeatedly());
+        new MoveIntake(i, 0, 0),
+        new SetIntakeDeployState(id, IntakeDeployState.Normal),
+        new SafeDumbTowerToPosition(e, a, Constants.TowerConstants.intakeGrab),
+        new AutoSpinSpindexer(s).repeatedly().withTimeout(12.0));
   }
 }

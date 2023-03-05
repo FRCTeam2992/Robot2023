@@ -25,6 +25,7 @@ import frc.robot.commands.TestTowerSafeMove;
 import frc.robot.commands.ZeroElevatorEncoders;
 import frc.robot.commands.groups.AutoGroundIntakeCone;
 import frc.robot.commands.groups.AutoGroundIntakeCube;
+import frc.robot.commands.groups.FinishIntakeSequence;
 import frc.robot.commands.groups.FollowTrajectoryCommand;
 import frc.robot.commands.groups.SafeDumbTowerToPosition;
 import frc.robot.subsystems.Arm;
@@ -131,8 +132,8 @@ public class RobotContainer {
 
     // A-Cube Intake
 
-    controller0.a().onTrue(new AutoGroundIntakeCube(mElevator, mArm, mClaw, mIntake, mIntakeDeploy));// cubes
-    controller0.b().onTrue(new AutoGroundIntakeCone(mElevator, mArm, mClaw, mIntake, mIntakeDeploy));// cone
+    controller0.a().onTrue(new AutoGroundIntakeCube(mElevator, mArm, mClaw, mIntake, mIntakeDeploy, mSpindexer));// cubes
+    controller0.b().onTrue(new AutoGroundIntakeCone(mElevator, mArm, mClaw, mIntake, mIntakeDeploy, mSpindexer));// cone
     // B-Retract Intake to Normal Spot(Inside Bumpers)
     // controller0.b().onTrue(null);// Retract intake
 
@@ -162,6 +163,10 @@ public class RobotContainer {
           mDrivetrain.setInSlowMode(false);
         })); // Slow Mode
 
+    controller0.axisGreaterThan(XboxController.Axis.kRightTrigger.value, .3)
+        .onTrue(new SetClawState(mClaw, ClawState.Closed));
+    testController1.axisGreaterThan(XboxController.Axis.kRightTrigger.value, .3)
+        .onFalse(new SetClawState(mClaw, ClawState.Opened));
     // controller0.axisGreaterThan(XboxController.Axis.kLeftTrigger.value,
     // .60).whileTrue(null);// Auto align for scoring
 
@@ -205,7 +210,7 @@ public class RobotContainer {
     controller1.leftBumper().whileTrue(new MoveSpindexer(mSpindexer, -0.3));
     controller1.rightBumper().whileTrue(new MoveSpindexer(mSpindexer, 0.3));
     controller1.rightTrigger(0.6).onTrue(
-        new SafeDumbTowerToPosition(mElevator, mArm, Constants.TowerConstants.intakeGrab));
+        new FinishIntakeSequence(mElevator, mArm, mClaw, mIntake, mIntakeDeploy, mSpindexer));
 
     // Back and Start
 
@@ -226,8 +231,8 @@ public class RobotContainer {
     /*
      * DO NOT USE "controller0" or "controller1" here
      */
-    testController0.povUp().whileTrue(new MoveIntakeDeploy(mIntakeDeploy, 0.1));
-    testController0.povDown().whileTrue(new MoveIntakeDeploy(mIntakeDeploy, -0.30));
+    testController0.povUp().whileTrue(new MoveIntakeDeploy(mIntakeDeploy, -0.3));
+    testController0.povDown().whileTrue(new MoveIntakeDeploy(mIntakeDeploy, 0.10));
     testController0.povRight().onTrue(new HomeIntakeDeploy(mIntakeDeploy));
 
     testController0.a().whileTrue(new SetIntakeSpeed(mIntake, 1, 1));
@@ -275,7 +280,10 @@ public class RobotContainer {
 
     SmartDashboard.putData("Home Intake", new HomeIntakeDeploy(mIntakeDeploy));
     SmartDashboard.putData("Intake to Ground", new SetIntakeDeployState(mIntakeDeploy, IntakeDeployState.GroundIntake));
-    SmartDashboard.putData("Intake to Normal", new SetIntakeDeployState(mIntakeDeploy, IntakeDeployState.LoadStation));
+    SmartDashboard.putData("Intake to Normal", new SetIntakeDeployState(mIntakeDeploy, IntakeDeployState.Normal));
+    SmartDashboard.putData("Intake to Load Station",
+        new SetIntakeDeployState(mIntakeDeploy, IntakeDeployState.LoadStation));
+    SmartDashboard.putData("Intake to Home", new SetIntakeDeployState(mIntakeDeploy, IntakeDeployState.Homed));
 
     SmartDashboard.putData("Test Path Planner Path",
         new FollowTrajectoryCommand(mDrivetrain, mDrivetrain.testPath, true));

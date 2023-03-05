@@ -21,6 +21,7 @@ public class Spindexer extends SubsystemBase {
     spindexerMotor = new VictorSPX(Constants.SpindexerConstants.DeviceIDs.spindexerMotor);
     spindexerMotor.setInverted(false);
     spindexerMotor.setNeutralMode(NeutralMode.Brake);
+    spindexerMotor.configOpenloopRamp(0.25);
   }
 
   @Override

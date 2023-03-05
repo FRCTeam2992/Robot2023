@@ -27,10 +27,10 @@ public class IntakeDeploy extends SubsystemBase {
   private double dashboardCounter = 0;
 
   public enum IntakeDeployState {
-    GroundIntake(22.0), // dummy value
-    LoadStation(10.0), // dummy value
-    Normal(5.0), // dummy valure
-    Homed(0.0);
+    GroundIntake(81.0), // dummy value
+    LoadStation(8.0), // dummy value
+    Normal(8.0), // dummy valure
+    Homed(0.5);
 
     public final double intakeSpot;
 
@@ -47,20 +47,23 @@ public class IntakeDeploy extends SubsystemBase {
         MotorType.kBrushless);
     intakeDeployMotor.setInverted(false);
     intakeDeployMotor.setIdleMode(IdleMode.kBrake);
+    intakeDeployMotor.setSmartCurrentLimit(40);
 
     intakeDeployLimitSwitch = new DigitalOutput(Constants.IntakeDeployConstants.DeviceIDs.intakeDeployLimitSwitch);
-    intakeDeployDebouncer = new Debouncer(.01, DebounceType.kBoth);
+    intakeDeployDebouncer = new Debouncer(.1, DebounceType.kBoth);
 
     intakeDeployLimitSwitch2 = new DigitalOutput(Constants.IntakeDeployConstants.DeviceIDs.intakeDeployLimitSwitch2);
-    intakeDeployDebouncer2 = new Debouncer(.01, DebounceType.kBoth);
+    intakeDeployDebouncer2 = new Debouncer(.1, DebounceType.kBoth);
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
     if (dashboardCounter++ > 5) {
-      SmartDashboard.putBoolean("Intake Deploy Limit Raw", getIntakeDeployLimitSwitchRaw());
-      SmartDashboard.putBoolean("Intake Deploy Limit Raw 2", getIntakeDeployLimitSwitch2Raw());
+      // SmartDashboard.putBoolean("Intake Deploy Limit Raw",
+      // getIntakeDeployLimitSwitchRaw());
+      // SmartDashboard.putBoolean("Intake Deploy Limit Raw 2",
+      // getIntakeDeployLimitSwitch2Raw());
       SmartDashboard.putBoolean("Intake Deploy Limit Debounced", getIntakeDeployLimitSwitchDebounced());
       SmartDashboard.putBoolean("Intake Deploy Limit Debounced 2", getIntakeDeployLimitSwitch2Debounced());
       SmartDashboard.putNumber("Intake Deploy Encoder", getIntakeDeployEncoderPosition());

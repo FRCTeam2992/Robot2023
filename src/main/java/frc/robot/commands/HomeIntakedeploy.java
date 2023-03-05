@@ -26,13 +26,15 @@ public class HomeIntakeDeploy extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    mIntakeDeploy.setIntakeDeploySpeed(-.2);
+    mIntakeDeploy.setIntakeDeploySpeed(-.20);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    if (mIntakeDeploy.getIntakeDeployLimitSwitchRaw()) {
+    mIntakeDeploy.setIntakeDeploySpeed(0);
+    if (mIntakeDeploy.getIntakeDeployLimitSwitchDebounced()
+        || mIntakeDeploy.getIntakeDeployLimitSwitch2Debounced()) {
       mIntakeDeploy.setIntakeDeployEncoderPosition(0.0);
     }
   }
@@ -40,6 +42,7 @@ public class HomeIntakeDeploy extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return mIntakeDeploy.getIntakeDeployLimitSwitchRaw();
+    return mIntakeDeploy.getIntakeDeployLimitSwitch2Debounced() ||
+        mIntakeDeploy.getIntakeDeployLimitSwitchDebounced();
   }
 }
