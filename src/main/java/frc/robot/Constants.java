@@ -153,14 +153,10 @@ public final class Constants {
       public static int spindexerMotor = 24;
     }
 
-    public static class PIDConstants {
-      public static double P = 0;
-      public static double I = 0;
-      public static double D = 0;
-      public static double FF = 0;
+    public static class AutoSpin {
+      public static double motorSpeed = 0.2; // percent output
+      public static double timeoutForDirectionChange = 1.5; // seconds
     }
-
-    public static double gearRatio = 116.0 + (2 / 3);
   }
 
   public static class TowerConstants {
