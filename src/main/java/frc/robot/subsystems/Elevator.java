@@ -114,6 +114,10 @@ public class Elevator extends SubsystemBase {
     elevatorSolenoid.set(toggle);
   }
 
+  public void toggleElevatorDeploy() {
+    elevatorSolenoid.set(!getElevatorSolenoidState());
+  }
+
   public boolean getElevatorSolenoidState() {
     return elevatorSolenoid.get();
   }
