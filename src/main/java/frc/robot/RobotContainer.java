@@ -12,7 +12,6 @@ import frc.robot.commands.MoveArm;
 import frc.robot.commands.MoveSpindexer;
 import frc.robot.commands.SetSwerveAngle;
 import frc.robot.commands.MoveElevator;
-import frc.robot.commands.MoveIntake;
 import frc.robot.commands.MoveIntakeDeploy;
 import frc.robot.commands.SetClawState;
 import frc.robot.commands.SetIntakeDeployState;
