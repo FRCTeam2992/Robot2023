@@ -37,7 +37,7 @@ public final class Constants {
     public static final double swerveLength = 0.667;
 
     // Max Swerve Speed (Velocity Control)
-    public static final double swerveMaxSpeed = 4.5; // (Meters per Second)(2 Slow, 4.5 normal)
+    public static final double swerveMaxSpeed = 3; // (Meters per Second)(2 Slow, 4.5 normal)
 
     // Swerve Wheels and Gear Ratio
     public static final double driveGearRatio = 6.75;// 6.75:1
@@ -131,13 +131,30 @@ public final class Constants {
     }
   }
 
+  public static class IntakeDeployConstants {
+    public static class DeviceIDs {
+      public static int intakeDeployMotor = 23;
+
+      public static int intakeDeployLimitSwitch = 0;
+      public static int intakeDeployLimitSwitch2 = 1;
+
+    }
+
+    public static class PIDConstants {
+      public static double P = 0.01;
+      public static double I = 0;
+      public static double D = 0;
+      public static double FF = 0;
+    }
+  }
+
   public static class SpindexerConstants {
     public static class DeviceIDs {
-      public static int spindexerMotor = 23;
+      public static int spindexerMotor = 24;
     }
 
     public static class AutoSpin {
-      public static double motorSpeed = 0.2; // percent output
+      public static double motorSpeed = 0.6; // percent output
       public static double timeoutForDirectionChange = 1.5; // seconds
     }
   }
@@ -148,7 +165,7 @@ public final class Constants {
     public static Waypoint scoreConeHigh = new Waypoint(23.5, 199.0);
     public static Waypoint scoreCubeMid = new Waypoint(0.0, 199.0);
     public static Waypoint scoreCubeHigh = new Waypoint(27.25, 166.0);
-    public static Waypoint intakeBackstop = new Waypoint(9.75, 38);
+    public static Waypoint intakeBackstop = new Waypoint(9.75, 35);
     public static Waypoint intakeGrab = new Waypoint(0.0, -4.0);
     public static Waypoint intakeRegrab = new Waypoint(7.75, 5.0);
     public static Waypoint floorGrab = new Waypoint(0.0, 92.0);
@@ -160,8 +177,6 @@ public final class Constants {
       public static int elevatorMotorFollow = 26;
 
       public static int elevatorSolenoid = 1;
-
-      public static int elevatorLimitSwitch = 0;
     }
 
     public static class PIDConstants {
