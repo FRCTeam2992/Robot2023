@@ -136,6 +136,10 @@ public final class Constants {
       public static int spindexerMotor = 23;
     }
 
+    public static class AutoSpin {
+      public static double motorSpeed = 0.2; // percent output
+      public static double timeoutForDirectionChange = 1.5; // seconds
+    }
   }
 
   public static class TowerConstants {
