@@ -7,11 +7,11 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.IntakeDeploy;
 
-public class HomeIntakeDeploy extends CommandBase {
+public class RehomeIntakeDeploy extends CommandBase {
   /** Creates a new HomeIntakedeploy. */
   private IntakeDeploy mIntakeDeploy;
 
-  public HomeIntakeDeploy(IntakeDeploy subsystem) {
+  public RehomeIntakeDeploy(IntakeDeploy subsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     mIntakeDeploy = subsystem;
     addRequirements(mIntakeDeploy);
