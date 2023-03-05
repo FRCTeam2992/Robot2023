@@ -7,27 +7,25 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Intake;
 
-public class MoveIntake extends CommandBase {
-  /** Creates a new MoveIntake. */
+public class SetIntakeSpeed extends CommandBase {
+  /** Creates a new SetIntakeSpeed. */
   private Intake mIntake;
 
   private double mIntakeTopSpeed;
   private double mIntakeBottomSpeed;
 
-  public MoveIntake(Intake subsystem, double intakeTopSpeed, double intakeBottomSpeed) {
-    // Use addRequirements() here to declare subsystem dependencies.
+  public SetIntakeSpeed(Intake subsystem, double intakeTopSpeed, double intakeBottomSpeed) {
     mIntake = subsystem;
     mIntakeTopSpeed = intakeTopSpeed;
     mIntakeBottomSpeed = intakeBottomSpeed;
-
+    // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(mIntake);
   }
-  
-
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -38,7 +36,8 @@ public class MoveIntake extends CommandBase {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+  }
 
   // Returns true when the command should end.
   @Override

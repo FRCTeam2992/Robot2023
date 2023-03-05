@@ -20,14 +20,14 @@ public class Spindexer extends SubsystemBase {
   public Spindexer() {
     spindexerMotor = new VictorSPX(Constants.SpindexerConstants.DeviceIDs.spindexerMotor);
     spindexerMotor.setInverted(false);
-    spindexerMotor.setNeutralMode(NeutralMode.Coast);
+    spindexerMotor.setNeutralMode(NeutralMode.Brake);
+    spindexerMotor.configOpenloopRamp(0.25);
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
     if (dashboardCounter++ >= 5) {
-
       dashboardCounter = 0;
     }
   }

@@ -55,8 +55,6 @@ public class Elevator extends SubsystemBase {
 
     elevatorSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM,
         Constants.ElevatorConstants.DeviceIDs.elevatorSolenoid);
-
-    elevatorLimitSwitch = new DigitalOutput(Constants.ElevatorConstants.DeviceIDs.elevatorLimitSwitch);
   }
 
   @Override

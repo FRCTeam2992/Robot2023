@@ -5,41 +5,41 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Intake.IntakeStates;
+import frc.robot.subsystems.IntakeDeploy;
+import frc.robot.subsystems.IntakeDeploy.IntakeDeployState;
 
-public class DeployIntake extends CommandBase {
-  /** Creates a new DeployIntake. */
-  private Intake mIntake;
+public class SetIntakeDeployState extends CommandBase {
+  /** Creates a new SetIntakeDeployState. */
+  private IntakeDeploy mIntakeDeploy;
 
-  private IntakeStates mIntakeState;
+  private IntakeDeployState mState;
 
-  public DeployIntake(Intake subsystem, IntakeStates intakeState) {
+  public SetIntakeDeployState(IntakeDeploy subsystem, IntakeDeployState state) {
+    mIntakeDeploy = subsystem;
+    mState = state;
     // Use addRequirements() here to declare subsystem dependencies.
-    mIntake = subsystem;
-
-    mIntakeState = intakeState;
-
-
+    addRequirements(mIntakeDeploy);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    mIntake.setIntakeState(mIntakeState);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    mIntakeDeploy.setIntakeDeployState(mState);
+  }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true;
+    return false;
   }
 }

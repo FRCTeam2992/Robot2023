@@ -5,40 +5,35 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.IntakeDeploy;
 
-public class MoveIntake extends CommandBase {
-  /** Creates a new MoveIntake. */
-  private Intake mIntake;
+public class MoveIntakeDeploy extends CommandBase {
+  /** Creates a new MoveIntakeDeploy. */
+  private IntakeDeploy mIntakeDeploy;
+  private double mIntakeDeploySpeed;
 
-  private double mIntakeTopSpeed;
-  private double mIntakeBottomSpeed;
-
-  public MoveIntake(Intake subsystem, double intakeTopSpeed, double intakeBottomSpeed) {
+  public MoveIntakeDeploy(IntakeDeploy subsystem, double intakeDeploySpeed) {
+    mIntakeDeploy = subsystem;
+    mIntakeDeploySpeed = intakeDeploySpeed;
     // Use addRequirements() here to declare subsystem dependencies.
-    mIntake = subsystem;
-    mIntakeTopSpeed = intakeTopSpeed;
-    mIntakeBottomSpeed = intakeBottomSpeed;
-
-    addRequirements(mIntake);
+    addRequirements(mIntakeDeploy);
   }
-  
-
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    mIntake.setIntakeTopSpeed(mIntakeTopSpeed);
-    mIntake.setIntakeBottomSpeed(mIntakeBottomSpeed);
+    mIntakeDeploy.setIntakeDeploySpeed(mIntakeDeploySpeed);
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+  }
 
   // Returns true when the command should end.
   @Override

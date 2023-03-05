@@ -4,11 +4,13 @@
 
 package frc.robot.subsystems;
 
+import javax.swing.text.StyleContext.SmallAttributeSet;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.Solenoid;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -17,25 +19,18 @@ public class Intake extends SubsystemBase {
   private CANSparkMax intakeMotorTop;
   private CANSparkMax intakeMotorBottom;
 
-  private Solenoid intakeSolenoid;
-
   private int dashboardCounter = 0;
-
-  public enum IntakeStates {
-    In,
-    Out
-  }
 
   public Intake() {
     intakeMotorTop = new CANSparkMax(Constants.IntakeConstants.DeviceIDs.intakeMotorTop, MotorType.kBrushless);
-    intakeMotorTop.setInverted(false);
+    intakeMotorTop.setInverted(true);
     intakeMotorTop.setIdleMode(IdleMode.kCoast);
+    intakeMotorTop.setSmartCurrentLimit(25);
 
     intakeMotorBottom = new CANSparkMax(Constants.IntakeConstants.DeviceIDs.intakeMotorBottom, MotorType.kBrushless);
-    intakeMotorBottom.setInverted(false);
+    intakeMotorBottom.setInverted(true);
     intakeMotorBottom.setIdleMode(IdleMode.kCoast);
-
-    intakeSolenoid = new Solenoid(PneumaticsModuleType.REVPH, Constants.IntakeConstants.DeviceIDs.intakeSolenoid);
+    intakeMotorBottom.setSmartCurrentLimit(25);
 
   }
 
@@ -43,6 +38,8 @@ public class Intake extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     if (dashboardCounter++ >= 5) {
+      SmartDashboard.putNumber("Intake Top Motor RPM", intakeMotorTop.getEncoder().getVelocity());
+      SmartDashboard.putNumber("Intake Bottom Motor RPM", intakeMotorBottom.getEncoder().getVelocity());
 
       dashboardCounter = 0;
     }
@@ -51,24 +48,12 @@ public class Intake extends SubsystemBase {
   public void setIntakeTopSpeed(double speed) {
     intakeMotorTop.set(speed);
   }
-  
 
   public void setIntakeBottomSpeed(double speed) {
     intakeMotorBottom.set(speed);
   }
 
-  public void setIntakeState(IntakeStates state) {
-    switch (state) {
-      case In:
-        intakeSolenoid.set(false);
-        break;
-      case Out:
-        intakeSolenoid.set(true);
-        break;
-    }
-  }
   public void onDisable() {
-    setIntakeState (IntakeStates.In);
     setIntakeBottomSpeed(0.0);
     setIntakeTopSpeed(0.0);
   }
