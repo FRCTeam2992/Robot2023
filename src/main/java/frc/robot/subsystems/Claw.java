@@ -18,12 +18,12 @@ public class Claw extends SubsystemBase {
   public enum ClawState {
     Opened(true),
     Closed(false);
-  
+
     public final boolean solenoidSetting;
 
-    private ClawState(boolean solenoidSetting){
+    private ClawState(boolean solenoidSetting) {
       this.solenoidSetting = solenoidSetting;
-    } 
+    }
   }
 
   public Claw() {
@@ -44,8 +44,15 @@ public class Claw extends SubsystemBase {
     clawSolenoid.set(state.solenoidSetting);
   }
 
+  public ClawState getClawState() {
+    if (clawSolenoid.get()) {
+      return ClawState.Opened;
+    }
+    return ClawState.Closed;
+  }
+
   public void onDisable() {
-   //Solenoid needs to be in false state when disabled.
+    // Solenoid needs to be in false state when disabled.
     setClawState(ClawState.Closed);
   }
 }
