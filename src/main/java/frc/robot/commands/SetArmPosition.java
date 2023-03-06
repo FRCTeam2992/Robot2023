@@ -11,21 +11,11 @@ public class SetArmPosition extends CommandBase {
   /** Creates a new SetArmPosition. */
   private Arm mArm;
   private double mAngle;
-  private boolean holdPosition = true; // By default command stays running and holds position unless constructer called
-                                       // with false here
 
   public SetArmPosition(Arm subsystem, double angle) {
     // Use addRequirements() here to declare subsystem dependencies.
     mArm = subsystem;
     mAngle = angle;
-
-    addRequirements(mArm);
-  }
-
-  public SetArmPosition(Arm subsystem, double angle, boolean hold) {
-    mArm = subsystem;
-    mAngle = angle;
-    holdPosition = hold;
 
     addRequirements(mArm);
   }
@@ -49,10 +39,7 @@ public class SetArmPosition extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (holdPosition) {
-      return false;
-    } else {
-      return mArm.atPosition();
-    }
+    return mArm.atPosition();
+
   }
 }
