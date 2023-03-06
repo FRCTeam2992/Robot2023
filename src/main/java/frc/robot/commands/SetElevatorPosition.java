@@ -12,11 +12,22 @@ public class SetElevatorPosition extends CommandBase {
   private Elevator mElevator;
 
   private double mPosition;
+  private boolean holdPosition = true; // By default we hold the position and command doesnt end.
 
   public SetElevatorPosition(Elevator subsystem, double position) {
     // Use addRequirements() here to declare subsystem dependencies.
     mElevator = subsystem;
     mPosition = position;
+    holdPosition = true;
+
+    addRequirements(mElevator);
+  }
+
+  public SetElevatorPosition(Elevator subsystem, double position, boolean hold) {
+    // Use addRequirements() here to declare subsystem dependencies.
+    mElevator = subsystem;
+    mPosition = position;
+    holdPosition = hold;
 
     addRequirements(mElevator);
   }
@@ -40,7 +51,10 @@ public class SetElevatorPosition extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return mElevator.atPosition();
-
+    if (holdPosition) {
+      return false;
+    } else {
+      return mElevator.atPosition();
+    }
   }
 }

@@ -7,7 +7,6 @@ package frc.robot;
 import frc.robot.commands.DeployButterflyWheels;
 import frc.robot.commands.DeployElevator;
 import frc.robot.commands.DriveSticks;
-import frc.robot.commands.HoldElevator;
 import frc.robot.commands.RehomeIntakeDeploy;
 import frc.robot.commands.MoveArm;
 import frc.robot.commands.MoveSpindexer;
