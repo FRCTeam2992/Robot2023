@@ -140,7 +140,8 @@ public class Robot extends TimedRobot {
     mRobotContainer.mArm.initArmMotorEncoder(); // Attempt reset at each teleop init
     if (mRobotContainer.mArm.motorEncoderCalibrated() != EncoderState.CALIBRATED) {
       // Encoder was not properly calibrated -- try and clean it up on init
-      CommandScheduler.getInstance().schedule(new ResetArmEncoder(mRobotContainer.mArm, mRobotContainer.mElevator));
+      CommandScheduler.getInstance()
+          .schedule(new ResetArmEncoder(mRobotContainer.mArm, mRobotContainer.mElevator).withTimeout(2.0));
     }
   }
 
