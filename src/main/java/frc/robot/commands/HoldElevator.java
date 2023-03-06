@@ -13,7 +13,7 @@ public class HoldElevator extends CommandBase {
   /** Creates a new StopElevator. */
   private Elevator mElevator;
 
-  Timer timer;
+  private Timer timer;
 
   public HoldElevator(Elevator subsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
