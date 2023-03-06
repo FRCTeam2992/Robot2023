@@ -11,17 +11,19 @@ public class MoveIntake extends CommandBase {
   /** Creates a new MoveIntake. */
   private Intake mIntake;
 
-  private double mTopIntakeSpeed;
-  private double mBottomIntakeSpeed;
+  private double mIntakeTopSpeed;
+  private double mIntakeBottomSpeed;
 
-  public MoveIntake(Intake subsystem, double topIntakeSpeed, double bottomIntakeSpeed) {
+  public MoveIntake(Intake subsystem, double intakeTopSpeed, double intakeBottomSpeed) {
     // Use addRequirements() here to declare subsystem dependencies.
     mIntake = subsystem;
-    mTopIntakeSpeed = topIntakeSpeed;
-    mBottomIntakeSpeed = bottomIntakeSpeed;
+    mIntakeTopSpeed = intakeTopSpeed;
+    mIntakeBottomSpeed = intakeBottomSpeed;
 
     addRequirements(mIntake);
   }
+  
+
 
   // Called when the command is initially scheduled.
   @Override
@@ -30,8 +32,8 @@ public class MoveIntake extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    mIntake.setIntakeTopSpeed(mTopIntakeSpeed);
-    mIntake.setIntakeBottomSpeed(mBottomIntakeSpeed);
+    mIntake.setIntakeTopSpeed(mIntakeTopSpeed);
+    mIntake.setIntakeBottomSpeed(mIntakeBottomSpeed);
   }
 
   // Called once the command ends or is interrupted.

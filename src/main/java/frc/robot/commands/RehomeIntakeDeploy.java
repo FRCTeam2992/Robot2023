@@ -5,41 +5,44 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Spindexer;
+import frc.robot.subsystems.IntakeDeploy;
 
-public class MoveSpindexer extends CommandBase {
-  /** Creates a new MoveSpindexer. */
-  private Spindexer mSpindexer;
+public class RehomeIntakeDeploy extends CommandBase {
+  /** Creates a new HomeIntakedeploy. */
+  private IntakeDeploy mIntakeDeploy;
 
-  private double mSpindexerSpeed;
-
-  public MoveSpindexer(Spindexer subsystem, double spindexerspeed) {
+  public RehomeIntakeDeploy(IntakeDeploy subsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
-    mSpindexer = subsystem;
-    mSpindexerSpeed = spindexerspeed;
-
-    addRequirements(mSpindexer);
+    mIntakeDeploy = subsystem;
+    addRequirements(mIntakeDeploy);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    mIntakeDeploy.goingToHome = true;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    mSpindexer.setSpindexerSpeed(mSpindexerSpeed);
+    mIntakeDeploy.setIntakeDeploySpeed(-.20);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    mIntakeDeploy.setIntakeDeploySpeed(0);
+    if (mIntakeDeploy.getIntakeDeployLimitSwitchDebounced()
+        || mIntakeDeploy.getIntakeDeployLimitSwitch2Debounced()) {
+      mIntakeDeploy.setIntakeDeployEncoderPosition(0.0);
+    }
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return mIntakeDeploy.getIntakeDeployLimitSwitch2Debounced() ||
+        mIntakeDeploy.getIntakeDeployLimitSwitchDebounced();
   }
 }

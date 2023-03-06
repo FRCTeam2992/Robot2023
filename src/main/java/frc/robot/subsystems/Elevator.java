@@ -40,27 +40,6 @@ public class Elevator extends SubsystemBase {
     }
   }
 
-  public enum ElevatorPosition {
-    HARD_STOP_TOP(32.25),
-    HARD_STOP_BOTTOM(0.0),
-    SOFT_STOP_TOP(31.75),
-    SOFT_STOP_BOTTOM(0.5),
-    CUBE_LOW(0.5),
-    CUBE_MID(1.5),
-    CUBE_TOP(16.5),
-    CONE_LOW(0.5),
-    CONE_MID(0.5),
-    CONE_TOP(27.7),
-    INTAKE_BACKSTOP(6.0),
-    SPINDEXER_GRAB(3.0);
-
-    public final double positionInches;
-
-    private ElevatorPosition(double positionInches) {
-      this.positionInches = positionInches;
-    }
-  }
-
   /** Creates a new Elevator. */
   public Elevator() {
     elevatorMotorLead = new TalonFX(Constants.ElevatorConstants.DeviceIDs.elevatorMotorLead);
@@ -76,8 +55,6 @@ public class Elevator extends SubsystemBase {
 
     elevatorSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM,
         Constants.ElevatorConstants.DeviceIDs.elevatorSolenoid);
-
-    elevatorLimitSwitch = new DigitalOutput(Constants.ElevatorConstants.DeviceIDs.elevatorLimitSwitch);
   }
 
   @Override
@@ -110,19 +87,19 @@ public class Elevator extends SubsystemBase {
   }
 
   public void setElevatorSpeed(double speed) {
-    if (getElevatorInches() < ElevatorPosition.SOFT_STOP_BOTTOM.positionInches) {
+    if (getElevatorInches() < Constants.ElevatorConstants.Limits.softStopBottom) {
       speed = Math.max(0.0, speed);
-    } else if (getElevatorInches() > ElevatorPosition.SOFT_STOP_TOP.positionInches) {
+    } else if (getElevatorInches() > Constants.ElevatorConstants.Limits.softStopTop) {
       speed = Math.min(0.0, speed);
     }
     elevatorMotorLead.set(TalonFXControlMode.PercentOutput, speed);
   }
 
   public void setElevatorPosition(double inches) {
-    if (inches < ElevatorPosition.SOFT_STOP_BOTTOM.positionInches) {
-      inches = ElevatorPosition.SOFT_STOP_BOTTOM.positionInches;
-    } else if (inches > ElevatorPosition.SOFT_STOP_TOP.positionInches) {
-      inches = ElevatorPosition.SOFT_STOP_TOP.positionInches;
+    if (inches < Constants.ElevatorConstants.Limits.softStopBottom) {
+      inches = Constants.ElevatorConstants.Limits.softStopBottom;
+    } else if (inches > Constants.ElevatorConstants.Limits.softStopTop) {
+      inches = Constants.ElevatorConstants.Limits.softStopTop;
     }
     targetHeightInch = inches;
     elevatorMotorLead.set(TalonFXControlMode.MotionMagic, inchesToEncoderClicks(inches));

@@ -5,20 +5,21 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Spindexer;
+import frc.robot.subsystems.Intake;
 
-public class MoveSpindexer extends CommandBase {
-  /** Creates a new MoveSpindexer. */
-  private Spindexer mSpindexer;
+public class SetIntakeSpeed extends CommandBase {
+  /** Creates a new SetIntakeSpeed. */
+  private Intake mIntake;
 
-  private double mSpindexerSpeed;
+  private double mIntakeTopSpeed;
+  private double mIntakeBottomSpeed;
 
-  public MoveSpindexer(Spindexer subsystem, double spindexerspeed) {
+  public SetIntakeSpeed(Intake subsystem, double intakeTopSpeed, double intakeBottomSpeed) {
+    mIntake = subsystem;
+    mIntakeTopSpeed = intakeTopSpeed;
+    mIntakeBottomSpeed = intakeBottomSpeed;
     // Use addRequirements() here to declare subsystem dependencies.
-    mSpindexer = subsystem;
-    mSpindexerSpeed = spindexerspeed;
-
-    addRequirements(mSpindexer);
+    addRequirements(mIntake);
   }
 
   // Called when the command is initially scheduled.
@@ -29,7 +30,8 @@ public class MoveSpindexer extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    mSpindexer.setSpindexerSpeed(mSpindexerSpeed);
+    mIntake.setIntakeTopSpeed(mIntakeTopSpeed);
+    mIntake.setIntakeBottomSpeed(mIntakeBottomSpeed);
   }
 
   // Called once the command ends or is interrupted.
