@@ -13,26 +13,24 @@ import frc.lib.manipulator.Waypoint;
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class UnsafeMoveTowerFromBackstopToSpindexer extends SequentialCommandGroup {
-  /**
-   * Creates a new MoveTowerFromSpindexerToBackstop.
-   * Note: This command group should NEVER be attached to an arbitrary
-   * input, as it does not respect no-fly zones. It is only to
-   * be used within a planned sequence of moves with a known
-   * safe starting point.
-   */
-  public UnsafeMoveTowerFromBackstopToSpindexer(Elevator mElevator, Arm mArm) {
-    addCommands(
-        new UnsafeMoveTowerToPosition(
-            mElevator, mArm,
-            new Waypoint(
-                Elevator.ElevatorPosition.INTAKE_BACKSTOP.positionInches,
-                Arm.ArmPosition.SPINDEXER_GRAB.positionDegrees),
-            false),
-        new UnsafeMoveTowerToPosition(
-            mElevator, mArm,
-            new Waypoint(
-                Elevator.ElevatorPosition.SPINDEXER_GRAB.positionInches,
-                Arm.ArmPosition.SPINDEXER_GRAB.positionDegrees),
-            true));
-  }
+    /**
+     * Creates a new MoveTowerFromSpindexerToBackstop.
+     * Note: This command group should NEVER be attached to an arbitrary
+     * input, as it does not respect no-fly zones. It is only to
+     * be used within a planned sequence of moves with a known
+     * safe starting point.
+     */
+    public UnsafeMoveTowerFromBackstopToSpindexer(Elevator mElevator, Arm mArm) {
+        addCommands(
+                new UnsafeMoveTowerToPosition(
+                        mElevator, mArm,
+                        new Waypoint(
+                                frc.robot.Constants.TowerConstants.intakeBackstop.height(),
+                                frc.robot.Constants.TowerConstants.intakeGrab.angle()),
+                        false),
+                new UnsafeMoveTowerToPosition(
+                        mElevator, mArm,
+                        frc.robot.Constants.TowerConstants.intakeGrab,
+                        true));
+    }
 }
