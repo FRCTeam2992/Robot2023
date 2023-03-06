@@ -25,6 +25,16 @@ public class Arm extends SubsystemBase {
 
   private double targetAngleDeg = 0;
 
+  public enum EncoderState {
+    UNKNOWN,
+    CANCODER_FAILED,
+    TOP_SLOP_ZONE,
+    BOTTOM_SLOP_ZONE,
+    CALIBRATED
+  }
+
+  private EncoderState motorEncoderConfidentCalibrated = EncoderState.UNKNOWN;
+
   public enum ArmPosition {
     PARALLEL_TO_ELEVATOR(45.0),
     MOVEMENT_THRESHOLD_2(15.0),
@@ -50,7 +60,7 @@ public class Arm extends SubsystemBase {
     // Wait for CANCoder config to take effect
     Timer.delay(0.5);
 
-    setArmMotorEncoder();
+    initArmMotorEncoder();
     setPIDConstants();
   }
 
@@ -59,7 +69,7 @@ public class Arm extends SubsystemBase {
     if (dashboardCounter++ >= 5) {
 
       if (hasArmMotorReset()) {
-        setArmMotorEncoder();
+        initArmMotorEncoder();
       }
 
       SmartDashboard.putNumber("Arm CANcoder", getArmCANCoderPositionCorrected());
@@ -103,6 +113,14 @@ public class Arm extends SubsystemBase {
     return armEncoder.getAbsolutePosition() + Constants.ArmConstants.CANCoderOffset;
   }
 
+  public EncoderState motorEncoderCalibrated() {
+    return motorEncoderConfidentCalibrated;
+  }
+
+  public void clearMotorEncoder() {
+    motorEncoderConfidentCalibrated = EncoderState.UNKNOWN;
+  }
+
   public boolean atPosition() {
     return (Math.abs(targetAngleDeg - getArmMotorPositionDeg()) < Constants.ArmConstants.armAngleToleranceDeg);
   }
@@ -111,19 +129,47 @@ public class Arm extends SubsystemBase {
     setArmSpeed(0.0);
   }
 
-  public void setArmMotorEncoder() {
+  public void initArmMotorEncoder() {
     double value = getArmCANCoderPositionCorrected();
 
+    if (!hasArmMotorReset() && motorEncoderConfidentCalibrated == EncoderState.CALIBRATED) {
+      // We previously had a good reset and no motor reset so still good
+      return;
+    }
+
     // If arm stowed at top of range, we have to adjust for mechanical chain slop
-    if (value > Constants.ArmConstants.ArmSlopConstants.topZoneEdge) {
+    if (Math.abs(armEncoder.getLastTimestamp() - Timer.getFPGATimestamp()) > 0.5) {
+      // Not getting current Cancoder settings
+      // Assume we are at Match Start position and PRAY!
+      System.out.println("+++++++++++++++++> ARM ENCODER NO CURRENT READING");
+      value = Constants.ArmConstants.Limits.hardStopTop - Constants.ArmConstants.ArmSlopConstants.topZoneAdjustment;
+      motorEncoderConfidentCalibrated = EncoderState.CANCODER_FAILED;
+    }
+    if (value >= Constants.ArmConstants.ArmSlopConstants.topZoneHiEdge) {
+      // Above the top slop zone -- apply adjustment
       value -= Constants.ArmConstants.ArmSlopConstants.topZoneAdjustment;
-    } else if (value < Constants.ArmConstants.ArmSlopConstants.bottomZoneEdge) {
+      motorEncoderConfidentCalibrated = EncoderState.CALIBRATED;
+    } else if (value >= Constants.ArmConstants.ArmSlopConstants.topZoneLowEdge) {
+      // In the top slop zone -- assume midpoint but note we don't have good reading
+      value -= (Constants.ArmConstants.ArmSlopConstants.topZoneAdjustment / 2.0);
+      motorEncoderConfidentCalibrated = EncoderState.TOP_SLOP_ZONE;
+      System.out.println("++++++++++++> Arm init in top slop zone");
+    } else if (value >= Constants.ArmConstants.ArmSlopConstants.bottomZoneHiEdge) {
+      // In the mid zone -- no offset to motor encoder needed
+      motorEncoderConfidentCalibrated = EncoderState.CALIBRATED;
+    } else if (value >= Constants.ArmConstants.ArmSlopConstants.bottomZoneLowEdge) {
+      // In the bottom slop zone -- assume midount but note we dont have good reading
+      value -= Constants.ArmConstants.ArmSlopConstants.bottomZoneAdjustment / 2.0;
+      motorEncoderConfidentCalibrated = EncoderState.BOTTOM_SLOP_ZONE;
+      System.out.println("++++++++++++++> Arm init in bottom slop zone");
+    } else {
+      // Below the bottom slop zone -- apply adjustment
       value -= Constants.ArmConstants.ArmSlopConstants.bottomZoneAdjustment;
+      motorEncoderConfidentCalibrated = EncoderState.CALIBRATED;
     }
 
     // Convert from degrees to encoder clicks
     value *= Constants.ArmConstants.motorEncoderClicksPerDegree;
-
     armMotor.setSelectedSensorPosition(value);
   }
 

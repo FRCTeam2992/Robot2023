@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.ResetArmEncoder;
+import frc.robot.subsystems.Arm.EncoderState;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -102,7 +104,7 @@ public class Robot extends TimedRobot {
     mRobotContainer.mDrivetrain.setDriveRampRate(0.0);
 
     // Arm make sure encoders are current
-    mRobotContainer.mArm.setArmMotorEncoder(); // Reset each time we enter Teleop or Auto
+    mRobotContainer.mArm.initArmMotorEncoder(); // Reset each time we enter Teleop or Auto
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
@@ -135,7 +137,11 @@ public class Robot extends TimedRobot {
     mRobotContainer.mDrivetrain.setDriveRampRate(0.25);
 
     // Arm make sure encoders are current
-    mRobotContainer.mArm.setArmMotorEncoder(); // Reset each time we enter Teleop or Auto
+    mRobotContainer.mArm.initArmMotorEncoder(); // Attempt reset at each teleop init
+    if (mRobotContainer.mArm.motorEncoderCalibrated() != EncoderState.CALIBRATED) {
+      // Encoder was not properly calibrated -- try and clean it up on init
+      CommandScheduler.getInstance().schedule(new ResetArmEncoder(mRobotContainer.mArm, mRobotContainer.mElevator));
+    }
   }
 
   /** This function is called periodically during operator control. */
