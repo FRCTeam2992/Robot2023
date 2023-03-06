@@ -33,27 +33,23 @@ public class SafeDumbTowerToPosition extends SequentialCommandGroup {
                                                                                 new UnsafeMoveTowerToPosition(
                                                                                                 mElevator,
                                                                                                 mArm,
-                                                                                                frc.lib.manipulator.Constants.Waypoints.WAYPOINT_CROSSBAR_ENTRY,
-                                                                                                false)),
+                                                                                                frc.lib.manipulator.Constants.Waypoints.WAYPOINT_CROSSBAR_ENTRY)),
                                                                 Map.entry(
                                                                                 WaypointSafety.WaypointSafetyClassification.NoFlyRobotBase,
                                                                                 new UnsafeMoveTowerToPosition(
                                                                                                 mElevator,
                                                                                                 mArm,
-                                                                                                frc.lib.manipulator.Constants.Waypoints.WAYPOINT_BASE_ENTRY,
-                                                                                                false)),
+                                                                                                frc.lib.manipulator.Constants.Waypoints.WAYPOINT_BASE_ENTRY)),
                                                                 Map.entry(
                                                                                 WaypointSafety.WaypointSafetyClassification.PlannedPathCrossbar,
                                                                                 new UnsafeMoveTowerToPosition(elevator,
                                                                                                 mArm,
-                                                                                                frc.lib.manipulator.Constants.Waypoints.WAYPOINT_CROSSBAR_ENTRY,
-                                                                                                false)),
+                                                                                                frc.lib.manipulator.Constants.Waypoints.WAYPOINT_CROSSBAR_ENTRY)),
                                                                 Map.entry(
                                                                                 WaypointSafety.WaypointSafetyClassification.PlannedPathRobotBase,
                                                                                 new UnsafeMoveTowerToPosition(mElevator,
                                                                                                 mArm,
-                                                                                                frc.lib.manipulator.Constants.Waypoints.WAYPOINT_BASE_ENTRY,
-                                                                                                false))),
+                                                                                                frc.lib.manipulator.Constants.Waypoints.WAYPOINT_BASE_ENTRY))),
                                                 this::checkStart),
 
                                 // Next we check if we're moving across the 90 degree position with the arm,
@@ -62,8 +58,7 @@ public class SafeDumbTowerToPosition extends SequentialCommandGroup {
                                                 Map.entry(true, new UnsafeMoveTowerToPosition(
                                                                 mElevator,
                                                                 mArm,
-                                                                frc.lib.manipulator.Constants.Waypoints.WAYPOINT_BASE_AVOID,
-                                                                false)),
+                                                                frc.lib.manipulator.Constants.Waypoints.WAYPOINT_BASE_AVOID)),
                                                 Map.entry(false, new InstantCommand())),
                                                 this::checkNeedsBaseAvoidWaypoint),
 
@@ -85,15 +80,13 @@ public class SafeDumbTowerToPosition extends SequentialCommandGroup {
                                                                                 new UnsafeMoveTowerToPosition(
                                                                                                 mElevator,
                                                                                                 mArm,
-                                                                                                frc.lib.manipulator.Constants.Waypoints.WAYPOINT_CROSSBAR_ENTRY,
-                                                                                                false)),
+                                                                                                frc.lib.manipulator.Constants.Waypoints.WAYPOINT_CROSSBAR_ENTRY)),
                                                                 Map.entry(
                                                                                 WaypointSafety.WaypointSafetyClassification.PlannedPathRobotBase,
                                                                                 new UnsafeMoveTowerToPosition(
                                                                                                 mElevator,
                                                                                                 mArm,
-                                                                                                frc.lib.manipulator.Constants.Waypoints.WAYPOINT_BASE_ENTRY,
-                                                                                                false))),
+                                                                                                frc.lib.manipulator.Constants.Waypoints.WAYPOINT_BASE_ENTRY))),
                                                 this::checkEnd),
 
                                 // And now we can move into the final spot if it is safe
@@ -102,7 +95,7 @@ public class SafeDumbTowerToPosition extends SequentialCommandGroup {
                                                                 Map.entry(
                                                                                 WaypointSafety.WaypointSafetyClassification.Safe,
                                                                                 new UnsafeMoveTowerToPosition(mElevator,
-                                                                                                mArm, mEnd, true)),
+                                                                                                mArm, mEnd)),
                                                                 Map.entry(
                                                                                 WaypointSafety.WaypointSafetyClassification.NoFlyCrossbar,
                                                                                 new InstantCommand()),
@@ -112,11 +105,11 @@ public class SafeDumbTowerToPosition extends SequentialCommandGroup {
                                                                 Map.entry(
                                                                                 WaypointSafety.WaypointSafetyClassification.PlannedPathCrossbar,
                                                                                 new UnsafeMoveTowerToPosition(elevator,
-                                                                                                mArm, mEnd, true)),
+                                                                                                mArm, mEnd)),
                                                                 Map.entry(
                                                                                 WaypointSafety.WaypointSafetyClassification.PlannedPathRobotBase,
                                                                                 new UnsafeMoveTowerToPosition(mElevator,
-                                                                                                mArm, mEnd, true))),
+                                                                                                mArm, mEnd))),
                                                 this::checkEnd));
         }
 
