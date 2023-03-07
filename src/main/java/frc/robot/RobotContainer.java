@@ -109,6 +109,7 @@ public class RobotContainer {
 
         // Add dashboard things
         addSubsystemsToDashboard();
+        addRobotStateToDashboard();
         // Configure the trigger bindings
         configureShuffleboardBindings();
         configRealButtonBindings();
@@ -289,7 +290,6 @@ public class RobotContainer {
         SmartDashboard.putNumber("ElevTestMoveHeight", 20.0);
         SmartDashboard.putNumber("ArmTestMoveAngle", 150);
         SmartDashboard.putData("TestSafeDumbPath", new TestTowerSafeMove(mElevator, mArm));
-
     }
 
     public void addSubsystemsToDashboard() {
@@ -300,6 +300,27 @@ public class RobotContainer {
         SmartDashboard.putData("Intake", mIntake);
         SmartDashboard.putData("Spindexer", mSpindexer);
         SmartDashboard.putData("Butterfly Wheels", mButterflyWheels);
+    }
+
+    public void addRobotStateToDashboard() {
+        SmartDashboard.putBoolean("Target High Left",
+                mRobotState.currentTarget == RobotState.TargetingState.GridHighLeft);
+        SmartDashboard.putBoolean("Target High Center",
+                mRobotState.currentTarget == RobotState.TargetingState.GridHighCenter);
+        SmartDashboard.putBoolean("Target High Right",
+                mRobotState.currentTarget == RobotState.TargetingState.GridHighRight);
+        SmartDashboard.putBoolean("Target Mid Left",
+                mRobotState.currentTarget == RobotState.TargetingState.GridMidLeft);
+        SmartDashboard.putBoolean("Target Mid Center",
+                mRobotState.currentTarget == RobotState.TargetingState.GridMidCenter);
+        SmartDashboard.putBoolean("Target Mid Right",
+                mRobotState.currentTarget == RobotState.TargetingState.GridMidRight);
+        SmartDashboard.putBoolean("Target Low Left",
+                mRobotState.currentTarget == RobotState.TargetingState.GridLowLeft);
+        SmartDashboard.putBoolean("Target Low Center",
+                mRobotState.currentTarget == RobotState.TargetingState.GridLowCenter);
+        SmartDashboard.putBoolean("Target Low Right",
+                mRobotState.currentTarget == RobotState.TargetingState.GridLowRight);
     }
 
     /**
