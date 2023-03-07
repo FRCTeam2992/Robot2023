@@ -5,28 +5,31 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Spindexer;
+import frc.robot.subsystems.Claw;
+import frc.robot.subsystems.Claw.ClawState;
 
-public class StopSpindexer extends CommandBase {
-  /** Creates a new StopSpindexer. */
-  private Spindexer mSpindexer;
+public class ToggleClawState extends CommandBase {
+  /** Creates a new SetClawState. */
+  private Claw mClaw;
 
-  public StopSpindexer(Spindexer subsystem) {
+  private ClawState mState;
+
+  public ToggleClawState(Claw subsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
-    mSpindexer = subsystem;
-    addRequirements(mSpindexer);
+    mClaw = subsystem;
 
+    addRequirements(mClaw);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    mClaw.toggleClawState();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    mSpindexer.setSpindexerSpeed(0.0);
   }
 
   // Called once the command ends or is interrupted.
@@ -37,6 +40,6 @@ public class StopSpindexer extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return true;
   }
 }

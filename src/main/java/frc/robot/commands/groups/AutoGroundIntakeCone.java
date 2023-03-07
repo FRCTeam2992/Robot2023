@@ -4,9 +4,6 @@
 
 package frc.robot.commands.groups;
 
-import java.io.Console;
-
-import edu.wpi.first.hal.simulation.ConstBufferCallback;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.Constants;
 import frc.robot.commands.SetClawState;
@@ -33,7 +30,7 @@ public class AutoGroundIntakeCone extends ParallelCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-        new SafeDumbTowerToPosition(elevator, arm, Constants.TowerConstants.intakeBackstop),
+        new SafeDumbTowerToPosition(elevator, arm, Constants.TowerConstants.intakeBackstop).asProxy(),
         new SetClawState(claw, ClawState.Closed),
         new SetIntakeDeployState(intakeDeploy, IntakeDeployState.GroundIntake),
         new SetIntakeSpeed(intake, 1.0, 1.0),

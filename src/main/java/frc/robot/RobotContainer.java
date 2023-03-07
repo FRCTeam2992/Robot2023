@@ -11,6 +11,7 @@ import frc.robot.commands.DriveSticks;
 import frc.robot.commands.HoldArm;
 import frc.robot.commands.HoldElevator;
 import frc.robot.commands.RehomeIntakeDeploy;
+import frc.robot.commands.ResetGyro;
 import frc.robot.commands.MoveArm;
 import frc.robot.commands.MoveSpindexer;
 import frc.robot.commands.MoveTowerToScoringPosition;
@@ -27,11 +28,15 @@ import frc.robot.commands.StopIntake;
 import frc.robot.commands.StopIntakeDeploy;
 import frc.robot.commands.StopSpindexer;
 import frc.robot.commands.TestTowerSafeMove;
+import frc.robot.commands.ToggleClawState;
+import frc.robot.commands.ToggleDeployElevator;
 import frc.robot.commands.ToggleEndgameState;
 import frc.robot.commands.ZeroElevatorEncoders;
+import frc.robot.commands.Deprecated.ADD_BUTTON_HERE;
 import frc.robot.commands.groups.AutoGroundIntakeCone;
 import frc.robot.commands.groups.AutoGroundIntakeCube;
-import frc.robot.commands.groups.FinishIntakeSequence;
+import frc.robot.commands.groups.AutoLoadStationIntake;
+import frc.robot.commands.groups.SpindexerGrabPiece;
 import frc.robot.commands.groups.FollowTrajectoryCommand;
 import frc.robot.commands.groups.SafeDumbTowerToPosition;
 import frc.robot.subsystems.Arm;
@@ -66,6 +71,7 @@ public class RobotContainer {
         private final CommandXboxController testController0 = new CommandXboxController(2);
         private final CommandXboxController testController1 = new CommandXboxController(3);
 
+
         public final RobotState mRobotState;
 
         public final Drivetrain mDrivetrain;
@@ -84,6 +90,7 @@ public class RobotContainer {
          * The container for the robot. Contains subsystems, OI devices, and commands.
          */
         public RobotContainer() {
+
                 mRobotState = new RobotState();
 
                 mDrivetrain = new Drivetrain();
@@ -99,6 +106,7 @@ public class RobotContainer {
                 mIntakeDeploy.setDefaultCommand(new StopIntakeDeploy(mIntakeDeploy));
 
                 mElevator = new Elevator();
+
                 mElevator.setDefaultCommand(new HoldElevator(mElevator));
 
                 mArm = new Arm();
@@ -111,7 +119,9 @@ public class RobotContainer {
 
                 // Add dashboard things
                 addSubsystemsToDashboard();
+
                 addRobotStateToDashboard();
+
                 // Configure the trigger bindings
                 configureShuffleboardBindings();
                 configRealButtonBindings();
@@ -144,19 +154,21 @@ public class RobotContainer {
 
                 // A-Cube Intake
 
-                controller0.a().onTrue(
+                controller0.x().onTrue(
                                 new AutoGroundIntakeCube(mElevator, mArm, mClaw, mIntake, mIntakeDeploy, mSpindexer));// cubes
-                controller0.b().onTrue(
+                controller0.y().onTrue(
                                 new AutoGroundIntakeCone(mElevator, mArm, mClaw, mIntake, mIntakeDeploy, mSpindexer));// cone
-                // B-Retract Intake to Normal Spot(Inside Bumpers)
-                // controller0.b().onTrue(null);// Retract intake
+                controller0.b().onTrue(
+                                new AutoLoadStationIntake(mElevator, mArm, mClaw, mIntake, mIntakeDeploy, mSpindexer));
+
+                controller0.a().onTrue(new ADD_BUTTON_HERE());// orient drive
 
                 // D-Pad
                 controller0.povDown().whileTrue(new SetSwerveAngle(mDrivetrain, 45, -45, -45, 45));// X the wheels
                 controller0.povLeft().whileTrue(new SetSwerveAngle(mDrivetrain, 45, -45, -45, 45));// X the wheels
                 controller0.povUp().whileTrue(new SetSwerveAngle(mDrivetrain, 45, -45, -45, 45));// X the wheels
 
-                // controller0.povRight().onTrue(null);// HomeIntakeDeploy
+                controller0.povRight().onTrue(new RehomeIntakeDeploy(mIntakeDeploy));
 
                 // Bumpers/Triggers
                 controller0.leftBumper().onTrue(new InstantCommand(
@@ -177,6 +189,9 @@ public class RobotContainer {
                                         mDrivetrain.setInSlowMode(false);
                                 })); // Slow Mode
 
+
+                controller0.axisGreaterThan(XboxController.Axis.kRightTrigger.value, .3)
+                                .onTrue(new ToggleClawState(mClaw));
                 controller0.leftTrigger(0.6)
                                 .whileTrue(new MoveTowerToScoringPosition(mElevator, mArm, mRobotState));
                 controller0.leftTrigger(0.6)
@@ -184,28 +199,23 @@ public class RobotContainer {
                 controller0.leftTrigger(0.6)
                                 .onFalse(new SafeDumbTowerToPosition(mElevator, mArm, TowerConstants.intakeBackstop));
 
-                controller0.axisGreaterThan(XboxController.Axis.kRightTrigger.value, .3)
-                                .onTrue(new SetClawState(mClaw, ClawState.Closed));
-                testController1.axisGreaterThan(XboxController.Axis.kRightTrigger.value, .3)
-                                .onFalse(new SetClawState(mClaw, ClawState.Opened));
-                // controller0.axisGreaterThan(XboxController.Axis.kLeftTrigger.value,
-                // .60).whileTrue(null);// Auto align for scoring
-
-                // controller0.axisGreaterThan(XboxController.Axis.kRightTrigger.value,
-                // .60).onTrue(null);// Toggle claw state
-
                 // Back and Start
 
-                // Joysticks and Buttons
+                controller0.start().onTrue(new ResetGyro(mDrivetrain));
+
+                // Joysticks Buttons
+                controller0.rightStick().onTrue(new StopIntake(mIntake));
+                controller0.rightStick().onTrue(new SetIntakeDeployState(mIntakeDeploy, IntakeDeployState.Normal));
 
                 // -----------------------controller1-----------------------
                 // ABXY
+
 
                 // Bumper/Trigger
                 controller1.leftBumper().whileTrue(new MoveSpindexer(mSpindexer, -0.6));
                 controller1.rightBumper().whileTrue(new MoveSpindexer(mSpindexer, 0.6));
                 controller1.leftTrigger(0.6).onTrue(
-                                new FinishIntakeSequence(mElevator, mArm, mClaw, mIntake, mIntakeDeploy, mSpindexer));
+                                new SpindexerGrabPiece(mElevator, mArm, mClaw, mIntake, mIntakeDeploy, mSpindexer));
                 controller1.rightTrigger(0.6).onTrue(new SetScoringTarget(mRobotState, controller1));
 
                 // Back and Start
@@ -222,6 +232,7 @@ public class RobotContainer {
                                 new MoveElevator(mElevator, 0.2));
                 controller1.axisGreaterThan(XboxController.Axis.kRightY.value, 0.6).whileTrue(
                                 new MoveElevator(mElevator, -0.2));
+                controller1.rightStick().onTrue(new ToggleDeployElevator(mElevator));
         }
 
         private void configTestButtonBindings() {
@@ -306,6 +317,7 @@ public class RobotContainer {
                 SmartDashboard.putData("Spindexer", mSpindexer);
                 SmartDashboard.putData("Butterfly Wheels", mButterflyWheels);
         }
+
 
         public void addRobotStateToDashboard() {
                 SmartDashboard.putBoolean("Target High Left",
