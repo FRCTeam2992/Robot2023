@@ -95,7 +95,7 @@ public class RobotContainer {
                 mRobotState = new RobotState();
 
                 mDrivetrain = new Drivetrain();
-                mDrivetrain.setDefaultCommand(new DriveSticks(mDrivetrain));
+                mDrivetrain.setDefaultCommand(new DriveSticks(mDrivetrain, mRobotState));
 
                 mIntake = new Intake();
                 mIntake.setDefaultCommand(new StopIntake(mIntake));

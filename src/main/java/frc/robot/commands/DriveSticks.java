@@ -9,12 +9,14 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.lib.drive.swerve.SwerveModuleFalconFalcon;
 import frc.robot.Constants;
 import frc.robot.Robot;
+import frc.robot.RobotState;
 import frc.robot.subsystems.Drivetrain;
 
 public class DriveSticks extends CommandBase {
 
   // Subsystem Instance
   private Drivetrain mDriveTrain;
+  private RobotState mRobotState;
 
   // Joystick Settings
   private boolean isLeftStrafe = true;
@@ -23,9 +25,10 @@ public class DriveSticks extends CommandBase {
   private double gyroTarget;
   private boolean gyroTargetRecorded;
 
-  public DriveSticks(Drivetrain subsystem) {
+  public DriveSticks(Drivetrain subsystem, RobotState robotState) {
     // Subsystem Instance
     mDriveTrain = subsystem;
+    mRobotState = robotState;
 
     // Set the Subsystem Requirement
     addRequirements(mDriveTrain);
@@ -94,6 +97,7 @@ public class DriveSticks extends CommandBase {
       double tempInverseDeadband = Constants.DrivetrainConstants.joystickRotationInverseDeadband;
 
       if (mDriveTrain.isInSlowMode()) {
+        // TODO -- Make this account also for endgame state
         tempInverseDeadband /= 0.3;
       }
 
@@ -125,6 +129,7 @@ public class DriveSticks extends CommandBase {
 
       // Check for Slow Mode
       if (mDriveTrain.isInSlowMode()) {
+        // TODO: Make this account for endgame mode also
         x1 *= 0.6;
         y1 *= 0.6;
         x2 *= 0.3;
