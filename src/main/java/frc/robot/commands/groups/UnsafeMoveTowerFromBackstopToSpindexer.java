@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Elevator;
 import frc.lib.manipulator.Waypoint;
+import frc.robot.Constants.TowerConstants;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -21,16 +22,12 @@ public class UnsafeMoveTowerFromBackstopToSpindexer extends SequentialCommandGro
      * safe starting point.
      */
     public UnsafeMoveTowerFromBackstopToSpindexer(Elevator mElevator, Arm mArm) {
+        double waypointHeight = TowerConstants.intakeBackstop.height();
+        double waypointAngle = TowerConstants.intakeGrab.angle();
+        Waypoint waypoint = new Waypoint(waypointHeight, waypointAngle);
+        Waypoint grab = TowerConstants.intakeGrab;
         addCommands(
-                new UnsafeMoveTowerToPosition(
-                        mElevator, mArm,
-                        new Waypoint(
-                                frc.robot.Constants.TowerConstants.intakeBackstop.height(),
-                                frc.robot.Constants.TowerConstants.intakeGrab.angle()),
-                        false),
-                new UnsafeMoveTowerToPosition(
-                        mElevator, mArm,
-                        frc.robot.Constants.TowerConstants.intakeGrab,
-                        true));
+                new UnsafeMoveTowerToPosition(mElevator, mArm, waypoint),
+                new UnsafeMoveTowerToPosition(mElevator, mArm, grab));
     }
 }
