@@ -31,7 +31,7 @@ public class AutoLoadStationIntake extends ParallelCommandGroup {
     addCommands(
         new SafeDumbTowerToPosition(elevator, arm, Constants.TowerConstants.intakeBackstop).asProxy(),
         new SetClawState(claw, ClawState.Closed),
-        new SetIntakeDeployState(intakeDeploy, IntakeDeployState.GroundIntake),
+        new SetIntakeDeployState(intakeDeploy, IntakeDeployState.LoadStation),
         new SetIntakeSpeed(intake, -0.5, 0.0),
         new AutoSpinSpindexer(spindexer).repeatedly());
   }
