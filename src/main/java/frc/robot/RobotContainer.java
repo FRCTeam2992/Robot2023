@@ -23,6 +23,7 @@ import frc.robot.commands.StopIntake;
 import frc.robot.commands.StopIntakeDeploy;
 import frc.robot.commands.StopSpindexer;
 import frc.robot.commands.TestTowerSafeMove;
+import frc.robot.commands.ToggleEndgameState;
 import frc.robot.commands.ZeroElevatorEncoders;
 import frc.robot.commands.groups.AutoGroundIntakeCone;
 import frc.robot.commands.groups.AutoGroundIntakeCube;
@@ -218,6 +219,7 @@ public class RobotContainer {
                 new FinishIntakeSequence(mElevator, mArm, mClaw, mIntake, mIntakeDeploy, mSpindexer));
 
         // Back and Start
+        controller1.start().onTrue(new ToggleEndgameState(mRobotState));
 
         // Joysticks and Buttons
         controller1.axisLessThan(XboxController.Axis.kLeftY.value, -0.6).whileTrue(
