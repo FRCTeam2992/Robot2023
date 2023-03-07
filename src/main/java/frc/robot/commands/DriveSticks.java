@@ -112,8 +112,8 @@ public class DriveSticks extends CommandBase {
 
     // Lock Rotation to 0 for scoring
 
-    // Check for Movement
-    if (Math.abs(x1) > 0.0 || Math.abs(y1) > 0.0 || Math.abs(x2) > 0.0) {
+    // Check for Movement or autoDrieMode
+    if (Math.abs(x1) > 0.0 || Math.abs(y1) > 0.0 || Math.abs(x2) > 0.0 || mDriveTrain.isScoringMode()) {
 
       // Demo Slow Mode
       // x1 /= 4;
