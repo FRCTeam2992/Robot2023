@@ -10,8 +10,8 @@ public final class Constants {
         public static final double AVOID_HEIGHT_INCHES = 9.0;
         public static final double BASE_AVOID_INCHES = 10.0;
         public static final double BASE_AVOID_DEGREES = 150.0;
-        public static final double BASE_ENTRY_INCHES = 10.0;
-        public static final double BASE_ENTRY_DEGREES = TowerConstants.intakeGrab.angle();
+        public static final double BASE_ENTRY_INCHES = 12.0;
+        public static final double BASE_ENTRY_DEGREES = 15.0;
         public static final double CROSSBAR_ENTRY_INCHES = 3.0;
         public static final double CROSSBAR_ENTRY_DEGREES = 180.0;
         public static final double CROSSBAR_AVOID_BOTTOM_INCHES = 3.0;

@@ -5,41 +5,39 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Elevator.ElevatorState;
 
-public class MoveArm extends CommandBase {
-  /** Creates a new MoveArm. */
-  private Arm mArm;
+public class ToggleDeployElevator extends CommandBase {
+  /** Creates a new DeployIntake. */
+  private Elevator mElevator;
 
-  private double mArmSpeed;
+  private ElevatorState mElevatorState;
 
-  public MoveArm(Arm subsystem, double armspeed) {
+  public ToggleDeployElevator(Elevator subsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
-    mArm = subsystem;
-    mArmSpeed = armspeed;
-
-    addRequirements(mArm);
+    mElevator = subsystem;
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    mElevator.toggleElevatorDeploy();
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    mArm.setArmSpeed(mArmSpeed);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    mArm.setArmSpeed(0.0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return true;
   }
 }

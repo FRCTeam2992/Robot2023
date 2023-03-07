@@ -4,29 +4,39 @@
 
 package frc.robot;
 
+import frc.robot.Constants.TowerConstants;
 import frc.robot.commands.DeployButterflyWheels;
 import frc.robot.commands.DeployElevator;
 import frc.robot.commands.DriveSticks;
+import frc.robot.commands.HoldArm;
 import frc.robot.commands.HoldElevator;
 import frc.robot.commands.RehomeIntakeDeploy;
+import frc.robot.commands.ResetGyro;
 import frc.robot.commands.MoveArm;
 import frc.robot.commands.MoveSpindexer;
+import frc.robot.commands.MoveTowerToScoringPosition;
 import frc.robot.commands.SetSwerveAngle;
 import frc.robot.commands.MoveElevator;
 import frc.robot.commands.MoveIntakeDeploy;
 import frc.robot.commands.SetClawState;
 import frc.robot.commands.SetIntakeDeployState;
 import frc.robot.commands.SetIntakeSpeed;
+import frc.robot.commands.SetScoringTarget;
 import frc.robot.commands.StopArm;
 import frc.robot.commands.StopElevator;
 import frc.robot.commands.StopIntake;
 import frc.robot.commands.StopIntakeDeploy;
 import frc.robot.commands.StopSpindexer;
 import frc.robot.commands.TestTowerSafeMove;
+import frc.robot.commands.ToggleClawState;
+import frc.robot.commands.ToggleDeployElevator;
+import frc.robot.commands.ToggleEndgameState;
 import frc.robot.commands.ZeroElevatorEncoders;
+import frc.robot.commands.Deprecated.ADD_BUTTON_HERE;
 import frc.robot.commands.groups.AutoGroundIntakeCone;
 import frc.robot.commands.groups.AutoGroundIntakeCube;
-import frc.robot.commands.groups.FinishIntakeSequence;
+import frc.robot.commands.groups.AutoLoadStationIntake;
+import frc.robot.commands.groups.SpindexerGrabPiece;
 import frc.robot.commands.groups.FollowTrajectoryCommand;
 import frc.robot.commands.groups.SafeDumbTowerToPosition;
 import frc.robot.subsystems.Arm;
@@ -61,6 +71,8 @@ public class RobotContainer {
         private final CommandXboxController testController0 = new CommandXboxController(2);
         private final CommandXboxController testController1 = new CommandXboxController(3);
 
+
+
         public final RobotState mRobotState;
 
         public final Drivetrain mDrivetrain;
@@ -79,6 +91,7 @@ public class RobotContainer {
          * The container for the robot. Contains subsystems, OI devices, and commands.
          */
         public RobotContainer() {
+
                 mRobotState = new RobotState();
 
                 mDrivetrain = new Drivetrain();
@@ -97,7 +110,8 @@ public class RobotContainer {
                 mElevator.setDefaultCommand(new HoldElevator(mElevator));
 
                 mArm = new Arm();
-                mArm.setDefaultCommand(new StopArm(mArm));
+                // mArm.setDefaultCommand(new StopArm(mArm));
+                mArm.setDefaultCommand(new HoldArm(mArm));
 
                 mClaw = new Claw();
 
@@ -105,6 +119,9 @@ public class RobotContainer {
 
                 // Add dashboard things
                 addSubsystemsToDashboard();
+
+                addRobotStateToDashboard();
+
                 // Configure the trigger bindings
                 configureShuffleboardBindings();
                 configRealButtonBindings();
@@ -131,30 +148,26 @@ public class RobotContainer {
                 // -----------------------controller0-----------------------
 
                 // ABXY
-                // X-Cone Intake
-                // controller0.x().onTrue(null); // Intakedeploy go to gorund spot
-                // controller0.x().whileTrue(new MoveIntake(mIntake, 1, 1));// cones
-
-                // A-Cube Intake
+        
                 controller0.a().onTrue(new InstantCommand(() -> {
                         mDrivetrain.setScoringMode(true);
                 }));
                 controller0.a().onFalse(new InstantCommand(() -> {
                         mDrivetrain.setScoringMode(false);
                 }));
-                controller0.x().onTrue(new AutoGroundIntakeCube(mElevator, mArm, mClaw,
-                                mIntake, mIntakeDeploy, mSpindexer));// cubes
-                controller0.y().onTrue(new AutoGroundIntakeCone(mElevator, mArm, mClaw,
-                                mIntake, mIntakeDeploy, mSpindexer));// cone
-                // B-Retract Intake to Normal Spot(Inside Bumpers)
-                // controller0.b().onTrue(null);// Retract intake
+                controller0.x().onTrue(
+                                new AutoGroundIntakeCube(mElevator, mArm, mClaw, mIntake, mIntakeDeploy, mSpindexer));// cubes
+                controller0.y().onTrue(
+                                new AutoGroundIntakeCone(mElevator, mArm, mClaw, mIntake, mIntakeDeploy, mSpindexer));// cone
+                controller0.b().onTrue(
+                                new AutoLoadStationIntake(mElevator, mArm, mClaw, mIntake, mIntakeDeploy, mSpindexer));
 
                 // D-Pad
                 controller0.povDown().whileTrue(new SetSwerveAngle(mDrivetrain, 45, -45, -45, 45));// X the wheels
                 controller0.povLeft().whileTrue(new SetSwerveAngle(mDrivetrain, 45, -45, -45, 45));// X the wheels
                 controller0.povUp().whileTrue(new SetSwerveAngle(mDrivetrain, 45, -45, -45, 45));// X the wheels
 
-                // controller0.povRight().onTrue(null);// HomeIntakeDeploy
+                controller0.povRight().onTrue(new RehomeIntakeDeploy(mIntakeDeploy));
 
                 // Bumpers/Triggers
                 controller0.leftBumper().onTrue(new InstantCommand(
@@ -175,67 +188,50 @@ public class RobotContainer {
                                         mDrivetrain.setInSlowMode(false);
                                 })); // Slow Mode
 
-                controller0.axisGreaterThan(XboxController.Axis.kRightTrigger.value, .3)
-                                .onTrue(new SetClawState(mClaw, ClawState.Closed));
-                testController1.axisGreaterThan(XboxController.Axis.kRightTrigger.value, .3)
-                                .onFalse(new SetClawState(mClaw, ClawState.Opened));
-                // controller0.axisGreaterThan(XboxController.Axis.kLeftTrigger.value,
-                // .60).whileTrue(null);// Auto align for scoring
 
-                // controller0.axisGreaterThan(XboxController.Axis.kRightTrigger.value,
-                // .60).onTrue(null);// Toggle claw state
+                controller0.axisGreaterThan(XboxController.Axis.kRightTrigger.value, .3)
+                                .onTrue(new ToggleClawState(mClaw));
+                controller0.leftTrigger(0.6)
+                                .whileTrue(new MoveTowerToScoringPosition(mElevator, mArm, mRobotState));
+                controller0.leftTrigger(0.6)
+                                .onTrue(new SetIntakeDeployState(mIntakeDeploy, IntakeDeploy.IntakeDeployState.Homed));
+                controller0.leftTrigger(0.6)
+                                .onFalse(new SafeDumbTowerToPosition(mElevator, mArm, TowerConstants.intakeBackstop));
 
                 // Back and Start
 
-                // Joysticks and Buttons
+                controller0.start().onTrue(new ResetGyro(mDrivetrain));
+
+                // Joysticks Buttons
+                controller0.rightStick().onTrue(new StopIntake(mIntake));
+                controller0.rightStick().onTrue(new SetIntakeDeployState(mIntakeDeploy, IntakeDeployState.Normal));
 
                 // -----------------------controller1-----------------------
                 // ABXY
-                controller1.y().onTrue(
-                                new SafeDumbTowerToPosition(mElevator, mArm, Constants.TowerConstants.intakeBackstop));
 
-                // Score on hybrid level
-                controller1.povDown().and(controller1.leftTrigger(0.6)).onTrue(
-                                new SafeDumbTowerToPosition(mElevator, mArm, Constants.TowerConstants.scoreFloor));
-                controller1.povDownLeft().and(controller1.leftTrigger(0.6)).onTrue(
-                                new SafeDumbTowerToPosition(mElevator, mArm, Constants.TowerConstants.scoreFloor));
-                controller1.povDownRight().and(controller1.leftTrigger(0.6)).onTrue(
-                                new SafeDumbTowerToPosition(mElevator, mArm, Constants.TowerConstants.scoreFloor));
-
-                // Score mid level
-                controller1.povLeft().and(controller1.leftTrigger(0.6)).onTrue(
-                                new SafeDumbTowerToPosition(mElevator, mArm, Constants.TowerConstants.scoreConeMid));
-                controller1.povCenter().and(controller1.leftTrigger(0.6)).onTrue(
-                                new SafeDumbTowerToPosition(mElevator, mArm, Constants.TowerConstants.scoreCubeMid));
-                controller1.povRight().and(controller1.leftTrigger(0.6)).onTrue(
-                                new SafeDumbTowerToPosition(mElevator, mArm, Constants.TowerConstants.scoreConeMid));
-
-                // Score top level
-                controller1.povUpLeft().and(controller1.leftTrigger(0.6)).onTrue(
-                                new SafeDumbTowerToPosition(mElevator, mArm, Constants.TowerConstants.scoreConeHigh));
-                controller1.povUp().and(controller1.leftTrigger(0.6)).onTrue(
-                                new SafeDumbTowerToPosition(mElevator, mArm, Constants.TowerConstants.scoreCubeHigh));
-                controller1.povUpRight().and(controller1.leftTrigger(0.6)).onTrue(
-                                new SafeDumbTowerToPosition(mElevator, mArm, Constants.TowerConstants.scoreConeHigh));
 
                 // Bumper/Trigger
-                controller1.leftBumper().whileTrue(new MoveSpindexer(mSpindexer, -0.3));
-                controller1.rightBumper().whileTrue(new MoveSpindexer(mSpindexer, 0.3));
-                controller1.rightTrigger(0.6).onTrue(
-                                new FinishIntakeSequence(mElevator, mArm, mClaw, mIntake, mIntakeDeploy, mSpindexer));
+                controller1.leftBumper().whileTrue(new MoveSpindexer(mSpindexer, -0.6));
+                controller1.rightBumper().whileTrue(new MoveSpindexer(mSpindexer, 0.6));
+                controller1.leftTrigger(0.6).onTrue(
+                                new SpindexerGrabPiece(mElevator, mArm, mClaw, mIntake, mIntakeDeploy, mSpindexer));
+                controller1.rightTrigger(0.6).onTrue(new SetScoringTarget(mRobotState, controller1));
 
                 // Back and Start
+                controller1.start().onTrue(new ToggleEndgameState(mRobotState));
+                controller1.back().onTrue(new DeployButterflyWheels(mButterflyWheels));
 
                 // Joysticks and Buttons
                 controller1.axisLessThan(XboxController.Axis.kLeftY.value, -0.6).whileTrue(
-                                new MoveArm(mArm, 0.1));
+                                new MoveArm(mArm, 0.20));
                 controller1.axisGreaterThan(XboxController.Axis.kLeftY.value, 0.6).whileTrue(
-                                new MoveArm(mArm, -0.1));
+                                new MoveArm(mArm, -0.20));
 
                 controller1.axisLessThan(XboxController.Axis.kRightY.value, -0.6).whileTrue(
-                                new MoveElevator(mElevator, 0.1));
+                                new MoveElevator(mElevator, 0.2));
                 controller1.axisGreaterThan(XboxController.Axis.kRightY.value, 0.6).whileTrue(
-                                new MoveElevator(mElevator, -0.1));
+                                new MoveElevator(mElevator, -0.2));
+                controller1.rightStick().onTrue(new ToggleDeployElevator(mElevator));
 
         }
 
@@ -322,6 +318,33 @@ public class RobotContainer {
                 SmartDashboard.putData("Spindexer", mSpindexer);
                 SmartDashboard.putData("Butterfly Wheels", mButterflyWheels);
         }
+
+
+
+        public void addRobotStateToDashboard() {
+                SmartDashboard.putBoolean("Target High Left",
+                                mRobotState.currentTarget == RobotState.TargetingState.GridHighLeft);
+                SmartDashboard.putBoolean("Target High Center",
+                                mRobotState.currentTarget == RobotState.TargetingState.GridHighCenter);
+                SmartDashboard.putBoolean("Target High Right",
+                                mRobotState.currentTarget == RobotState.TargetingState.GridHighRight);
+                SmartDashboard.putBoolean("Target Mid Left",
+                                mRobotState.currentTarget == RobotState.TargetingState.GridMidLeft);
+                SmartDashboard.putBoolean("Target Mid Center",
+                                mRobotState.currentTarget == RobotState.TargetingState.GridMidCenter);
+                SmartDashboard.putBoolean("Target Mid Right",
+                                mRobotState.currentTarget == RobotState.TargetingState.GridMidRight);
+                SmartDashboard.putBoolean("Target Low Left",
+                                mRobotState.currentTarget == RobotState.TargetingState.GridLowLeft);
+                SmartDashboard.putBoolean("Target Low Center",
+                                mRobotState.currentTarget == RobotState.TargetingState.GridLowCenter);
+                SmartDashboard.putBoolean("Target Low Right",
+                                mRobotState.currentTarget == RobotState.TargetingState.GridLowRight);
+
+                SmartDashboard.putBoolean("Endgame Mode",
+                                mRobotState.endgameMode == RobotState.EndgameModeState.InEndgame);
+        }
+
 
         /**
          * Use this to pass the autonomous command to the main {@link Robot} class.

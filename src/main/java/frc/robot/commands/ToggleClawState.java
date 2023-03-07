@@ -5,41 +5,41 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Claw;
+import frc.robot.subsystems.Claw.ClawState;
 
-public class MoveArm extends CommandBase {
-  /** Creates a new MoveArm. */
-  private Arm mArm;
+public class ToggleClawState extends CommandBase {
+  /** Creates a new SetClawState. */
+  private Claw mClaw;
 
-  private double mArmSpeed;
+  private ClawState mState;
 
-  public MoveArm(Arm subsystem, double armspeed) {
+  public ToggleClawState(Claw subsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
-    mArm = subsystem;
-    mArmSpeed = armspeed;
+    mClaw = subsystem;
 
-    addRequirements(mArm);
+    addRequirements(mClaw);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    mClaw.toggleClawState();
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    mArm.setArmSpeed(mArmSpeed);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    mArm.setArmSpeed(0.0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return true;
   }
 }
