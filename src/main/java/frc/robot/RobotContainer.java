@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import frc.robot.Constants.TowerConstants;
 import frc.robot.commands.DeployButterflyWheels;
 import frc.robot.commands.DeployElevator;
 import frc.robot.commands.DriveSticks;
@@ -18,6 +19,7 @@ import frc.robot.commands.MoveIntakeDeploy;
 import frc.robot.commands.SetClawState;
 import frc.robot.commands.SetIntakeDeployState;
 import frc.robot.commands.SetIntakeSpeed;
+import frc.robot.commands.SetScoringTarget;
 import frc.robot.commands.StopArm;
 import frc.robot.commands.StopElevator;
 import frc.robot.commands.StopIntake;
@@ -170,6 +172,11 @@ public class RobotContainer {
                     mDrivetrain.setInSlowMode(false);
                 })); // Slow Mode
 
+        controller0.leftTrigger(0.6)
+                .whileTrue(new SafeDumbTowerToPosition(mElevator, mArm, mRobotState.currentTarget.towerWaypoint));
+        controller0.leftTrigger(0.6)
+                .onFalse(new SafeDumbTowerToPosition(mElevator, mArm, TowerConstants.intakeBackstop));
+
         controller0.axisGreaterThan(XboxController.Axis.kRightTrigger.value, .3)
                 .onTrue(new SetClawState(mClaw, ClawState.Closed));
         testController1.axisGreaterThan(XboxController.Axis.kRightTrigger.value, .3)
@@ -189,29 +196,8 @@ public class RobotContainer {
         controller1.y().onTrue(
                 new SafeDumbTowerToPosition(mElevator, mArm, Constants.TowerConstants.intakeBackstop));
 
-        // Score on hybrid level
-        controller1.povDown().and(controller1.leftTrigger(0.6)).onTrue(
-                new SafeDumbTowerToPosition(mElevator, mArm, Constants.TowerConstants.scoreFloor));
-        controller1.povDownLeft().and(controller1.leftTrigger(0.6)).onTrue(
-                new SafeDumbTowerToPosition(mElevator, mArm, Constants.TowerConstants.scoreFloor));
-        controller1.povDownRight().and(controller1.leftTrigger(0.6)).onTrue(
-                new SafeDumbTowerToPosition(mElevator, mArm, Constants.TowerConstants.scoreFloor));
-
-        // Score mid level
-        controller1.povLeft().and(controller1.leftTrigger(0.6)).onTrue(
-                new SafeDumbTowerToPosition(mElevator, mArm, Constants.TowerConstants.scoreConeMid));
-        controller1.povCenter().and(controller1.leftTrigger(0.6)).onTrue(
-                new SafeDumbTowerToPosition(mElevator, mArm, Constants.TowerConstants.scoreCubeMid));
-        controller1.povRight().and(controller1.leftTrigger(0.6)).onTrue(
-                new SafeDumbTowerToPosition(mElevator, mArm, Constants.TowerConstants.scoreConeMid));
-
-        // Score top level
-        controller1.povUpLeft().and(controller1.leftTrigger(0.6)).onTrue(
-                new SafeDumbTowerToPosition(mElevator, mArm, Constants.TowerConstants.scoreConeHigh));
-        controller1.povUp().and(controller1.leftTrigger(0.6)).onTrue(
-                new SafeDumbTowerToPosition(mElevator, mArm, Constants.TowerConstants.scoreCubeHigh));
-        controller1.povUpRight().and(controller1.leftTrigger(0.6)).onTrue(
-                new SafeDumbTowerToPosition(mElevator, mArm, Constants.TowerConstants.scoreConeHigh));
+        // Set scoring target based on D-pad
+        controller1.rightTrigger(0.6).onTrue(new SetScoringTarget(mRobotState, controller1));
 
         // Bumper/Trigger
         controller1.leftBumper().whileTrue(new MoveSpindexer(mSpindexer, -0.3));
