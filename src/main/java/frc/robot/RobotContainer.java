@@ -141,10 +141,10 @@ public class RobotContainer {
                                 new AutoGroundIntakeCube(mElevator, mArm, mClaw, mIntake, mIntakeDeploy, mSpindexer));// cubes
                 controller0.y().onTrue(
                                 new AutoGroundIntakeCone(mElevator, mArm, mClaw, mIntake, mIntakeDeploy, mSpindexer));// cone
-                // B-Retract Intake to Normal Spot(Inside Bumpers)
-                controller0.b().onTrue(new SetIntakeDeployState(mIntakeDeploy, IntakeDeployState.Normal));// Retract //
-                                                                                                          // // intake
-                controller0.b().onTrue(new StopIntake(mIntake));
+                controller0.b().onTrue(
+                                new AutoLoadStationIntake(mElevator, mArm, mClaw, mIntake, mIntakeDeploy, mSpindexer));
+
+                controller0.a().onTrue(new ADD_BUTTON_HERE());// orient drive
 
                 // D-Pad
                 controller0.povDown().whileTrue(new SetSwerveAngle(mDrivetrain, 45, -45, -45, 45));// X the wheels
