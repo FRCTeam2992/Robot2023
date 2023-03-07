@@ -8,7 +8,6 @@ import frc.robot.Constants.TowerConstants;
 import frc.robot.commands.DeployButterflyWheels;
 import frc.robot.commands.DeployElevator;
 import frc.robot.commands.DriveSticks;
-import frc.robot.commands.EndgameOnlyDeployButterflyWheels;
 import frc.robot.commands.HoldArm;
 import frc.robot.commands.HoldElevator;
 import frc.robot.commands.RehomeIntakeDeploy;
@@ -221,7 +220,8 @@ public class RobotContainer {
 
                 // Back and Start
                 controller1.start().onTrue(new ToggleEndgameState(mRobotState));
-                controller1.back().onTrue(new EndgameOnlyDeployButterflyWheels(mButterflyWheels, mRobotState));
+                controller1.back().onTrue(new DeployButterflyWheels(mButterflyWheels)
+                                .unless(() -> !mRobotState.isInEndgameMode()));
 
                 // Joysticks and Buttons
                 controller1.axisLessThan(XboxController.Axis.kLeftY.value, -0.6).whileTrue(
