@@ -18,7 +18,7 @@ import frc.robot.subsystems.Elevator;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class UnsafeMoveTowerToPosition extends ParallelCommandGroup {
   /** Creates a new UnsafeMoveTowerToPosition. */
-  public UnsafeMoveTowerToPosition(Elevator mElevator, Arm mArm, Waypoint point, boolean hold) {
+  public UnsafeMoveTowerToPosition(Elevator mElevator, Arm mArm, Waypoint point) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
