@@ -200,20 +200,17 @@ public class RobotContainer {
 
                 // -----------------------controller1-----------------------
                 // ABXY
-                controller1.y().onTrue(
-                                new SafeDumbTowerToPosition(mElevator, mArm, Constants.TowerConstants.intakeBackstop));
-
-                // Set scoring target based on D-pad
-                controller1.rightTrigger(0.6).onTrue(new SetScoringTarget(mRobotState, controller1));
 
                 // Bumper/Trigger
-                controller1.leftBumper().whileTrue(new MoveSpindexer(mSpindexer, -0.3));
-                controller1.rightBumper().whileTrue(new MoveSpindexer(mSpindexer, 0.3));
-                controller1.rightTrigger(0.6).onTrue(
+                controller1.leftBumper().whileTrue(new MoveSpindexer(mSpindexer, -0.6));
+                controller1.rightBumper().whileTrue(new MoveSpindexer(mSpindexer, 0.6));
+                controller1.leftTrigger(0.6).onTrue(
                                 new FinishIntakeSequence(mElevator, mArm, mClaw, mIntake, mIntakeDeploy, mSpindexer));
+                controller1.rightTrigger(0.6).onTrue(new SetScoringTarget(mRobotState, controller1));
 
                 // Back and Start
                 controller1.start().onTrue(new ToggleEndgameState(mRobotState));
+                controller1.back().onTrue(new DeployButterflyWheels(mButterflyWheels));
 
                 // Joysticks and Buttons
                 controller1.axisLessThan(XboxController.Axis.kLeftY.value, -0.6).whileTrue(
@@ -225,7 +222,6 @@ public class RobotContainer {
                                 new MoveElevator(mElevator, 0.2));
                 controller1.axisGreaterThan(XboxController.Axis.kRightY.value, 0.6).whileTrue(
                                 new MoveElevator(mElevator, -0.2));
-
         }
 
         private void configTestButtonBindings() {
@@ -330,6 +326,9 @@ public class RobotContainer {
                                 mRobotState.currentTarget == RobotState.TargetingState.GridLowCenter);
                 SmartDashboard.putBoolean("Target Low Right",
                                 mRobotState.currentTarget == RobotState.TargetingState.GridLowRight);
+
+                SmartDashboard.putBoolean("Endgame Mode",
+                                mRobotState.endgameMode == RobotState.EndgameModeState.InEndgame);
         }
 
         /**
