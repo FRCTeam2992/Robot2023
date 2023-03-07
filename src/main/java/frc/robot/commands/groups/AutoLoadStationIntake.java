@@ -21,8 +21,9 @@ import frc.robot.subsystems.IntakeDeploy.IntakeDeployState;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class AutoGroundIntakeCube extends ParallelCommandGroup {
-  public AutoGroundIntakeCube(Elevator elevator, Arm arm, Claw claw, Intake intake,
+public class AutoLoadStationIntake extends ParallelCommandGroup {
+  /** Creates a new AutoLoadStationIntake. */
+  public AutoLoadStationIntake(Elevator elevator, Arm arm, Claw claw, Intake intake,
       IntakeDeploy intakeDeploy, Spindexer spindexer) {
 
     // Add your commands in the addCommands() call, e.g.
@@ -31,7 +32,7 @@ public class AutoGroundIntakeCube extends ParallelCommandGroup {
         new SafeDumbTowerToPosition(elevator, arm, Constants.TowerConstants.intakeBackstop).asProxy(),
         new SetClawState(claw, ClawState.Closed),
         new SetIntakeDeployState(intakeDeploy, IntakeDeployState.GroundIntake),
-        new SetIntakeSpeed(intake, 0.75, 0.0),
+        new SetIntakeSpeed(intake, -0.5, 0.0),
         new AutoSpinSpindexer(spindexer).repeatedly());
   }
 }

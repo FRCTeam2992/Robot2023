@@ -12,6 +12,7 @@ import frc.robot.commands.MoveArm;
 import frc.robot.commands.MoveSpindexer;
 import frc.robot.commands.SetSwerveAngle;
 import frc.robot.commands.MoveElevator;
+import frc.robot.commands.MoveIntake;
 import frc.robot.commands.MoveIntakeDeploy;
 import frc.robot.commands.SetClawState;
 import frc.robot.commands.SetIntakeDeployState;
@@ -25,8 +26,10 @@ import frc.robot.commands.TestTowerSafeMove;
 import frc.robot.commands.ToggleClawState;
 import frc.robot.commands.ToggleDeployElevator;
 import frc.robot.commands.ZeroElevatorEncoders;
+import frc.robot.commands.Deprecated.ADD_BUTTON_HERE;
 import frc.robot.commands.groups.AutoGroundIntakeCone;
 import frc.robot.commands.groups.AutoGroundIntakeCube;
+import frc.robot.commands.groups.AutoLoadStationIntake;
 import frc.robot.commands.groups.FinishIntakeSequence;
 import frc.robot.commands.groups.FollowTrajectoryCommand;
 import frc.robot.commands.groups.SafeDumbTowerToPosition;
@@ -134,9 +137,9 @@ public class RobotContainer {
 
                 // A-Cube Intake
 
-                controller0.a().onTrue(
-                                new AutoGroundIntakeCube(mElevator, mArm, mClaw, mIntake, mIntakeDeploy, mSpindexer));// cubes
                 controller0.x().onTrue(
+                                new AutoGroundIntakeCube(mElevator, mArm, mClaw, mIntake, mIntakeDeploy, mSpindexer));// cubes
+                controller0.y().onTrue(
                                 new AutoGroundIntakeCone(mElevator, mArm, mClaw, mIntake, mIntakeDeploy, mSpindexer));// cone
                 // B-Retract Intake to Normal Spot(Inside Bumpers)
                 controller0.b().onTrue(new SetIntakeDeployState(mIntakeDeploy, IntakeDeployState.Normal));// Retract //
@@ -179,7 +182,9 @@ public class RobotContainer {
                 // Back and Start
                 controller0.start().onTrue(new ResetGyro(mDrivetrain));
 
-                // Joysticks and Buttons
+                // Joysticks Buttons
+                controller0.rightStick().onTrue(new StopIntake(mIntake));
+                controller0.rightStick().onTrue(new SetIntakeDeployState(mIntakeDeploy, IntakeDeployState.Normal));
 
                 // -----------------------controller1-----------------------
                 // ABXY
