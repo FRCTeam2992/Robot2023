@@ -27,7 +27,7 @@ public class UnsafeMoveTowerFromBackstopToSpindexer extends SequentialCommandGro
         Waypoint waypoint = new Waypoint(waypointHeight, waypointAngle);
         Waypoint grab = TowerConstants.intakeGrab;
         addCommands(
-                new UnsafeMoveTowerToPosition(mElevator, mArm, waypoint),
-                new UnsafeMoveTowerToPosition(mElevator, mArm, grab));
+                new UnsafeMoveTowerToPosition(mElevator, mArm, waypoint).asProxy(),
+                new UnsafeMoveTowerToPosition(mElevator, mArm, grab).asProxy());
     }
 }
