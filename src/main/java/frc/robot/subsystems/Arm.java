@@ -35,6 +35,10 @@ public class Arm extends SubsystemBase {
 
   private EncoderState motorEncoderConfidentCalibrated = EncoderState.UNKNOWN;
 
+  // Variables for managing "hold position" to prevent backdrive
+  private boolean holdPositionRecorded = false; // Have we logged the hold position yet
+  private double holdPosition; // arm motor encoder clicks
+
   public enum ArmPosition {
     PARALLEL_TO_ELEVATOR(45.0),
     MOVEMENT_THRESHOLD_2(15.0),
@@ -83,9 +87,21 @@ public class Arm extends SubsystemBase {
   }
 
   public void setArmPosition(double angle) {
+    holdPositionRecorded = false; // Hold position invalidated since we moved
     targetAngleDeg = angle;
     double position = angle * Constants.ArmConstants.motorEncoderClicksPerDegree;
     armMotor.set(ControlMode.MotionMagic, position);
+  }
+
+  public void holdArm() {
+    if (!holdPositionRecorded) {
+      // We haven't recorded where we are yet, so get it
+      holdPosition = getArmMotorPositionRaw(); // encoder clicks
+      holdPositionRecorded = true;
+    } else {
+      armMotor.set(ControlMode.MotionMagic, holdPosition);
+    }
+
   }
 
   public double getArmMotorPositionRaw() {
@@ -97,6 +113,7 @@ public class Arm extends SubsystemBase {
   }
 
   public void setArmSpeed(double speed) {
+    holdPositionRecorded = false; // Hold position invalidated since we moved
     if (getArmMotorPositionDeg() > Constants.ArmConstants.Limits.softStopTop) {
       speed = Math.min(0.0, speed);
     } else if (getArmMotorPositionDeg() < Constants.ArmConstants.Limits.softStopBottom) {
