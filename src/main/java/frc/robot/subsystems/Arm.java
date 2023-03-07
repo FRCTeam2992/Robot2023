@@ -88,9 +88,10 @@ public class Arm extends SubsystemBase {
       // We haven't recorded where we are yet, so get it
       holdPosition = getArmMotorPositionRaw(); // encoder clicks
       holdPositionRecorded = true;
+    } else {
+      armMotor.set(ControlMode.MotionMagic, holdPosition);
     }
 
-    armMotor.set(ControlMode.MotionMagic, holdPosition);
   }
 
   public double getArmMotorPositionRaw() {

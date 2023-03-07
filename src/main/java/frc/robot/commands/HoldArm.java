@@ -27,6 +27,7 @@ public class HoldArm extends CommandBase {
   public void initialize() {
     timer.reset();
     timer.start();
+    mArm.setArmSpeed(0.0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -35,7 +36,9 @@ public class HoldArm extends CommandBase {
     if (timer.get() > Constants.ArmConstants.holdPositionMaxTime) {
       mArm.setArmSpeed(0.0);
     } else {
-      mArm.holdArm();
+      if (timer.get() > 0.150) {
+        mArm.holdArm();
+      }
     }
 
   }
