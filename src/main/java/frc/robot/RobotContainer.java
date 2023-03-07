@@ -30,7 +30,7 @@ import frc.robot.commands.Deprecated.ADD_BUTTON_HERE;
 import frc.robot.commands.groups.AutoGroundIntakeCone;
 import frc.robot.commands.groups.AutoGroundIntakeCube;
 import frc.robot.commands.groups.AutoLoadStationIntake;
-import frc.robot.commands.groups.FinishIntakeSequence;
+import frc.robot.commands.groups.SpindexerGrabPiece;
 import frc.robot.commands.groups.FollowTrajectoryCommand;
 import frc.robot.commands.groups.SafeDumbTowerToPosition;
 import frc.robot.subsystems.Arm;
@@ -188,12 +188,6 @@ public class RobotContainer {
 
                 // -----------------------controller1-----------------------
                 // ABXY
-                controller1.y().onTrue(
-                                new SafeDumbTowerToPosition(mElevator, mArm, Constants.TowerConstants.intakeBackstop));
-                controller1.y().onTrue(
-                                new SetClawState(mClaw, ClawState.Closed));
-                controller1.y().onTrue(
-                                new DeployElevator(mElevator, ElevatorState.Undeployed));
 
                 // Score on hybrid level
                 controller1.povDown().and(controller1.rightTrigger(0.6)).onTrue(
@@ -241,7 +235,7 @@ public class RobotContainer {
                 controller1.leftBumper().whileTrue(new MoveSpindexer(mSpindexer, -0.3));
                 controller1.rightBumper().whileTrue(new MoveSpindexer(mSpindexer, 0.3));
                 controller1.leftTrigger(0.6).onTrue(
-                                new FinishIntakeSequence(mElevator, mArm, mClaw, mIntake, mIntakeDeploy, mSpindexer));
+                                new SpindexerGrabPiece(mElevator, mArm, mClaw, mIntake, mIntakeDeploy, mSpindexer));
 
                 // Back and Start
 

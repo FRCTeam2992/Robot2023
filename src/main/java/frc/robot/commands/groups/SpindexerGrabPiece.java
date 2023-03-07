@@ -10,6 +10,7 @@ import frc.robot.Constants;
 import frc.robot.commands.MoveIntake;
 import frc.robot.commands.SetClawState;
 import frc.robot.commands.SetIntakeDeployState;
+import frc.robot.commands.StopSpindexer;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Elevator;
@@ -22,19 +23,20 @@ import frc.robot.subsystems.IntakeDeploy.IntakeDeployState;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class FinishIntakeSequence extends SequentialCommandGroup {
+public class SpindexerGrabPiece extends SequentialCommandGroup {
   /** Creates a new FinishIntakeSequence. */
-  public FinishIntakeSequence(Elevator e, Arm a, Claw c, Intake i, IntakeDeploy id, Spindexer s) {
+  public SpindexerGrabPiece(Elevator elevator, Arm arm, Claw claw, Intake intake, IntakeDeploy intakeDeploy,
+      Spindexer spindexer) {
     // Add your commands in the addCommands() call, e.g.
-    // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-        new SetClawState(c, ClawState.Opened),
+        new SetClawState(claw, ClawState.Opened),
         new ParallelRaceGroup(
-            new MoveIntake(i, 0, 0),
-            new SetIntakeDeployState(id, IntakeDeployState.Homed),
-            new SafeDumbTowerToPosition(e, a, Constants.TowerConstants.intakeGrab)).withTimeout(1.5),
+            new MoveIntake(intake, 0, 0),
+            new SetIntakeDeployState(intakeDeploy, IntakeDeployState.Normal),
+            new StopSpindexer(spindexer),
+            new SafeDumbTowerToPosition(elevator, arm, Constants.TowerConstants.intakeGrab)).asProxy(),
         // new AutoSpinSpindexer(s).repeatedly().withTimeout(1.5)),
-        new SetClawState(c, ClawState.Closed)
+        new SetClawState(claw, ClawState.Closed)
 
     );
 
