@@ -27,6 +27,7 @@ public class Robot extends TimedRobot {
 
   public static RobotContainer mRobotContainer;
 
+  private int slowLoopCounter = 0;
   /**
    * This function is run when the robot is first started up and should be used
    * for any
@@ -65,7 +66,13 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods. This must be called from the
     // robot's periodic
     // block in order for anything in the Command-based framework to work.
+    if (slowLoopCounter++ < 5) {
+      slowLoopCounter = 0;
+      mRobotContainer.addRobotStateToDashboard();
+    }
+
     CommandScheduler.getInstance().run();
+
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
