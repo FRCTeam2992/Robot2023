@@ -93,7 +93,7 @@ public class Elevator extends SubsystemBase {
   public void setElevatorSpeed(double speed) {
     holdPositionRecorded = false; // Hold position invalidated since we moved
     if (getElevatorInches() < Constants.ElevatorConstants.Limits.softStopBottom) {
-      speed = Math.max(0.0, speed);
+      speed = Math.max(-0.1, speed); // Allow down at slow speed if encoder out of sync
     } else if (getElevatorInches() > Constants.ElevatorConstants.Limits.softStopTop) {
       speed = Math.min(0.0, speed);
     }
@@ -114,10 +114,18 @@ public class Elevator extends SubsystemBase {
   }
 
   public void holdElevator() {
+    if (getElevatorInches() < 1.0) {
+      // We are at bottom or go encoder reset. Stop the holdPosition
+      holdPositionRecorded = false;
+      holdPosition = 0.0;
+      elevatorMotorLead.set(TalonFXControlMode.PercentOutput, 0.0);
+      return;
+    }
     if (!holdPositionRecorded) {
       // We haven't recorded where we are yet, so get it
       holdPosition = getLeadElevatorPostion();
       holdPositionRecorded = true;
+      elevatorMotorLead.set(TalonFXControlMode.PercentOutput, 0.0);
     } else {
       elevatorMotorLead.set(TalonFXControlMode.MotionMagic, holdPosition);
     }
@@ -158,6 +166,10 @@ public class Elevator extends SubsystemBase {
   }
 
   public void zeroElevatorEncoders() {
+    elevatorMotorLead.set(TalonFXControlMode.PercentOutput, 0.0);
+
+    holdPositionRecorded = false;
+    holdPosition = 0.0;
     elevatorMotorLead.getSensorCollection().setIntegratedSensorPosition(0.0, 100);
     elevatorMotorFollow.getSensorCollection().setIntegratedSensorPosition(0.0, 100);
   }
