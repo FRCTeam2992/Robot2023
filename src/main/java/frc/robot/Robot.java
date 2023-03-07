@@ -42,6 +42,8 @@ public class Robot extends TimedRobot {
 
     mRobotContainer.mDrivetrain.navx.zeroYaw();
 
+    mRobotContainer.mElevator.zeroElevatorEncoders();
+
     DataLogManager.start();
     DriverStation.startDataLog(DataLogManager.getLog());
 
