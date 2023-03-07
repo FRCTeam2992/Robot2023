@@ -13,6 +13,7 @@ import frc.robot.commands.HoldElevator;
 import frc.robot.commands.RehomeIntakeDeploy;
 import frc.robot.commands.MoveArm;
 import frc.robot.commands.MoveSpindexer;
+import frc.robot.commands.MoveTowerToScoringPosition;
 import frc.robot.commands.SetSwerveAngle;
 import frc.robot.commands.MoveElevator;
 import frc.robot.commands.MoveIntakeDeploy;
@@ -177,8 +178,9 @@ public class RobotContainer {
                                 })); // Slow Mode
 
                 controller0.leftTrigger(0.6)
-                                .whileTrue(new SafeDumbTowerToPosition(mElevator, mArm,
-                                                mRobotState.currentTarget.towerWaypoint));
+                                .whileTrue(new MoveTowerToScoringPosition(mElevator, mArm, mRobotState));
+                controller0.leftTrigger(0.6)
+                                .onTrue(new SetIntakeDeployState(mIntakeDeploy, IntakeDeploy.IntakeDeployState.Homed));
                 controller0.leftTrigger(0.6)
                                 .onFalse(new SafeDumbTowerToPosition(mElevator, mArm, TowerConstants.intakeBackstop));
 
