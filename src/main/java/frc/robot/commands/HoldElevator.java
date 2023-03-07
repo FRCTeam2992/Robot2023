@@ -4,8 +4,6 @@
 
 package frc.robot.commands;
 
-import com.pathplanner.lib.auto.MecanumAutoBuilder;
-
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
@@ -35,7 +33,7 @@ public class HoldElevator extends CommandBase {
   @Override
   public void execute() {
     if (timer.get() > Constants.ElevatorConstants.holdPositionMaxTime) {
-      mElevator.setElevatorSpeed(0);
+      mElevator.setElevatorSpeed(0.0);
     } else {
       if (timer.get() > 0.150) {
         mElevator.holdElevator();
