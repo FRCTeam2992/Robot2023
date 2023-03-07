@@ -72,6 +72,7 @@ public class RobotContainer {
         private final CommandXboxController testController1 = new CommandXboxController(3);
 
 
+
         public final RobotState mRobotState;
 
         public final Drivetrain mDrivetrain;
@@ -106,7 +107,6 @@ public class RobotContainer {
                 mIntakeDeploy.setDefaultCommand(new StopIntakeDeploy(mIntakeDeploy));
 
                 mElevator = new Elevator();
-
                 mElevator.setDefaultCommand(new HoldElevator(mElevator));
 
                 mArm = new Arm();
@@ -148,20 +148,19 @@ public class RobotContainer {
                 // -----------------------controller0-----------------------
 
                 // ABXY
-                // X-Cone Intake
-                // controller0.x().onTrue(null); // Intakedeploy go to gorund spot
-                // controller0.x().whileTrue(new MoveIntake(mIntake, 1, 1));// cones
-
-                // A-Cube Intake
-
+        
+                controller0.a().onTrue(new InstantCommand(() -> {
+                        mDrivetrain.setScoringMode(true);
+                }));
+                controller0.a().onFalse(new InstantCommand(() -> {
+                        mDrivetrain.setScoringMode(false);
+                }));
                 controller0.x().onTrue(
                                 new AutoGroundIntakeCube(mElevator, mArm, mClaw, mIntake, mIntakeDeploy, mSpindexer));// cubes
                 controller0.y().onTrue(
                                 new AutoGroundIntakeCone(mElevator, mArm, mClaw, mIntake, mIntakeDeploy, mSpindexer));// cone
                 controller0.b().onTrue(
                                 new AutoLoadStationIntake(mElevator, mArm, mClaw, mIntake, mIntakeDeploy, mSpindexer));
-
-                controller0.a().onTrue(new ADD_BUTTON_HERE());// orient drive
 
                 // D-Pad
                 controller0.povDown().whileTrue(new SetSwerveAngle(mDrivetrain, 45, -45, -45, 45));// X the wheels
@@ -234,6 +233,7 @@ public class RobotContainer {
                 controller1.axisGreaterThan(XboxController.Axis.kRightY.value, 0.6).whileTrue(
                                 new MoveElevator(mElevator, -0.2));
                 controller1.rightStick().onTrue(new ToggleDeployElevator(mElevator));
+
         }
 
         private void configTestButtonBindings() {
@@ -307,6 +307,7 @@ public class RobotContainer {
                 SmartDashboard.putNumber("ElevTestMoveHeight", 20.0);
                 SmartDashboard.putNumber("ArmTestMoveAngle", 150);
                 SmartDashboard.putData("TestSafeDumbPath", new TestTowerSafeMove(mElevator, mArm));
+
         }
 
         public void addSubsystemsToDashboard() {
@@ -318,6 +319,7 @@ public class RobotContainer {
                 SmartDashboard.putData("Spindexer", mSpindexer);
                 SmartDashboard.putData("Butterfly Wheels", mButterflyWheels);
         }
+
 
 
         public void addRobotStateToDashboard() {
@@ -343,6 +345,7 @@ public class RobotContainer {
                 SmartDashboard.putBoolean("Endgame Mode",
                                 mRobotState.endgameMode == RobotState.EndgameModeState.InEndgame);
         }
+
 
         /**
          * Use this to pass the autonomous command to the main {@link Robot} class.
