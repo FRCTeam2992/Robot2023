@@ -25,6 +25,10 @@ public class RobotState {
     }
 
     public EndgameModeState endgameMode = EndgameModeState.NotInEndgame;
+    
+    public boolean isInEndgameMode() {
+        return endgameMode == EndgameModeState.InEndgame;
+    }
 
     public enum TargetingState {
         GridHighLeft(Constants.TowerConstants.scoreConeHigh),

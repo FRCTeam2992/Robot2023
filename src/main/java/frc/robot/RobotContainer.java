@@ -219,7 +219,8 @@ public class RobotContainer {
 
                 // Back and Start
                 controller1.start().onTrue(new ToggleEndgameState(mRobotState));
-                controller1.back().onTrue(new DeployButterflyWheels(mButterflyWheels));
+                controller1.back().onTrue(new DeployButterflyWheels(mButterflyWheels)
+                                .unless(() -> !mRobotState.isInEndgameMode()));
 
                 // Joysticks and Buttons
                 controller1.axisLessThan(XboxController.Axis.kLeftY.value, -0.6).whileTrue(
