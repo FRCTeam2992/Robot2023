@@ -27,15 +27,17 @@ public class HoldElevator extends CommandBase {
   public void initialize() {
     timer.reset();
     timer.start();
+    mElevator.setElevatorSpeed(0.0);
   }
-
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     if (timer.get() > Constants.ElevatorConstants.holdPositionMaxTime) {
-      mElevator.setElevatorSpeed(0);
+      mElevator.setElevatorSpeed(0.0);
     } else {
-      mElevator.holdElevator();
+      if (timer.get() > 0.150) {
+        mElevator.holdElevator();
+      }
     }
   }
 

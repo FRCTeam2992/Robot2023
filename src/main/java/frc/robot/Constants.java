@@ -250,6 +250,7 @@ public final class Constants {
       public static double bottomZoneAdjustment = 9.6;
     }
 
+    public static double holdPositionMaxTime = 120; // Seconds -- How long to prevent backdrive
   }
 
   public static class ClawConstants {

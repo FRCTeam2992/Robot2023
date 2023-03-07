@@ -118,9 +118,10 @@ public class Elevator extends SubsystemBase {
       // We haven't recorded where we are yet, so get it
       holdPosition = getLeadElevatorPostion();
       holdPositionRecorded = true;
+    } else {
+      elevatorMotorLead.set(TalonFXControlMode.MotionMagic, holdPosition);
     }
 
-    elevatorMotorLead.set(TalonFXControlMode.MotionMagic, holdPosition);
   }
 
   public void setElevatorState(ElevatorState state) {

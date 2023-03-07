@@ -4,37 +4,48 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.subsystems.Arm;
 
-public class MoveArm extends CommandBase {
+public class HoldArm extends CommandBase {
   /** Creates a new MoveArm. */
   private Arm mArm;
 
-  private double mArmSpeed;
+  private Timer timer;
 
-  public MoveArm(Arm subsystem, double armspeed) {
+  public HoldArm(Arm subsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     mArm = subsystem;
-    mArmSpeed = armspeed;
-
+    timer = new Timer();
     addRequirements(mArm);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    timer.reset();
+    timer.start();
+    mArm.setArmSpeed(0.0);
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    mArm.setArmSpeed(mArmSpeed);
+    if (timer.get() > Constants.ArmConstants.holdPositionMaxTime) {
+      mArm.setArmSpeed(0.0);
+    } else {
+      if (timer.get() > 0.150) {
+        mArm.holdArm();
+      }
+    }
+
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    mArm.setArmSpeed(0.0);
   }
 
   // Returns true when the command should end.
