@@ -47,6 +47,14 @@ public class Claw extends SubsystemBase {
   public void toggleClawState() {
     clawSolenoid.set(!clawSolenoid.get());
   }
+  
+  public ClawState getClawState() {
+    if (clawSolenoid.get()) {
+      return ClawState.Opened;
+    }
+    return ClawState.Closed;
+
+  }
 
   public void onDisable() {
     // Solenoid needs to be in false state when disabled.

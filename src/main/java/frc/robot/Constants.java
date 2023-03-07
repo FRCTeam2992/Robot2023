@@ -205,6 +205,7 @@ public final class Constants {
     public static double encoderClicksPerInch = (encoderClicksPerRevolution * gearRatio)
         / (sprocketPitchDiameter * Math.PI);
 
+    public static double holdPositionMaxTime = 120; // Seconds -- How long to prevent backdrive
   }
 
   public static class ArmConstants {
@@ -241,14 +242,16 @@ public final class Constants {
 
     public static class ArmSlopConstants {
       // All of these constants need to be validated!
-      public static double topZoneEdge = 207; // Higher angle than this assume arm slop, adjust encoder by slop amount
-      public static double topZoneAdjustment = 9.6; // True encoder arm position this much lower than Cancoder in this
-      // zone
-      public static double bottomZoneEdge = 40; // If lower angle than this assume arm slop, adjust encoder by slop
-                                                // amount
+      public static double topZoneLowEdge = 213; // Above this may be n the slop zone
+      public static double topZoneHiEdge = 219; // Past the slop zone -- use adjustment
+      public static double topZoneAdjustment = 9.6; // Slop adjustment to apply
+
+      public static double bottomZoneHiEdge = 43.8; // Past this in the slop zone
+      public static double bottomZoneLowEdge = 34.2; // Past the slop zone -- use adjustment
       public static double bottomZoneAdjustment = 9.6;
     }
 
+    public static double holdPositionMaxTime = 120; // Seconds -- How long to prevent backdrive
   }
 
   public static class ClawConstants {
