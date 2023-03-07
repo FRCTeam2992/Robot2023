@@ -117,10 +117,10 @@ public class Drivetrain extends SubsystemBase {
   public PathPlannerTrajectory curvePath;
   public PathPlannerTrajectory testPath;
 
-  // Slowmode
+  // State Variables
   private boolean inSlowMode = false;
-
   private boolean doFieldOreint = true;
+  private boolean scoringMode = false;
 
   private int dashboardCounter = 0;
 
@@ -444,6 +444,14 @@ public class Drivetrain extends SubsystemBase {
 
   public void setDoFieldOreint(boolean disableFieldOreint) {
     this.doFieldOreint = disableFieldOreint;
+  }
+
+  public boolean isScoringMode() {
+    return scoringMode;
+  }
+
+  public void setScoringMode(boolean scoringMode) {
+    this.scoringMode = scoringMode;
   }
 
   public void onDisable() {

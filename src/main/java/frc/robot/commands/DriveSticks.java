@@ -110,23 +110,7 @@ public class DriveSticks extends CommandBase {
       }
     }
 
-    // // Check if LimeLight Button Pressed
-    // if (Robot.m_robotContainer.autoAimButton.get()) {
-    // // Turn On the LimeLight
-    // mDriveTrain.limeLightCamera.setLedMode(LedMode.On);
-
-    // // Check if LimeLight Has a Target
-    // if (mDriveTrain.limeLightCamera.hasTarget() &&
-    // Math.abs(mDriveTrain.limeLightCamera.getTargetXOffset()) > .5) {
-    // // Calculate the Drive Aim Correction
-    // x2 = -mDriveTrain.limeLightCamera.getTargetXOffset() * Constants.driveAimP;
-
-    // gyroTargetRecorded = false;
-    // }
-    // } else {
-    // // Turn Off the LimeLight
-    // mDriveTrain.limeLightCamera.setLedMode(LedMode.Off);
-    // }
+    // Lock Rotation to 0 for scoring
 
     // Check for Movement
     if (Math.abs(x1) > 0.0 || Math.abs(y1) > 0.0 || Math.abs(x2) > 0.0) {
@@ -198,7 +182,17 @@ public class DriveSticks extends CommandBase {
         // Reset the Target Recorded State
         gyroTargetRecorded = false;
       }
-
+      if (mDriveTrain.isScoringMode()) {
+        if ((mDriveTrain.getGyroYaw()) < 180) {// Check if gyro is between 0-180 so turn left
+          x2 = -(180 - mDriveTrain.getGyroYaw()) * Constants.DrivetrainConstants.driveRotationP;
+        } else if ((mDriveTrain.getGyroYaw()) > 180) {// Check if gyro is between 180-360 so turn right
+          x2 = (360 - mDriveTrain.getGyroYaw()) * Constants.DrivetrainConstants.driveRotationP;
+        } else { // aready at target so overwrite rotation
+          x2 = 0.0;
+        }
+        x2 = Math.min(x2, .20);
+        x2 = Math.max(x2, -.20);
+      }
       // Calculate the Swerve States
       double[] swerveStates;
 
