@@ -5,6 +5,7 @@
 package frc.robot.commands.groups;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.lib.manipulator.Waypoint;
 import frc.robot.commands.SetArmPosition;
