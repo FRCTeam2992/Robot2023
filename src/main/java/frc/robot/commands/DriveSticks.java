@@ -188,17 +188,7 @@ public class DriveSticks extends CommandBase {
           x2 -= 360;
         }
         x2 = x2 * Constants.DrivetrainConstants.driveRotationP;
-        // if ((mDriveTrain.getGyroYaw()) < 180) {// Check if gyro is between 0-180 so
-        // turn left
-        // x2 = (180 - mDriveTrain.getGyroYaw()) *
-        // Constants.DrivetrainConstants.driveRotationP;
-        // } else if ((mDriveTrain.getGyroYaw()) > 180) {// Check if gyro is between
-        // 180-360 so turn right
-        // x2 = -(360 - mDriveTrain.getGyroYaw()) *
-        // Constants.DrivetrainConstants.driveRotationP;
-        // } else { // aready at target so overwrite rotation
-        // x2 = 0.0;
-        // }
+
         x2 = Math.min(x2, .40);
         x2 = Math.max(x2, -.40);
       }
