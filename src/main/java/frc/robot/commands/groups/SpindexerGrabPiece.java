@@ -4,11 +4,13 @@
 
 package frc.robot.commands.groups;
 
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
+import frc.robot.commands.MoveIntake;
 import frc.robot.commands.SetClawState;
 import frc.robot.commands.SetIntakeDeployState;
-import frc.robot.commands.SetIntakeSpeed;
+import frc.robot.commands.StopSpindexer;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Elevator;
@@ -21,17 +23,22 @@ import frc.robot.subsystems.IntakeDeploy.IntakeDeployState;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class AutoGroundIntakeCube extends ParallelCommandGroup {
-  public AutoGroundIntakeCube(Elevator elevator, Arm arm, Claw claw, Intake intake,
-      IntakeDeploy intakeDeploy, Spindexer spindexer) {
-
+public class SpindexerGrabPiece extends SequentialCommandGroup {
+  /** Creates a new FinishIntakeSequence. */
+  public SpindexerGrabPiece(Elevator elevator, Arm arm, Claw claw, Intake intake, IntakeDeploy intakeDeploy,
+      Spindexer spindexer) {
     // Add your commands in the addCommands() call, e.g.
-    // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-        new SafeDumbTowerToPosition(elevator, arm, Constants.TowerConstants.intakeBackstop).asProxy(),
-        new SetClawState(claw, ClawState.Closed),
-        new SetIntakeDeployState(intakeDeploy, IntakeDeployState.GroundIntake),
-        new SetIntakeSpeed(intake, 0.75, 0.0),
-        new AutoSpinSpindexer(spindexer).repeatedly());
+        new SetClawState(claw, ClawState.Opened),
+        new ParallelRaceGroup(
+            new MoveIntake(intake, 0, 0),
+            new SetIntakeDeployState(intakeDeploy, IntakeDeployState.Normal),
+            new StopSpindexer(spindexer),
+            new SafeDumbTowerToPosition(elevator, arm, Constants.TowerConstants.intakeGrab)).asProxy(),
+        // new AutoSpinSpindexer(s).repeatedly().withTimeout(1.5)),
+        new SetClawState(claw, ClawState.Closed)
+
+    );
+
   }
 }

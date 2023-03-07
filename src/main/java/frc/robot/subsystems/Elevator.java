@@ -29,6 +29,10 @@ public class Elevator extends SubsystemBase {
 
   private double targetHeightInch = 0;
 
+  // Variables for managing "hold position" to prevent backdrive
+  private boolean holdPositionRecorded = false; // Have we logged the hold position yet
+  private double holdPosition; // lead motor encoder clicks
+
   public enum ElevatorState {
     Undeployed(false),
     Deployed(true);
@@ -87,6 +91,7 @@ public class Elevator extends SubsystemBase {
   }
 
   public void setElevatorSpeed(double speed) {
+    holdPositionRecorded = false; // Hold position invalidated since we moved
     if (getElevatorInches() < Constants.ElevatorConstants.Limits.softStopBottom) {
       speed = Math.max(0.0, speed);
     } else if (getElevatorInches() > Constants.ElevatorConstants.Limits.softStopTop) {
@@ -96,6 +101,8 @@ public class Elevator extends SubsystemBase {
   }
 
   public void setElevatorPosition(double inches) {
+    holdPositionRecorded = false; // Hold position invalidated since we moved
+
     if (inches < Constants.ElevatorConstants.Limits.softStopBottom) {
       inches = Constants.ElevatorConstants.Limits.softStopBottom;
     } else if (inches > Constants.ElevatorConstants.Limits.softStopTop) {
@@ -106,12 +113,27 @@ public class Elevator extends SubsystemBase {
     // System.out.println("MOVING: " + inchesToEncoderClicks(inches));
   }
 
+  public void holdElevator() {
+    if (!holdPositionRecorded) {
+      // We haven't recorded where we are yet, so get it
+      holdPosition = getLeadElevatorPostion();
+      holdPositionRecorded = true;
+    } else {
+      elevatorMotorLead.set(TalonFXControlMode.MotionMagic, holdPosition);
+    }
+
+  }
+
   public void setElevatorState(ElevatorState state) {
     elevatorSolenoid.set(state.solenoidSetting);
   }
 
   public void deployElevator(boolean toggle) {
     elevatorSolenoid.set(toggle);
+  }
+
+  public void toggleElevatorDeploy() {
+    elevatorSolenoid.set(!getElevatorSolenoidState());
   }
 
   public boolean getElevatorSolenoidState() {

@@ -155,7 +155,7 @@ public final class Constants {
 
     public static class AutoSpin {
       public static double motorSpeed = 0.6; // percent output
-      public static double timeoutForDirectionChange = 1.5; // seconds
+      public static double timeoutForDirectionChange = 1.0; // seconds
     }
   }
 
@@ -166,7 +166,7 @@ public final class Constants {
     public static Waypoint scoreCubeMid = new Waypoint(0.0, 199.0);
     public static Waypoint scoreCubeHigh = new Waypoint(27.25, 166.0);
     public static Waypoint intakeBackstop = new Waypoint(9.75, 35);
-    public static Waypoint intakeGrab = new Waypoint(0.0, -4.0);
+    public static Waypoint intakeGrab = new Waypoint(0.0, 0.0);
     public static Waypoint intakeRegrab = new Waypoint(7.75, 5.0);
     public static Waypoint floorGrab = new Waypoint(0.0, 92.0);
   }
@@ -184,10 +184,10 @@ public final class Constants {
       public static double I = 0;
       public static double D = 0.5;
       public static double FF = 0.1;
-      // public static double cruiseVelocity = 13200;
-      public static double cruiseVelocity = 1000;
-      // public static double acceleration = 26400;
-      public static double acceleration = 2000;
+      public static double cruiseVelocity = 13200;
+      // public static double cruiseVelocity = 1000;
+      public static double acceleration = 26400;
+      // public static double acceleration = 2000;
     }
 
     public static class Limits {
@@ -205,6 +205,7 @@ public final class Constants {
     public static double encoderClicksPerInch = (encoderClicksPerRevolution * gearRatio)
         / (sprocketPitchDiameter * Math.PI);
 
+    public static double holdPositionMaxTime = 120; // Seconds -- How long to prevent backdrive
   }
 
   public static class ArmConstants {
@@ -219,10 +220,10 @@ public final class Constants {
       public static double D = 0;
       public static double FF = 0;
 
-      // public static double cruiseVelocity = 7280;
-      // public static double acceleration = 29000;
-      public static double cruiseVelocity = 3000;
-      public static double acceleration = 6000;
+      public static double cruiseVelocity = 15000;
+      public static double acceleration = 29000;
+      // public static double cruiseVelocity = 3000;
+      // public static double acceleration = 6000;
 
     }
 
@@ -241,14 +242,16 @@ public final class Constants {
 
     public static class ArmSlopConstants {
       // All of these constants need to be validated!
-      public static double topZoneEdge = 207; // Higher angle than this assume arm slop, adjust encoder by slop amount
-      public static double topZoneAdjustment = 9.6; // True encoder arm position this much lower than Cancoder in this
-      // zone
-      public static double bottomZoneEdge = 40; // If lower angle than this assume arm slop, adjust encoder by slop
-                                                // amount
+      public static double topZoneLowEdge = 213; // Above this may be n the slop zone
+      public static double topZoneHiEdge = 219; // Past the slop zone -- use adjustment
+      public static double topZoneAdjustment = 9.6; // Slop adjustment to apply
+
+      public static double bottomZoneHiEdge = 43.8; // Past this in the slop zone
+      public static double bottomZoneLowEdge = 34.2; // Past the slop zone -- use adjustment
       public static double bottomZoneAdjustment = 9.6;
     }
 
+    public static double holdPositionMaxTime = 120; // Seconds -- How long to prevent backdrive
   }
 
   public static class ClawConstants {

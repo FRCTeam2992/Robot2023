@@ -5,31 +5,33 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Elevator;
+import frc.robot.RobotState;
 
-public class SetElevatorPosition extends CommandBase {
-  /** Creates a new SetElevatorPosition. */
-  private Elevator mElevator;
+public class ToggleEndgameState extends CommandBase {
+  private RobotState mRobotState;
 
-  private double mPosition;
-
-  public SetElevatorPosition(Elevator subsystem, double position) {
+  /** Creates a new SetEndgameState. */
+  public ToggleEndgameState(RobotState robotState) {
     // Use addRequirements() here to declare subsystem dependencies.
-    mElevator = subsystem;
-    mPosition = position;
-
-    addRequirements(mElevator);
+    mRobotState = robotState;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    switch (mRobotState.endgameMode) {
+      case InEndgame:
+        mRobotState.endgameMode = RobotState.EndgameModeState.NotInEndgame;
+        break;
+      case NotInEndgame:
+        mRobotState.endgameMode = RobotState.EndgameModeState.InEndgame;
+        break;
+    }
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    mElevator.setElevatorPosition(mPosition);
   }
 
   // Called once the command ends or is interrupted.
@@ -40,7 +42,6 @@ public class SetElevatorPosition extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return mElevator.atPosition();
-
+    return true;
   }
 }
