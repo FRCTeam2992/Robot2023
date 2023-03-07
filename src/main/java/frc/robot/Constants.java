@@ -242,12 +242,12 @@ public final class Constants {
 
     public static class ArmSlopConstants {
       // All of these constants need to be validated!
-      public static double topZoneLowEdge = 197; // Above this may be n the slop zone
-      public static double topZoneHiEdge = 207; // Past the slop zone -- use adjustment
+      public static double topZoneLowEdge = 213; // Above this may be n the slop zone
+      public static double topZoneHiEdge = 219; // Past the slop zone -- use adjustment
       public static double topZoneAdjustment = 9.6; // Slop adjustment to apply
 
-      public static double bottomZoneHiEdge = 50; // Past this in the slop zone
-      public static double bottomZoneLowEdge = 40; // Past the slop zone -- use adjustment
+      public static double bottomZoneHiEdge = 43.8; // Past this in the slop zone
+      public static double bottomZoneLowEdge = 34.2; // Past the slop zone -- use adjustment
       public static double bottomZoneAdjustment = 9.6;
     }
 

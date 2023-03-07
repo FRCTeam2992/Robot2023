@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.commands.ResetArmEncoder;
 import frc.robot.subsystems.Arm.EncoderState;
 
 /**
@@ -138,11 +137,7 @@ public class Robot extends TimedRobot {
 
     // Arm make sure encoders are current
     mRobotContainer.mArm.initArmMotorEncoder(); // Attempt reset at each teleop init
-    if (mRobotContainer.mArm.motorEncoderCalibrated() != EncoderState.CALIBRATED) {
-      // Encoder was not properly calibrated -- try and clean it up on init
-      CommandScheduler.getInstance()
-          .schedule(new ResetArmEncoder(mRobotContainer.mArm, mRobotContainer.mElevator).withTimeout(2.0));
-    }
+
   }
 
   /** This function is called periodically during operator control. */

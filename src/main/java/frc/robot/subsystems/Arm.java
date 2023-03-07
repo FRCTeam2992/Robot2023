@@ -138,13 +138,18 @@ public class Arm extends SubsystemBase {
     }
 
     // If arm stowed at top of range, we have to adjust for mechanical chain slop
-    if (Math.abs(armEncoder.getLastTimestamp() - Timer.getFPGATimestamp()) > 0.5) {
-      // Not getting current Cancoder settings
-      // Assume we are at Match Start position and PRAY!
-      System.out.println("+++++++++++++++++> ARM ENCODER NO CURRENT READING");
-      value = Constants.ArmConstants.Limits.hardStopTop - Constants.ArmConstants.ArmSlopConstants.topZoneAdjustment;
-      motorEncoderConfidentCalibrated = EncoderState.CANCODER_FAILED;
-    }
+    // if (Math.abs(armEncoder.getLastTimestamp() - Timer.getFPGATimestamp()) > 0.5)
+    // {
+    // // Not getting current Cancoder settings
+    // // Assume we are at Match Start position and PRAY!
+    // System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++> ARM
+    // ENCODER NO CURRENT READING");
+    // System.out.println("Encoder timestamp:" + armEncoder.getLastTimestamp());
+    // System.out.println("FPGA Timestamp:" + Timer.getFPGATimestamp());
+    // value = Constants.ArmConstants.Limits.hardStopTop -
+    // Constants.ArmConstants.ArmSlopConstants.topZoneAdjustment;
+    // motorEncoderConfidentCalibrated = EncoderState.CANCODER_FAILED;
+    // }
     if (value >= Constants.ArmConstants.ArmSlopConstants.topZoneHiEdge) {
       // Above the top slop zone -- apply adjustment
       value -= Constants.ArmConstants.ArmSlopConstants.topZoneAdjustment;
@@ -169,8 +174,10 @@ public class Arm extends SubsystemBase {
     }
 
     // Convert from degrees to encoder clicks
+    System.out.println("==========================================> Encoder set to " + value);
     value *= Constants.ArmConstants.motorEncoderClicksPerDegree;
     armMotor.setSelectedSensorPosition(value);
+
   }
 
   public boolean hasArmMotorReset() {
