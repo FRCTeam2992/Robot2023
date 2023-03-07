@@ -7,6 +7,7 @@ package frc.robot;
 import frc.robot.commands.DeployButterflyWheels;
 import frc.robot.commands.DeployElevator;
 import frc.robot.commands.DriveSticks;
+import frc.robot.commands.HoldArm;
 import frc.robot.commands.HoldElevator;
 import frc.robot.commands.RehomeIntakeDeploy;
 import frc.robot.commands.MoveArm;
@@ -98,7 +99,8 @@ public class RobotContainer {
         mElevator.setDefaultCommand(new HoldElevator(mElevator));
 
         mArm = new Arm();
-        mArm.setDefaultCommand(new StopArm(mArm));
+        // mArm.setDefaultCommand(new StopArm(mArm));
+        mArm.setDefaultCommand(new HoldArm(mArm));
 
         mClaw = new Claw();
 
@@ -223,14 +225,14 @@ public class RobotContainer {
 
         // Joysticks and Buttons
         controller1.axisLessThan(XboxController.Axis.kLeftY.value, -0.6).whileTrue(
-                new MoveArm(mArm, 0.1));
+                        new MoveArm(mArm, 0.20));
         controller1.axisGreaterThan(XboxController.Axis.kLeftY.value, 0.6).whileTrue(
-                new MoveArm(mArm, -0.1));
+                        new MoveArm(mArm, -0.20));
 
         controller1.axisLessThan(XboxController.Axis.kRightY.value, -0.6).whileTrue(
-                new MoveElevator(mElevator, 0.1));
+                        new MoveElevator(mElevator, 0.2));
         controller1.axisGreaterThan(XboxController.Axis.kRightY.value, 0.6).whileTrue(
-                new MoveElevator(mElevator, -0.1));
+                        new MoveElevator(mElevator, -0.2));
 
     }
 
