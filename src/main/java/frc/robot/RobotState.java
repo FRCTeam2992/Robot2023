@@ -27,7 +27,6 @@ public class RobotState {
     public EndgameModeState endgameMode = EndgameModeState.NotInEndgame;
 
     public enum TargetingState {
-        None(null),
         GridHighLeft(Constants.TowerConstants.scoreConeHigh),
         GridHighRight(Constants.TowerConstants.scoreConeHigh),
         GridHighCenter(Constants.TowerConstants.scoreCubeHigh),
@@ -45,5 +44,5 @@ public class RobotState {
         }
     }
 
-    public TargetingState currentTarget = TargetingState.None;
+    public TargetingState currentTarget = TargetingState.GridMidCenter;
 }
