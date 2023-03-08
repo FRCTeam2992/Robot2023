@@ -21,6 +21,7 @@ import frc.lib.drive.swerve.SwerveModuleFalconFalcon;
 import frc.lib.vision.LimeLight;
 import frc.lib.vision.LimeLight.CoordinateSpace;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
@@ -102,7 +103,7 @@ public class Drivetrain extends SubsystemBase {
   public final SwerveDriveKinematics swerveDriveKinematics;
 
   // Swerve Drive Odometry
-  public final SwerveDriveOdometry swerveDriveOdometry;
+  public final SwerveDrivePoseEstimator swerveDrivePoseEstimator;
   public SwerveModulePosition[] swerveDriveModulePositions = {
       new SwerveModulePosition(),
       new SwerveModulePosition(),
@@ -283,7 +284,7 @@ public class Drivetrain extends SubsystemBase {
         Constants.DrivetrainConstants.rearRightLocation);
 
     // Serve Drive Odometry
-    swerveDriveOdometry = new SwerveDriveOdometry(
+    swerveDrivePoseEstimator = new SwerveDrivePoseEstimator(
         swerveDriveKinematics,
         // Rotation2d.fromDegrees(navx.getYaw()),
         Rotation2d.fromDegrees(getGyroYaw()),
@@ -308,7 +309,7 @@ public class Drivetrain extends SubsystemBase {
     swerveDriveModulePositions[2] = rearLeftModule.getPosition();
     swerveDriveModulePositions[3] = rearRightModule.getPosition();
 
-    latestSwervePose = swerveDriveOdometry.update(
+    latestSwervePose = swerveDrivePoseEstimator.update(
         Rotation2d.fromDegrees(-getGyroYaw()),
         swerveDriveModulePositions);
 
@@ -398,12 +399,13 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public void resetOdometry() {
-    swerveDriveOdometry.resetPosition(Rotation2d.fromDegrees(-getGyroYaw()), swerveDriveModulePositions,
+    swerveDrivePoseEstimator.resetPosition(Rotation2d.fromDegrees(-getGyroYaw()), swerveDriveModulePositions,
         new Pose2d(0.0, 0.0, new Rotation2d()));
   }
 
   public void resetOdometryToPose(Pose2d initialPose) {
-    swerveDriveOdometry.resetPosition(Rotation2d.fromDegrees(-getGyroYaw()), swerveDriveModulePositions, initialPose);
+    swerveDrivePoseEstimator.resetPosition(Rotation2d.fromDegrees(-getGyroYaw()), swerveDriveModulePositions,
+        initialPose);
     latestSwervePose = initialPose;
   }
 
