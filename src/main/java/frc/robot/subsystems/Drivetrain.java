@@ -20,6 +20,8 @@ import frc.lib.drive.swerve.SwerveController;
 import frc.lib.drive.swerve.SwerveModuleFalconFalcon;
 import frc.lib.vision.LimeLight;
 import frc.lib.vision.LimeLight.CoordinateSpace;
+import edu.wpi.first.math.MatBuilder;
+import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -289,7 +291,11 @@ public class Drivetrain extends SubsystemBase {
         // Rotation2d.fromDegrees(navx.getYaw()),
         Rotation2d.fromDegrees(getGyroYaw()),
         swerveDriveModulePositions,
-        new Pose2d(0.0, 0.0, new Rotation2d()));
+        new Pose2d(0.0, 0.0, new Rotation2d()),
+        new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.02, 0.02, 0.01), // State measurement standard deviations. X, Y,
+                                                                     // theta.
+        new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.1, 0.1, 0.05)); // Global measurement standard deviations. X, Y, and
+                                                                    // theta.);
   }
 
   private void initTalonFX(TalonFX motorContollerName, boolean isInverted) {
