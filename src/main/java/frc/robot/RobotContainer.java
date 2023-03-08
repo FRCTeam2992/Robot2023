@@ -36,6 +36,7 @@ import frc.robot.commands.Deprecated.ADD_BUTTON_HERE;
 import frc.robot.commands.groups.AutoGroundIntakeCone;
 import frc.robot.commands.groups.AutoGroundIntakeCube;
 import frc.robot.commands.groups.AutoLoadStationIntake;
+import frc.robot.commands.groups.AutoSpinSpindexer;
 import frc.robot.commands.groups.SpindexerGrabPiece;
 import frc.robot.commands.groups.FollowTrajectoryCommand;
 import frc.robot.commands.groups.SafeDumbTowerToPosition;
@@ -95,7 +96,7 @@ public class RobotContainer {
                 mRobotState = new RobotState();
 
                 mDrivetrain = new Drivetrain();
-                mDrivetrain.setDefaultCommand(new DriveSticks(mDrivetrain));
+                mDrivetrain.setDefaultCommand(new DriveSticks(mDrivetrain, mRobotState));
 
                 mIntake = new Intake();
                 mIntake.setDefaultCommand(new StopIntake(mIntake));
@@ -132,9 +133,7 @@ public class RobotContainer {
          * Use this method to define your trigger->command mappings. Triggers can be
          * created via the {@link Trigger#Trigger(java.util.function.BooleanSupplier)}
          * constructor with an arbitrary predicate, or via the named factories in
-         * {@link edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s
-         * subclasses for {@link CommandXboxController
-         * Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
+         * t * Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
          * PS4} controllers or {@link
          * edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight joysticks}.
          */
@@ -195,8 +194,10 @@ public class RobotContainer {
                                 .whileTrue(new MoveTowerToScoringPosition(mElevator, mArm, mRobotState));
                 controller0.leftTrigger(0.6)
                                 .onTrue(new SetIntakeDeployState(mIntakeDeploy, IntakeDeploy.IntakeDeployState.Homed));
+                controller0.leftTrigger(0.6).onTrue(new DeployElevator(mElevator, ElevatorState.Deployed));
                 controller0.leftTrigger(0.6)
                                 .onFalse(new SafeDumbTowerToPosition(mElevator, mArm, TowerConstants.intakeBackstop));
+                controller0.leftTrigger(0.6).onFalse(new DeployElevator(mElevator, ElevatorState.Undeployed));
 
                 // Back and Start
 
@@ -204,6 +205,7 @@ public class RobotContainer {
 
                 // Joysticks Buttons
                 controller0.rightStick().onTrue(new StopIntake(mIntake));
+                controller0.rightStick().onTrue(new AutoSpinSpindexer(mSpindexer).repeatedly());
                 controller0.rightStick().onTrue(new SetIntakeDeployState(mIntakeDeploy, IntakeDeployState.Normal));
 
                 // -----------------------controller1-----------------------

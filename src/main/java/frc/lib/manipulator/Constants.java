@@ -8,7 +8,7 @@ public final class Constants {
         public static final double MAX_HEIGHT_INCHES = ElevatorConstants.Limits.hardStopTop;
         public static final double MAX_ANGLE_DEGREES = ArmConstants.Limits.hardStopTop;
         public static final double AVOID_HEIGHT_INCHES = 9.0;
-        public static final double BASE_AVOID_INCHES = 10.0;
+        public static final double BASE_AVOID_INCHES = 13.0;
         public static final double BASE_AVOID_DEGREES = 150.0;
         public static final double BASE_ENTRY_INCHES = 12.0;
         public static final double BASE_ENTRY_DEGREES = 15.0;
