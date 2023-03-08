@@ -333,7 +333,7 @@ public class Drivetrain extends SubsystemBase {
       limelight11JsonLog.append(limeLightCamera11.getLimelightJson());
       // limelight12JsonLog.append(limeLightCamera12.getLimelightJson());
 
-      ll11BotposeFieldSpaceLog.append(limeLightCamera11.getBotPose(CoordinateSpace.Field));
+      ll11BotposeFieldSpaceLog.append(limeLightCamera11.getBotPose(CoordinateSpace.Blue));
       // ll12BotposeFieldSpaceLog.append(limeLightCamera12.getBotPose(CoordinateSpace.Field));
       ll11BotposeBlueLog.append(limeLightCamera11.getBotPose(CoordinateSpace.Blue));
       // ll12BotposeBlueLog.append(limeLightCamera12.getBotPose(CoordinateSpace.Blue));
@@ -358,25 +358,31 @@ public class Drivetrain extends SubsystemBase {
       SmartDashboard.putNumber("Odometry X (m)", latestSwervePose.getX());
       SmartDashboard.putNumber("Odometry Y (m)", latestSwervePose.getY());
 
-      limelight11BotPose = limeLightCamera11.getBotPose(getAllianceCoordinateSpace());
-      SmartDashboard.putNumber("Limelight Pose X (m)", limelight11BotPose[0]);
-      SmartDashboard.putNumber("Limelight Pose Y (m)", limelight11BotPose[1]);
-      SmartDashboard.putNumber("Limelight Pose Yaw (deg)", limelight11BotPose[5]);
-      SmartDashboard.putNumber("Limelight Pose Latency (ms)", limelight11BotPose[6]);
-      SmartDashboard.putNumber("Limelight Tid", limeLightCamera11.getTargetID());
+      limelight11BotPose = limeLightCamera11.getBotPose(CoordinateSpace.Blue);
+      // limelight11BotPose =
+      // limeLightCamera11.getBotPose(getAllianceCoordinateSpace());
+      if (limeLightCamera11.getTargetID() > 0) {
+        SmartDashboard.putNumber("Limelight Pose X (m)", limelight11BotPose[0]);
+        SmartDashboard.putNumber("Limelight Pose Y (m)", limelight11BotPose[1]);
+        SmartDashboard.putNumber("Limelight Pose Yaw (deg)", limelight11BotPose[5]);
+        // SmartDashboard.putNumber("Limelight Pose Latency (ms)",
+        // limelight11BotPose[6]);
 
+      }
+      SmartDashboard.putNumber("Limelight Tid", limeLightCamera11.getTargetID());
       dashboardCounter = 0;
     }
 
     /*
      * TODO: Finish this once we test limelight botPose data
      */
-    // if (limeLightCamera11.getTargetID() > 0) {
-    // latestVisionPose = new Pose2d(limelight11BotPose[0], limelight11BotPose[1],
-    // Rotation2d.fromDegrees(limelight11BotPose[5]));
-    // swerveDrivePoseEstimator.addVisionMeasurement(latestVisionPose,
-    // Timer.getFPGATimestamp() - (limelight11BotPose[6]/1000.0));
-    // }
+    if (limeLightCamera11.getTargetID() > 0) {
+      limelight11BotPose = limeLightCamera11.getBotPose(CoordinateSpace.Blue);
+      latestVisionPose = new Pose2d(limelight11BotPose[0], limelight11BotPose[1],
+          Rotation2d.fromDegrees(limelight11BotPose[5]));
+      swerveDrivePoseEstimator.addVisionMeasurement(latestVisionPose,
+          Timer.getFPGATimestamp());
+    }
   }
 
   public CoordinateSpace getAllianceCoordinateSpace() {
