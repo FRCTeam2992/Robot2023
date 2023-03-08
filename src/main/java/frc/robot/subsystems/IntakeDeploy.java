@@ -45,7 +45,7 @@ public class IntakeDeploy extends SubsystemBase {
   public IntakeDeploy() {
     intakeDeployMotor = new CANSparkMax(Constants.IntakeDeployConstants.DeviceIDs.intakeDeployMotor,
         MotorType.kBrushless);
-    intakeDeployMotor.setInverted(false);
+    intakeDeployMotor.setInverted(true);
     intakeDeployMotor.setIdleMode(IdleMode.kBrake);
     intakeDeployMotor.setSmartCurrentLimit(40);
 
