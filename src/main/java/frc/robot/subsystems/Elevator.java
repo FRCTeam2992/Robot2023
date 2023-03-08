@@ -9,7 +9,8 @@ import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
-import edu.wpi.first.wpilibj.DigitalOutput;
+import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -23,11 +24,13 @@ public class Elevator extends SubsystemBase {
 
   private Solenoid elevatorSolenoid;
 
-  private DigitalOutput elevatorLimitSwitch;
-
   private int dashboardCounter = 0;
 
   private double targetHeightInch = 0;
+
+  private Debouncer limit1Debounce;
+  private Debouncer limit2Debounce;
+  private boolean alreadyLimited = false; // Keep track of transitions and only limit on rise
 
   // Variables for managing "hold position" to prevent backdrive
   private boolean holdPositionRecorded = false; // Have we logged the hold position yet
@@ -59,6 +62,9 @@ public class Elevator extends SubsystemBase {
 
     elevatorSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM,
         Constants.ElevatorConstants.DeviceIDs.elevatorSolenoid);
+
+    limit1Debounce = new Debouncer(0.05, DebounceType.kRising);
+    limit2Debounce = new Debouncer(0.05, DebounceType.kRising);
   }
 
   @Override
@@ -71,6 +77,20 @@ public class Elevator extends SubsystemBase {
       SmartDashboard.putNumber("Elevator Inches", getElevatorInches());
 
       dashboardCounter = 0;
+    }
+
+    if ((limit1Debounce.calculate(elevatorMotorLead.getSensorCollection().isRevLimitSwitchClosed() == 1)) ||
+        (limit2Debounce.calculate(elevatorMotorFollow.getSensorCollection().isFwdLimitSwitchClosed() == 1))) {
+      if (!alreadyLimited) {
+        // New transition rise on limit switches
+        alreadyLimited = true;
+        zeroElevatorEncoders();
+      } else {
+        // Do nothing -- we already recorded the limit switch hit
+      }
+    } else {
+      // Off of the limit switches so reset state
+      alreadyLimited = false;
     }
   }
 
