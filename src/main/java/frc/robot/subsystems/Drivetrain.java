@@ -4,17 +4,23 @@
 
 package frc.robot.subsystems;
 
-import java.nio.file.Path;
-
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoder;
-import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
+
+/**
+ * Use a bugfix posted on ChiefDelphi by Programming4907 instead of the origin dependency
+ * https://www.chiefdelphi.com/t/navx2-disconnecting-reconnecting-intermittently-not-browning-out/425487/42
+ * The src/lib/NavX folder was copied wholesale from Thunderstamps/navx2workaround
+ * and package references in each file were adapted to the location in this repo.
+ */
+// import com.kauailabs.navx.frc.AHRS;
+import frc.lib.NavX.AHRS;
 
 import frc.lib.drive.swerve.SwerveController;
 import frc.lib.drive.swerve.SwerveModuleFalconFalcon;
