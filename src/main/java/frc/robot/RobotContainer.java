@@ -203,7 +203,7 @@ public class RobotContainer {
                 controller0.start().onTrue(new ResetGyro(mDrivetrain));
 
                 // Joysticks Buttons
-                controller0.rightStick().onTrue(new MoveIntake(mIntake, -.5, -.5).withTimeout(2));
+                controller0.rightStick().onTrue(new MoveIntake(mIntake, .5, .5).withTimeout(2));
                 controller0.rightStick().onTrue(new AutoSpinSpindexer(mSpindexer).repeatedly());
                 controller0.rightStick().onTrue(new SetIntakeDeployState(mIntakeDeploy, IntakeDeployState.Normal));
 
