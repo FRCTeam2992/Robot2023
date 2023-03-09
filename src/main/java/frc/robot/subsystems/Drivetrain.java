@@ -39,6 +39,7 @@ import edu.wpi.first.util.datalog.DoubleArrayLogEntry;
 import edu.wpi.first.util.datalog.IntegerLogEntry;
 import edu.wpi.first.util.datalog.StringLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -274,7 +275,7 @@ public class Drivetrain extends SubsystemBase {
     }
 
     // robot gyro initialization
-    navx = new AHRS();
+    navx = new AHRS(SPI.Port.kMXP, (byte) 50);
 
     swerveDriveModulePositions[0] = frontLeftModule.getPosition();
     swerveDriveModulePositions[1] = frontRightModule.getPosition();
