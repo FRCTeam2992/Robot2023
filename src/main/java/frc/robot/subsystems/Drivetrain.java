@@ -333,7 +333,7 @@ public class Drivetrain extends SubsystemBase {
       limelight11JsonLog.append(limeLightCamera11.getLimelightJson());
       // limelight12JsonLog.append(limeLightCamera12.getLimelightJson());
 
-      ll11BotposeFieldSpaceLog.append(limeLightCamera11.getBotPose(CoordinateSpace.Blue));
+      ll11BotposeFieldSpaceLog.append(limeLightCamera11.getBotPose(CoordinateSpace.Field));
       // ll12BotposeFieldSpaceLog.append(limeLightCamera12.getBotPose(CoordinateSpace.Field));
       ll11BotposeBlueLog.append(limeLightCamera11.getBotPose(CoordinateSpace.Blue));
       // ll12BotposeBlueLog.append(limeLightCamera12.getBotPose(CoordinateSpace.Blue));
@@ -358,7 +358,7 @@ public class Drivetrain extends SubsystemBase {
       SmartDashboard.putNumber("Odometry X (m)", latestSwervePose.getX());
       SmartDashboard.putNumber("Odometry Y (m)", latestSwervePose.getY());
 
-      limelight11BotPose = limeLightCamera11.getBotPose(CoordinateSpace.Blue);
+      limelight11BotPose = limeLightCamera11.getBotPose(getAllianceCoordinateSpace());
       // limelight11BotPose =
       // limeLightCamera11.getBotPose(getAllianceCoordinateSpace());
       if (limeLightCamera11.getTargetID() > 0) {
@@ -377,7 +377,7 @@ public class Drivetrain extends SubsystemBase {
      * TODO: Finish this once we test limelight botPose data
      */
     if (limeLightCamera11.getTargetID() > 0) {
-      limelight11BotPose = limeLightCamera11.getBotPose(CoordinateSpace.Blue);
+      limelight11BotPose = limeLightCamera11.getBotPose(getAllianceCoordinateSpace());
       latestVisionPose = new Pose2d(limelight11BotPose[0], limelight11BotPose[1],
           Rotation2d.fromDegrees(limelight11BotPose[5]));
       swerveDrivePoseEstimator.addVisionMeasurement(latestVisionPose,
