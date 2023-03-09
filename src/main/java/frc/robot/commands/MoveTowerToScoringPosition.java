@@ -28,7 +28,7 @@ public class MoveTowerToScoringPosition extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    Waypoint waypoint = mRobotState.currentTarget.towerWaypoint;
+    Waypoint waypoint = mRobotState.currentTargetPosition.towerWaypoint;
     CommandScheduler.getInstance().schedule(new SafeDumbTowerToPosition(mElevator, mArm, waypoint));
   }
 

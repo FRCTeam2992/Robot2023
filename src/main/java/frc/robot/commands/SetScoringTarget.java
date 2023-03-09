@@ -64,34 +64,45 @@ public class SetScoringTarget extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    if (mController.x().getAsBoolean()) {
+      mRobotState.currentTargetedGrid = RobotState.TargetingGrid.GridDriverLeft;
+    } else if (mController.a().getAsBoolean()) {
+      mRobotState.currentTargetedGrid = RobotState.TargetingGrid.GridCenter;
+    } else if (mController.b().getAsBoolean()) {
+      mRobotState.currentTargetedGrid = RobotState.TargetingGrid.GridDriverRight;
+    } else {
+      // Default to Driver left grid if no button is registered
+      mRobotState.currentTargetedGrid = RobotState.TargetingGrid.GridDriverLeft;
+    }
+
     JoystickPOVToAngle direction = JoystickPOVToAngle.fromValue(mController.getHID().getPOV());
     switch (direction) {
       case UpLeft:
-        mRobotState.currentTarget = RobotState.TargetingState.GridHighRight;
+        mRobotState.currentTargetPosition = RobotState.GridTargetingPosition.HighRight;
         break;
       case Up:
-        mRobotState.currentTarget = RobotState.TargetingState.GridHighCenter;
+        mRobotState.currentTargetPosition = RobotState.GridTargetingPosition.HighCenter;
         break;
       case UpRight:
-        mRobotState.currentTarget = RobotState.TargetingState.GridHighLeft;
+        mRobotState.currentTargetPosition = RobotState.GridTargetingPosition.HighLeft;
         break;
       case Left:
-        mRobotState.currentTarget = RobotState.TargetingState.GridMidRight;
+        mRobotState.currentTargetPosition = RobotState.GridTargetingPosition.MidRight;
         break;
       case Center:
-        mRobotState.currentTarget = RobotState.TargetingState.GridMidCenter;
+        mRobotState.currentTargetPosition = RobotState.GridTargetingPosition.MidCenter;
         break;
       case Right:
-        mRobotState.currentTarget = RobotState.TargetingState.GridMidLeft;
+        mRobotState.currentTargetPosition = RobotState.GridTargetingPosition.MidLeft;
         break;
       case DownLeft:
-        mRobotState.currentTarget = RobotState.TargetingState.GridLowRight;
+        mRobotState.currentTargetPosition = RobotState.GridTargetingPosition.LowRight;
         break;
       case Down:
-        mRobotState.currentTarget = RobotState.TargetingState.GridLowCenter;
+        mRobotState.currentTargetPosition = RobotState.GridTargetingPosition.LowCenter;
         break;
       case DownRight:
-        mRobotState.currentTarget = RobotState.TargetingState.GridLowLeft;
+        mRobotState.currentTargetPosition = RobotState.GridTargetingPosition.LowLeft;
         break;
     }
   }
