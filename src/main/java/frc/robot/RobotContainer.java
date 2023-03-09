@@ -17,6 +17,7 @@ import frc.robot.commands.MoveSpindexer;
 import frc.robot.commands.MoveTowerToScoringPosition;
 import frc.robot.commands.SetSwerveAngle;
 import frc.robot.commands.MoveElevator;
+import frc.robot.commands.MoveIntake;
 import frc.robot.commands.MoveIntakeDeploy;
 import frc.robot.commands.SetClawState;
 import frc.robot.commands.SetIntakeDeployState;
@@ -204,17 +205,17 @@ public class RobotContainer {
                 controller0.start().onTrue(new ResetGyro(mDrivetrain));
 
                 // Joysticks Buttons
-                controller0.rightStick().onTrue(new StopIntake(mIntake));
+                controller0.rightStick().onTrue(new MoveIntake(mIntake, -.5, -.5).withTimeout(2));
                 controller0.rightStick().onTrue(new AutoSpinSpindexer(mSpindexer).repeatedly());
                 controller0.rightStick().onTrue(new SetIntakeDeployState(mIntakeDeploy, IntakeDeployState.Normal));
 
                 // -----------------------controller1-----------------------
                 // ABXY
-
+                controller1.y().whileTrue(new MoveIntake(mIntake, .5, .5));
 
                 // Bumper/Trigger
-                controller1.leftBumper().whileTrue(new MoveSpindexer(mSpindexer, -0.6));
-                controller1.rightBumper().whileTrue(new MoveSpindexer(mSpindexer, 0.6));
+                controller1.leftBumper().whileTrue(new MoveSpindexer(mSpindexer, -0.9));
+                controller1.rightBumper().whileTrue(new MoveSpindexer(mSpindexer, 0.9));
                 controller1.leftTrigger(0.6).onTrue(
                                 new SpindexerGrabPiece(mElevator, mArm, mClaw, mIntake, mIntakeDeploy, mSpindexer));
                 controller1.rightTrigger(0.6).onTrue(new SetScoringTarget(mRobotState, controller1));
