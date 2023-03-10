@@ -49,9 +49,19 @@ import frc.robot.subsystems.Spindexer;
 import frc.robot.subsystems.Claw.ClawState;
 import frc.robot.subsystems.Elevator.ElevatorState;
 import frc.robot.subsystems.IntakeDeploy.IntakeDeployState;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import com.pathplanner.lib.PathPlannerTrajectory;
+
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -86,6 +96,9 @@ public class RobotContainer {
         public final Claw mClaw;
 
         public final ButterflyWheels mButterflyWheels;
+
+        private SendableChooser<AutoStartPosition> autoStartChooser;
+        private SendableChooser<AutoSequence> autoSequenceChooser;
 
         /**
          * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -126,6 +139,9 @@ public class RobotContainer {
                 configureShuffleboardBindings();
                 configRealButtonBindings();
                 configTestButtonBindings();
+
+                // Setup the Auto Selectors
+                setupAutoSelector();
         }
 
         /**
@@ -415,18 +431,104 @@ public class RobotContainer {
                         mRobotState.endgameMode == RobotState.EndgameModeState.InEndgame);
         }
 
+        public enum AutoStartPosition {
+                Left_Most("LeftMost"),
+                Center_Left("Center Left"),
+                Center_Right("Center Right"),
+                Right_Most("RightMost");
 
-        /**
-         * Use this to pass the autonomous command to the main {@link Robot} class.
-         *
-         * @return the command to run in autonomous
-         */
-        // public Command getAutonomousCommand() {
-        // // An example command will be run in autonomous
-        // return Autos.exampleAuto(m_exampleSubsystem);
-        // }
+                public String description;
+
+                private AutoStartPosition(String description) {
+                        this.description = description;
+                }
+        }
+
+        public enum AutoSequence {
+                Do_Nothing("Do Nothing",
+                                AutoStartPosition.Left_Most,
+                                AutoStartPosition.Center_Left,
+                                AutoStartPosition.Center_Right,
+                                AutoStartPosition.Right_Most),
+                Mobility_Only("Mobility Only",
+                                AutoStartPosition.Left_Most,
+                                AutoStartPosition.Center_Left,
+                                AutoStartPosition.Center_Right,
+                                AutoStartPosition.Right_Most),
+                Hi_Cone_Only("Hi Cone Only",
+                                AutoStartPosition.Left_Most,
+                                AutoStartPosition.Center_Left,
+                                AutoStartPosition.Center_Right,
+                                AutoStartPosition.Right_Most),
+                Hi_Mobility("R/L Hi Cone + Mobility",
+                                AutoStartPosition.Left_Most,
+                                AutoStartPosition.Right_Most),
+                Hi_Balance("C Hi Cone + Balance",
+                                AutoStartPosition.Center_Left,
+                                AutoStartPosition.Center_Right);
+
+                public String description;
+                public List<AutoStartPosition> allowedStartPositions;
+
+                private AutoSequence(String description, AutoStartPosition... allowedStartPositions) {
+                        this.description = description;
+                        this.allowedStartPositions = Arrays.asList(allowedStartPositions);
+                }
+        }
+
+        private void setupAutoSelector() {
+                // Setup choosers for start position
+                autoStartChooser = new SendableChooser<>();
+                autoStartChooser.addOption(AutoStartPosition.Left_Most.description, AutoStartPosition.Left_Most);
+                autoStartChooser.addOption(AutoStartPosition.Center_Left.description, AutoStartPosition.Center_Left);
+                autoStartChooser.addOption(AutoStartPosition.Center_Right.description, AutoStartPosition.Center_Right);
+                autoStartChooser.setDefaultOption(AutoStartPosition.Right_Most.description,
+                                AutoStartPosition.Center_Right);
+
+                SmartDashboard.putData("Auto Start Position", autoStartChooser);
+
+                // Setup chooser for auto sequence
+                autoSequenceChooser = new SendableChooser<>();
+                autoSequenceChooser.setDefaultOption(AutoSequence.Do_Nothing.description, AutoSequence.Do_Nothing);
+                autoSequenceChooser.addOption(AutoSequence.Hi_Cone_Only.description, AutoSequence.Hi_Cone_Only);
+                autoSequenceChooser.addOption(AutoSequence.Mobility_Only.description, AutoSequence.Mobility_Only);
+                autoSequenceChooser.addOption(AutoSequence.Hi_Mobility.description, AutoSequence.Hi_Mobility);
+                autoSequenceChooser.addOption(AutoSequence.Hi_Balance.description, AutoSequence.Hi_Balance);
+
+                SmartDashboard.putData("Auto Sequence", autoSequenceChooser);
+        }
+
+        public AutoStartPosition getAutoStartPositioString() {
+                return autoStartChooser.getSelected();
+        }
+
+        public AutoSequence getAutoSequence() {
+                return autoSequenceChooser.getSelected();
+        }
+
+        public boolean autoStartCompatible() {
+                // Returns true if the Auto Start Position is valid for the current selected
+                // sequence
+                return autoSequenceChooser.getSelected().allowedStartPositions.contains(
+                                autoStartChooser.getSelected());
+        }
+
+        public Command buildAutoCommand() {
+                Pose2d startingPose;
+                Command initialScoreCommand;
+                PathPlannerTrajectory autoPath;
+
+                if (!autoStartCompatible()) {
+                        // We have
+                        return new InstantCommand();
+                } else {
+                        // TODO
+                        return new InstantCommand();
+                }
+        }
 
         public CommandXboxController getController0() {
                 return controller0;
         }
+
 }
