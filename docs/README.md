@@ -6,3 +6,4 @@
 - _Doc_ [Subsystems & Controls](./subsystems_controls.md)
 - _Doc_ [Subsystem & Assembly State Diagrams](./state_diagrams.md)
 - _Doc_ [Command Sequences](./command_sequences.md)
+- _Doc_ [Auto Commands](./auto_commands.md)
