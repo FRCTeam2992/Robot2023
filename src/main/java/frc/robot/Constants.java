@@ -32,7 +32,7 @@ public final class Constants {
     public static double joystickRotationSmoothFactor = 0.5;
     public static double joystickRotationInverseDeadband = 0.14;
 
-    // Length and Width of the Robot in Meters (Inches: 22.0 x 24.5)
+    // Length and Width of the Robot in Meters (Inches: 28 x 31.5)
     public static final double swerveWidth = 0.578;
     public static final double swerveLength = 0.667;
 
