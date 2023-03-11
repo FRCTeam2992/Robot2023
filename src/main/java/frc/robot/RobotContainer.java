@@ -526,8 +526,11 @@ public class RobotContainer {
 
         public Command buildAutoCommand() {
             Pose2d startingPose;
-            Command preloadScore = null;
+            PathPlannerTrajectory initialScorepath;
+            Command initialScoreCommand = null;
+            Command afterInitialScoreCommand = null;
             PathPlannerTrajectory autoPath = null;
+            Command withAutoPathCommand = null;
 
             if (!autoStartCompatible()) {
                 // We have incompatible starting position for sequence. Do NOTHING!
@@ -535,47 +538,71 @@ public class RobotContainer {
             } else {
                 // Record the proper starting pose
                 startingPose = getAutoStartPosition().getStartPose();
+                initialScorepath = getAutoStartPosition().getInitialTrajectory();
 
                 // Set the preload score command sequence
                 switch (getAutoPreloadScore()) {
                     case No_Preload:
-                        preloadScore = new InstantCommand();
+                        initialScoreCommand = new InstantCommand();
                         break;
                     case Hi_Cone:
-                        preloadScore = new SafeDumbTowerToPosition(mElevator, mArm,
-                                GridTargetingPosition.HighRight.towerWaypoint)
-                                .andThen(new DeployElevator(mElevator, ElevatorState.Deployed))
-                                .andThen(new WaitCommand(2.0))
-                                .andThen(new SetClawState(mClaw, ClawState.Opened));
+                        initialScoreCommand = (new FollowTrajectoryCommand(mDrivetrain, initialScorepath, true)
+                                .alongWith(new SafeDumbTowerToPosition(mElevator, mArm,
+                                        GridTargetingPosition.HighRight.towerWaypoint))
+                                .alongWith(new DeployElevator(mElevator, ElevatorState.Deployed)));
+
+                        // Add Sequential Commands after initial move
+                        initialScoreCommand = initialScoreCommand
+                                .andThen(new WaitCommand(0.5))
+                                .andThen(new SetClawState(mClaw, ClawState.Opened))
+                                .andThen(new WaitCommand(0.5));
                         break;
                     default:
-                        preloadScore = new InstantCommand();
+                        initialScoreCommand = new InstantCommand();
                 }
 
                 // Now setup the path following command
                 switch (getAutoSequence()) {
                     case Do_Nothing:
+                        autoPath = null;
                         break;
                     case SideMobilityOnly:
+                        withAutoPathCommand = new SafeDumbTowerToPosition(mElevator, mArm,
+                                TowerConstants.intakeBackstop)
+                                .alongWith(new DeployElevator(mElevator, ElevatorState.Undeployed));
                         if (getAutoStartPosition() == AutoStartPosition.LoadStationEnd) {
-
+                            autoPath = mDrivetrain.loadStationMobility;
                         } else if (getAutoStartPosition() == AutoStartPosition.WallEnd) {
-
+                            autoPath = mDrivetrain.wallMobility;
                         }
                         break;
                     case CenterBalance:
                         if (getAutoStartPosition() == AutoStartPosition.CenterLoadStationSide) {
-
+                            autoPath = mDrivetrain.centerBalanceLoadStationSide;
                         } else if (getAutoStartPosition() == AutoStartPosition.CenterWallSide) {
-
+                            autoPath = mDrivetrain.centerBalanceWallSide;
                         }
                         break;
+                    default:
+                        autoPath = null;
+                }
+
+                // Build parallel group to move from scoring position while driving
+                if (getAutoPreloadScore() != AutoPreloadScore.No_Preload) {
+                    afterInitialScoreCommand = new SafeDumbTowerToPosition(mElevator, mArm,
+                            TowerConstants.intakeBackstop)
+                            .alongWith(new DeployElevator(mElevator, ElevatorState.Undeployed))
+                            .alongWith(new SetClawState(mClaw, ClawState.Closed))
+                            .alongWith(new FollowTrajectoryCommand(mDrivetrain, autoPath, false));
+                } else {
+                    afterInitialScoreCommand = new FollowTrajectoryCommand(mDrivetrain, autoPath, false);
                 }
 
                 //
-                if (startingPose != null && preloadScore != null) {
+                if (startingPose != null && initialScoreCommand != null) {
                     return new InstantCommand(() -> mDrivetrain.resetOdometryToPose(startingPose))
-                            .andThen(preloadScore);
+                            .andThen(initialScoreCommand)
+                            .andThen(afterInitialScoreCommand);
                 }
             }
             return new InstantCommand();
