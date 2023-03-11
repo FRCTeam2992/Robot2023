@@ -4,8 +4,6 @@
 
 package frc.robot;
 
-import javax.lang.model.element.ModuleElement.DirectiveKind;
-
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.lib.manipulator.Waypoint;
 
