@@ -51,6 +51,8 @@ import frc.robot.subsystems.Spindexer;
 import frc.robot.subsystems.Claw.ClawState;
 import frc.robot.subsystems.Elevator.ElevatorState;
 import frc.robot.subsystems.IntakeDeploy.IntakeDeployState;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -315,6 +317,9 @@ public class RobotContainer {
                 SmartDashboard.putData("Spin Intake", new MoveSpindexer(mSpindexer, .5));
 
                 SmartDashboard.putData("Reset Odometry", mDrivetrain.ResetOdometry());
+                SmartDashboard.putData("Reset Odometry to Red Inner Cone",
+                        new InstantCommand(() -> mDrivetrain
+                                .resetOdometryToPose(new Pose2d(1.89, 3.0307, Rotation2d.fromDegrees(0.0)))));
                 SmartDashboard.putData("0 Wheels", new SetSwerveAngle(mDrivetrain, 0, 0, 0, 0));
 
                 SmartDashboard.putData("Home Intake", new RehomeIntakeDeploy(mIntakeDeploy));
