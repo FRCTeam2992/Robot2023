@@ -113,6 +113,7 @@ public class Robot extends TimedRobot {
     } else {
       SmartDashboard.putString("Confirmed Auto Sequence", "INVALID SEQUENCE FOR THIS START POSN");
     }
+    SmartDashboard.putString("Confirmed Auto Preload Score", mRobotContainer.getAutoPreloadScore().description);
 
   }
 
@@ -135,6 +136,8 @@ public class Robot extends TimedRobot {
 
     // Arm make sure encoders are current
     mRobotContainer.mArm.initArmMotorEncoder(); // Reset each time we enter Teleop or Auto
+
+    m_autonomousCommand = mRobotContainer.buildAutoCommand();
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {

@@ -75,6 +75,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -483,22 +484,22 @@ public class RobotContainer {
                     AutoStartPosition.CenterLoadStationSide);
             autoStartChooser.addOption(AutoStartPosition.CenterWallSide.description, AutoStartPosition.CenterWallSide);
             autoStartChooser.setDefaultOption(AutoStartPosition.WallEnd.description,
-                    AutoStartPosition.CenterWallSide);
+                    AutoStartPosition.WallEnd);
 
             SmartDashboard.putData("Auto Start Position", autoStartChooser);
 
             // Setup chooser for preload scoring
             autoPreloadScoreChooser = new SendableChooser<>();
-            autoPreloadScoreChooser.addOption("No Preload Scoring", AutoPreloadScore.No_Preload);
-            autoPreloadScoreChooser.setDefaultOption("Score Hi Cone", AutoPreloadScore.Hi_Cone);
+            autoPreloadScoreChooser.addOption(AutoPreloadScore.No_Preload.description, AutoPreloadScore.No_Preload);
+            autoPreloadScoreChooser.setDefaultOption(AutoPreloadScore.Hi_Cone.description, AutoPreloadScore.Hi_Cone);
 
             SmartDashboard.putData("Preload Score?", autoPreloadScoreChooser);
 
             // Setup chooser for auto sequence
             autoSequenceChooser = new SendableChooser<>();
             autoSequenceChooser.setDefaultOption(AutoSequence.Do_Nothing.description, AutoSequence.Do_Nothing);
-            autoSequenceChooser.addOption(AutoSequence.Mobility_Only.description, AutoSequence.Mobility_Only);
-            autoSequenceChooser.addOption(AutoSequence.Balance.description, AutoSequence.Balance);
+            autoSequenceChooser.addOption(AutoSequence.SideMobilityOnly.description, AutoSequence.SideMobilityOnly);
+            autoSequenceChooser.addOption(AutoSequence.CenterBalance.description, AutoSequence.CenterBalance);
 
             SmartDashboard.putData("Auto Sequence", autoSequenceChooser);
 
@@ -525,8 +526,8 @@ public class RobotContainer {
 
         public Command buildAutoCommand() {
             Pose2d startingPose;
-            Command preloadScore;
-            PathPlannerTrajectory autoPath;
+            Command preloadScore = null;
+            PathPlannerTrajectory autoPath = null;
 
             if (!autoStartCompatible()) {
                 // We have incompatible starting position for sequence. Do NOTHING!
@@ -541,29 +542,28 @@ public class RobotContainer {
                         preloadScore = new InstantCommand();
                         break;
                     case Hi_Cone:
-                        preloadScore = new InstantCommand(() -> {
-                            mRobotState.setTargetPosition(GridTargetingPosition.HighRight);
-                        }).andThen((new DeployElevator(mElevator, ElevatorState.Deployed))
-                                .alongWith(new MoveTowerToScoringPosition(mElevator, mArm, mRobotState)))
+                        preloadScore = new SafeDumbTowerToPosition(mElevator, mArm,
+                                GridTargetingPosition.HighRight.towerWaypoint)
+                                .andThen(new DeployElevator(mElevator, ElevatorState.Deployed))
+                                .andThen(new WaitCommand(2.0))
                                 .andThen(new SetClawState(mClaw, ClawState.Opened));
                         break;
                     default:
                         preloadScore = new InstantCommand();
-
                 }
 
                 // Now setup the path following command
                 switch (getAutoSequence()) {
                     case Do_Nothing:
                         break;
-                    case Mobility_Only:
+                    case SideMobilityOnly:
                         if (getAutoStartPosition() == AutoStartPosition.LoadStationEnd) {
 
                         } else if (getAutoStartPosition() == AutoStartPosition.WallEnd) {
 
                         }
                         break;
-                    case Balance:
+                    case CenterBalance:
                         if (getAutoStartPosition() == AutoStartPosition.CenterLoadStationSide) {
 
                         } else if (getAutoStartPosition() == AutoStartPosition.CenterWallSide) {
@@ -573,9 +573,12 @@ public class RobotContainer {
                 }
 
                 //
-
-                return new InstantCommand(() -> mDrivetrain.resetOdometryToPose(startingPose)).andThen(preloadScore);
+                if (startingPose != null && preloadScore != null) {
+                    return new InstantCommand(() -> mDrivetrain.resetOdometryToPose(startingPose))
+                            .andThen(preloadScore);
+                }
             }
+            return new InstantCommand();
         }
 
         public CommandXboxController getController0() {
