@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import frc.lib.leds.Color;
 import frc.robot.Constants.TowerConstants;
 import frc.robot.commands.DeployButterflyWheels;
 import frc.robot.commands.DeployElevator;
@@ -22,6 +23,7 @@ import frc.robot.commands.MoveIntakeDeploy;
 import frc.robot.commands.SetClawState;
 import frc.robot.commands.SetIntakeDeployState;
 import frc.robot.commands.SetIntakeSpeed;
+import frc.robot.commands.SetLEDsColor;
 import frc.robot.commands.SetScoringTarget;
 import frc.robot.commands.StopIntake;
 import frc.robot.commands.StopIntakeDeploy;
@@ -49,6 +51,8 @@ import frc.robot.subsystems.Spindexer;
 import frc.robot.subsystems.Claw.ClawState;
 import frc.robot.subsystems.Elevator.ElevatorState;
 import frc.robot.subsystems.IntakeDeploy.IntakeDeployState;
+import edu.wpi.first.wpilibj.AddressableLED;
+import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -71,8 +75,6 @@ public class RobotContainer {
         private final CommandXboxController testController0 = new CommandXboxController(2);
         private final CommandXboxController testController1 = new CommandXboxController(3);
 
-
-
         public final RobotState mRobotState;
 
         public final Drivetrain mDrivetrain;
@@ -86,6 +88,12 @@ public class RobotContainer {
         public final Claw mClaw;
 
         public final ButterflyWheels mButterflyWheels;
+
+        private Color purple;
+        private Color yellow;
+
+        public AddressableLED m_led;
+        public AddressableLEDBuffer m_ledBuffer;
 
         /**
          * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -116,6 +124,21 @@ public class RobotContainer {
                 mClaw = new Claw();
 
                 mButterflyWheels = new ButterflyWheels();
+
+                m_led = new AddressableLED(0);
+
+                // Reuse buffer
+                // Default to a length of 60, start empty output
+                // Length is expensive to set, so only set it once, then just update data
+                m_ledBuffer = new AddressableLEDBuffer(17);
+                m_led.setLength(m_ledBuffer.getLength());
+
+                // Set the data
+                m_led.setData(m_ledBuffer);
+                m_led.start();
+
+                purple = new Color(210, 75, 230);
+                yellow = new Color(255, 160, 0);
 
                 // Add dashboard things
                 addSubsystemsToDashboard();
@@ -161,11 +184,12 @@ public class RobotContainer {
                                 new AutoLoadStationIntake(mElevator, mArm, mClaw, mIntake, mIntakeDeploy, mSpindexer));
 
                 // D-Pad
-                controller0.povDown().whileTrue(new SetSwerveAngle(mDrivetrain, 45, -45, -45, 45));// X the wheels
                 controller0.povLeft().whileTrue(new SetSwerveAngle(mDrivetrain, 45, -45, -45, 45));// X the wheels
-                controller0.povUp().whileTrue(new SetSwerveAngle(mDrivetrain, 45, -45, -45, 45));// X the wheels
 
                 controller0.povRight().onTrue(new RehomeIntakeDeploy(mIntakeDeploy));
+
+                controller0.povUp().onTrue(new SetLEDsColor(yellow));
+                controller0.povDown().onTrue(new SetLEDsColor(purple));
 
                 // Bumpers/Triggers
                 controller0.leftBumper().onTrue(new InstantCommand(
@@ -203,7 +227,7 @@ public class RobotContainer {
                 controller0.start().onTrue(new ResetGyro(mDrivetrain));
 
                 // Joysticks Buttons
-                controller0.rightStick().onTrue(new MoveIntake(mIntake, .5, .5).withTimeout(2));
+                controller0.rightStick().onTrue(new MoveIntake(mIntake, -.5, -.5).withTimeout(2));
                 controller0.rightStick().onTrue(new AutoSpinSpindexer(mSpindexer).repeatedly());
                 controller0.rightStick().onTrue(new SetIntakeDeployState(mIntakeDeploy, IntakeDeployState.Normal));
 
@@ -428,5 +452,14 @@ public class RobotContainer {
 
         public CommandXboxController getController0() {
                 return controller0;
+        }
+
+        public void setLEDsColor(Color color) {
+                for (var i = 0; i < m_ledBuffer.getLength(); i++) {
+                        // Sets the specified LED to the RGB values for red
+                        m_ledBuffer.setRGB(i, color.r(), color.g(), color.b());
+                }
+
+                m_led.setData(m_ledBuffer);
         }
 }
