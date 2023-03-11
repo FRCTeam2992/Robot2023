@@ -162,6 +162,23 @@ public final class Constants {
     }
   }
 
+  public static class ScoringGridConstants {
+    public static final double autoAlignmentAreaMinXMeters = 2.0;
+    public static final double autoAlignmentAreaMaxXMeters = 2.4;
+    public static final double conePoleOffsetYMeters = 0.559;
+
+    public static class Red {
+      public static final double grid1CenterYMeters = 8.0137 - 1.072;
+      public static final double grid2CenterYMeters = 8.0137 - 2.748;
+      public static final double grid3CenterYMeters = 8.0137 - 4.424;
+    }
+    public static class Blue {
+      public static final double grid6CenterYMeters = 4.424;
+      public static final double grid7CenterYMeters = 2.748;
+      public static final double grid8CenterYMeters = 1.072;
+    }
+  }
+
   public static class TowerConstants {
     public static Waypoint scoreFloor = new Waypoint(0.0, 117.0);
     public static Waypoint scoreConeMid = new Waypoint(0.0, 219.0);
