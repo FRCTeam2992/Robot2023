@@ -4,17 +4,23 @@
 
 package frc.robot.subsystems;
 
-import java.nio.file.Path;
-
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoder;
-import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
+
+/**
+ * Use a bugfix posted on ChiefDelphi by Programming4907 instead of the origin dependency
+ * https://www.chiefdelphi.com/t/navx2-disconnecting-reconnecting-intermittently-not-browning-out/425487/42
+ * The src/lib/NavX folder was copied wholesale from Thunderstamps/navx2workaround
+ * and package references in each file were adapted to the location in this repo.
+ */
+// import com.kauailabs.navx.frc.AHRS;
+import frc.lib.NavX.AHRS;
 
 import frc.lib.drive.swerve.SwerveController;
 import frc.lib.drive.swerve.SwerveModuleFalconFalcon;
@@ -39,6 +45,7 @@ import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -129,6 +136,7 @@ public class Drivetrain extends SubsystemBase {
   private boolean inSlowMode = false;
   private boolean doFieldOreint = true;
   private boolean scoringMode = false;
+  private boolean loadingMode = false;
 
   private int dashboardCounter = 0;
 
@@ -280,7 +288,7 @@ public class Drivetrain extends SubsystemBase {
     }
 
     // robot gyro initialization
-    navx = new AHRS();
+    navx = new AHRS(SPI.Port.kMXP, (byte) 50);
 
     swerveDriveModulePositions[0] = frontLeftModule.getPosition();
     swerveDriveModulePositions[1] = frontRightModule.getPosition();
@@ -501,9 +509,17 @@ public class Drivetrain extends SubsystemBase {
     this.scoringMode = scoringMode;
   }
 
+  public boolean isLoadingMode() {
+    return loadingMode;
+  }
+
+  public void setLoadingMode(boolean loadingMode) {
+    this.loadingMode = loadingMode;
+  }
+
   public void onDisable() {
-    setDriveNeutralMode(NeutralMode.Coast);
-    setTurnNeutralMode(NeutralMode.Coast);
+    setDriveNeutralMode(NeutralMode.Brake);
+    setTurnNeutralMode(NeutralMode.Brake);
     stopDrive();
   }
 

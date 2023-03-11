@@ -5,31 +5,22 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.lib.manipulator.Waypoint;
-import frc.robot.RobotState;
-import frc.robot.commands.groups.SafeDumbTowerToPosition;
-import frc.robot.subsystems.Arm;
-import frc.robot.subsystems.Elevator;
+import frc.lib.leds.Color;
+import frc.robot.Robot;
 
-public class MoveTowerToScoringPosition extends CommandBase {
-  private Elevator mElevator;
-  private Arm mArm;
-  private RobotState mRobotState;
+public class SetLEDsColor extends CommandBase {
+  private Color mColor;
 
-  /** Creates a new MoveTowerToScoringPosition. */
-  public MoveTowerToScoringPosition(Elevator elevator, Arm arm, RobotState robotState) {
-    mElevator = elevator;
-    mArm = arm;
-    mRobotState = robotState;
+  /** Creates a new SetLEDsColor. */
+  public SetLEDsColor(Color color) {
+    mColor = color;
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    Waypoint waypoint = mRobotState.currentTargetPosition.towerWaypoint;
-    CommandScheduler.getInstance().schedule(new SafeDumbTowerToPosition(mElevator, mArm, waypoint));
+    Robot.mRobotContainer.setLEDsColor(mColor);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

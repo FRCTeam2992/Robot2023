@@ -4,6 +4,9 @@
 
 package frc.robot.commands;
 
+import java.sql.Driver;
+
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.lib.drive.swerve.SwerveModuleFalconFalcon;
@@ -97,8 +100,10 @@ public class DriveSticks extends CommandBase {
       double tempInverseDeadband = Constants.DrivetrainConstants.joystickRotationInverseDeadband;
 
       if (mDriveTrain.isInSlowMode()) {
-        // TODO -- Make this account also for endgame state
         tempInverseDeadband /= 0.3;
+      }
+      if (mRobotState.isInEndgameMode()) {
+        tempInverseDeadband /= 0.8;
       }
 
       if (x2 >= 0.0) {
@@ -117,7 +122,7 @@ public class DriveSticks extends CommandBase {
     // Lock Rotation to 0 for scoring
 
     // Check for Movement or autoDrieMode
-    if (Math.abs(x1) > 0.0 || Math.abs(y1) > 0.0 || Math.abs(x2) > 0.0 || mDriveTrain.isScoringMode()) {
+    if (Math.abs(x1) > 0.0 || Math.abs(y1) > 0.0 || Math.abs(x2) > 0.0 || mDriveTrain.isScoringMode() || mDriveTrain.isLoadingMode()) {
 
       // Demo Slow Mode
       // x1 /= 4;
@@ -129,10 +134,14 @@ public class DriveSticks extends CommandBase {
 
       // Check for Slow Mode
       if (mDriveTrain.isInSlowMode()) {
-        // TODO: Make this account for endgame mode also
         x1 *= 0.6;
         y1 *= 0.6;
         x2 *= 0.3;
+      }
+      // Check for Endgame Mode
+      if (mRobotState.isInEndgameMode()) {
+        x1 *= 0.8;
+        y1 *= 0.8;
       }
 
       // Gyro Input (-180 to 180)
@@ -196,6 +205,26 @@ public class DriveSticks extends CommandBase {
 
         x2 = Math.min(x2, .40);
         x2 = Math.max(x2, -.40);
+
+        gyroTargetRecorded = false;
+      }
+      if (mDriveTrain.isLoadingMode()) {
+        double rotationTarget = 90.0;
+        if (DriverStation.getAlliance() == DriverStation.Alliance.Blue) {
+          rotationTarget *= -1.0;
+        }
+        x2 = mDriveTrain.getGyroYaw() - rotationTarget;
+        if (x2 > 180) {
+          x2 -= 360;
+        } else if (x2 < -180) {
+          x2 += 360;
+        }
+        x2 = x2 * Constants.DrivetrainConstants.driveRotationP;
+
+        x2 = Math.min(x2, .40);
+        x2 = Math.max(x2, -.40);
+
+        gyroTargetRecorded = false;
       }
       // Calculate the Swerve States
       double[] swerveStates;

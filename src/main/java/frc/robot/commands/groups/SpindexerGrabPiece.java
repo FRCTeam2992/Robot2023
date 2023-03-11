@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.commands.MoveIntake;
+import frc.robot.commands.MoveSpindexer;
 import frc.robot.commands.SetClawState;
 import frc.robot.commands.SetIntakeDeployState;
 import frc.robot.commands.StopSpindexer;
@@ -33,6 +34,8 @@ public class SpindexerGrabPiece extends SequentialCommandGroup {
         new ParallelRaceGroup(
             new MoveIntake(intake, 0, 0),
             new SetIntakeDeployState(intakeDeploy, IntakeDeployState.Normal),
+            // new MoveSpindexer(spindexer,
+            // -Constants.SpindexerConstants.AutoSpin.motorSpeed),
             new StopSpindexer(spindexer),
             new SafeDumbTowerToPosition(elevator, arm, Constants.TowerConstants.intakeGrab)).asProxy(),
         // new AutoSpinSpindexer(s).repeatedly().withTimeout(1.5)),

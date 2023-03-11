@@ -30,23 +30,43 @@ public class RobotState {
         return endgameMode == EndgameModeState.InEndgame;
     }
 
-    public enum TargetingState {
-        GridHighLeft(Constants.TowerConstants.scoreConeHigh),
-        GridHighRight(Constants.TowerConstants.scoreConeHigh),
-        GridHighCenter(Constants.TowerConstants.scoreCubeHigh),
-        GridMidLeft(Constants.TowerConstants.scoreConeMid),
-        GridMidRight(Constants.TowerConstants.scoreConeMid),
-        GridMidCenter(Constants.TowerConstants.scoreCubeMid),
-        GridLowLeft(Constants.TowerConstants.scoreFloor),
-        GridLowRight(Constants.TowerConstants.scoreFloor),
-        GridLowCenter(Constants.TowerConstants.scoreFloor);
+    public enum TargetingGrid {
+        GridLoadingOuter(3, 6),
+        GridCoopertition(2, 7),
+        GridWallOuter(1, 8),
+        GridCenter(2, 7),
+        GridDriverLeft(1, 6),
+        GridDriverRight(3, 8);
 
-        public Waypoint towerWaypoint;
+        public int targetIdBlue;
+        public int targetIdRed;
+        public double allianceCoordinateCenterY;
 
-        private TargetingState(Waypoint towerWaypoint) {
-            this.towerWaypoint = towerWaypoint;
+        private TargetingGrid(int targetIdRed, int targetIdBlue) {
+            this.targetIdBlue = targetIdBlue;
+            this.targetIdRed = targetIdRed;
+            // TODO: add alliance coordinate center Y reference for grid
         }
     }
 
-    public TargetingState currentTarget = TargetingState.GridMidCenter;
+    public enum GridTargetingPosition {
+        HighLeft(Constants.TowerConstants.scoreConeHigh),
+        HighRight(Constants.TowerConstants.scoreConeHigh),
+        HighCenter(Constants.TowerConstants.scoreCubeHigh),
+        MidLeft(Constants.TowerConstants.scoreConeMid),
+        MidRight(Constants.TowerConstants.scoreConeMid),
+        MidCenter(Constants.TowerConstants.scoreCubeMid),
+        LowLeft(Constants.TowerConstants.scoreFloor),
+        LowRight(Constants.TowerConstants.scoreFloor),
+        LowCenter(Constants.TowerConstants.scoreFloor);
+
+        public Waypoint towerWaypoint;
+
+        private GridTargetingPosition(Waypoint waypoint) {
+            this.towerWaypoint = waypoint;
+        }
+    }
+
+    public TargetingGrid currentTargetedGrid = TargetingGrid.GridDriverLeft;
+    public GridTargetingPosition currentTargetPosition = GridTargetingPosition.MidCenter;
 }
