@@ -477,10 +477,13 @@ public class RobotContainer {
         private void setupAutoSelector() {
             // Setup choosers for start position
             autoStartChooser = new SendableChooser<>();
-            autoStartChooser.addOption(AutoStartPosition.Inner_Most.description, AutoStartPosition.Inner_Most);
-            autoStartChooser.addOption(AutoStartPosition.Center_Inner.description, AutoStartPosition.Center_Inner);
-            autoStartChooser.addOption(AutoStartPosition.Center_Outer.description, AutoStartPosition.Center_Outer);
-            autoStartChooser.setDefaultOption(AutoStartPosition.Outer_Most.description, AutoStartPosition.Center_Outer);
+            autoStartChooser.addOption(AutoStartPosition.LoadStationEnd.description,
+                    AutoStartPosition.LoadStationEnd);
+            autoStartChooser.addOption(AutoStartPosition.CenterLoadStationSide.description,
+                    AutoStartPosition.CenterLoadStationSide);
+            autoStartChooser.addOption(AutoStartPosition.CenterWallSide.description, AutoStartPosition.CenterWallSide);
+            autoStartChooser.setDefaultOption(AutoStartPosition.WallEnd.description,
+                    AutoStartPosition.CenterWallSide);
 
             SmartDashboard.putData("Auto Start Position", autoStartChooser);
 
@@ -530,7 +533,7 @@ public class RobotContainer {
                 return new InstantCommand();
             } else {
                 // Record the proper starting pose
-                startingPose = getAutoStartPosition().startPose;
+                startingPose = getAutoStartPosition().getStartPose();
 
                 // Set the preload score command sequence
                 switch (getAutoPreloadScore()) {
@@ -544,6 +547,8 @@ public class RobotContainer {
                                 .alongWith(new MoveTowerToScoringPosition(mElevator, mArm, mRobotState)))
                                 .andThen(new SetClawState(mClaw, ClawState.Opened));
                         break;
+                    default:
+                        preloadScore = new InstantCommand();
 
                 }
 
@@ -552,16 +557,16 @@ public class RobotContainer {
                     case Do_Nothing:
                         break;
                     case Mobility_Only:
-                        if (getAutoStartPosition() == AutoStartPosition.Inner_Most) {
+                        if (getAutoStartPosition() == AutoStartPosition.LoadStationEnd) {
 
-                        } else if (getAutoStartPosition() == AutoStartPosition.Outer_Most) {
+                        } else if (getAutoStartPosition() == AutoStartPosition.WallEnd) {
 
                         }
                         break;
                     case Balance:
-                        if (getAutoStartPosition() == AutoStartPosition.Center_Inner) {
+                        if (getAutoStartPosition() == AutoStartPosition.CenterLoadStationSide) {
 
-                        } else if (getAutoStartPosition() == AutoStartPosition.Center_Outer) {
+                        } else if (getAutoStartPosition() == AutoStartPosition.CenterWallSide) {
 
                         }
                         break;
@@ -569,7 +574,7 @@ public class RobotContainer {
 
                 //
 
-                return new InstantCommand(() -> mDrivetrain.resetOdometryToPose(startingPose));
+                return new InstantCommand(() -> mDrivetrain.resetOdometryToPose(startingPose)).andThen(preloadScore);
             }
         }
 
