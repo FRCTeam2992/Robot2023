@@ -19,8 +19,8 @@ public class AutoSpinSpindexer extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
         (new MoveSpindexer(mSpindexer, SpindexerConstants.AutoSpin.motorSpeed))
-            .withTimeout(SpindexerConstants.AutoSpin.timeoutForDirectionChange),
-        (new MoveSpindexer(mSpindexer, -SpindexerConstants.AutoSpin.motorSpeed))
             .withTimeout(SpindexerConstants.AutoSpin.timeoutForDirectionChange));
+    // (new MoveSpindexer(mSpindexer, -SpindexerConstants.AutoSpin.motorSpeed))
+    // .withTimeout(SpindexerConstants.AutoSpin.timeoutForDirectionChange));
   }
 }

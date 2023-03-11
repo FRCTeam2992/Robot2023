@@ -78,11 +78,11 @@ public class IntakeDeploy extends SubsystemBase {
   }
 
   public boolean getIntakeDeployLimitSwitchRaw() {
-    return !intakeDeployLimitSwitch.get();
+    return intakeDeployLimitSwitch.get();
   }
 
   public boolean getIntakeDeployLimitSwitch2Raw() {
-    return !intakeDeployLimitSwitch2.get();
+    return intakeDeployLimitSwitch2.get();
   }
 
   public boolean getIntakeDeployLimitSwitchDebounced() {
