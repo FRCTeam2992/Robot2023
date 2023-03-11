@@ -69,4 +69,8 @@ public class RobotState {
 
     public TargetingGrid currentTargetedGrid = TargetingGrid.GridDriverLeft;
     public GridTargetingPosition currentTargetPosition = GridTargetingPosition.MidCenter;
+
+    public void setTargetPosition(GridTargetingPosition position) {
+        currentTargetPosition = position;
+    }
 }
