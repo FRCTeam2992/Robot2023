@@ -94,7 +94,7 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledPeriodic() {
     // Confirm display selected auto status
-    SmartDashboard.putString("Confirmed Auto Start Position", mRobotContainer.getAutoStartPositioString().description);
+    SmartDashboard.putString("Confirmed Auto Start Position", mRobotContainer.getAutoStartPosition().description);
     if (mRobotContainer.autoStartCompatible()) {
       SmartDashboard.putString("Confirmed Auto Sequence", mRobotContainer.getAutoSequence().description);
     } else {

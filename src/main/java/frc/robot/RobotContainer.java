@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import frc.lib.autonomous.AutoPreloadScore;
+import frc.lib.autonomous.AutoSequence;
+import frc.lib.autonomous.AutoStartPosition;
 import frc.robot.Constants.TowerConstants;
 import frc.robot.commands.DeployButterflyWheels;
 import frc.robot.commands.DeployElevator;
@@ -50,10 +53,6 @@ import frc.robot.subsystems.Claw.ClawState;
 import frc.robot.subsystems.Elevator.ElevatorState;
 import frc.robot.subsystems.IntakeDeploy.IntakeDeployState;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import com.pathplanner.lib.PathPlannerTrajectory;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -99,6 +98,7 @@ public class RobotContainer {
 
         private SendableChooser<AutoStartPosition> autoStartChooser;
         private SendableChooser<AutoSequence> autoSequenceChooser;
+        private SendableChooser<AutoPreloadScore> autoPreloadScoreChooser;
 
         /**
          * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -431,100 +431,99 @@ public class RobotContainer {
                         mRobotState.endgameMode == RobotState.EndgameModeState.InEndgame);
         }
 
-        public enum AutoStartPosition {
-                Left_Most("LeftMost"),
-                Center_Left("Center Left"),
-                Center_Right("Center Right"),
-                Right_Most("RightMost");
-
-                public String description;
-
-                private AutoStartPosition(String description) {
-                        this.description = description;
-                }
-        }
-
-        public enum AutoSequence {
-                Do_Nothing("Do Nothing",
-                                AutoStartPosition.Left_Most,
-                                AutoStartPosition.Center_Left,
-                                AutoStartPosition.Center_Right,
-                                AutoStartPosition.Right_Most),
-                Mobility_Only("Mobility Only",
-                                AutoStartPosition.Left_Most,
-                                AutoStartPosition.Center_Left,
-                                AutoStartPosition.Center_Right,
-                                AutoStartPosition.Right_Most),
-                Hi_Cone_Only("Hi Cone Only",
-                                AutoStartPosition.Left_Most,
-                                AutoStartPosition.Center_Left,
-                                AutoStartPosition.Center_Right,
-                                AutoStartPosition.Right_Most),
-                Hi_Mobility("R/L Hi Cone + Mobility",
-                                AutoStartPosition.Left_Most,
-                                AutoStartPosition.Right_Most),
-                Hi_Balance("C Hi Cone + Balance",
-                                AutoStartPosition.Center_Left,
-                                AutoStartPosition.Center_Right);
-
-                public String description;
-                public List<AutoStartPosition> allowedStartPositions;
-
-                private AutoSequence(String description, AutoStartPosition... allowedStartPositions) {
-                        this.description = description;
-                        this.allowedStartPositions = Arrays.asList(allowedStartPositions);
-                }
-        }
-
         private void setupAutoSelector() {
-                // Setup choosers for start position
-                autoStartChooser = new SendableChooser<>();
-                autoStartChooser.addOption(AutoStartPosition.Left_Most.description, AutoStartPosition.Left_Most);
-                autoStartChooser.addOption(AutoStartPosition.Center_Left.description, AutoStartPosition.Center_Left);
-                autoStartChooser.addOption(AutoStartPosition.Center_Right.description, AutoStartPosition.Center_Right);
-                autoStartChooser.setDefaultOption(AutoStartPosition.Right_Most.description,
-                                AutoStartPosition.Center_Right);
+            // Setup choosers for start position
+            autoStartChooser = new SendableChooser<>();
+            autoStartChooser.addOption(AutoStartPosition.Inner_Most.description, AutoStartPosition.Inner_Most);
+            autoStartChooser.addOption(AutoStartPosition.Center_Inner.description, AutoStartPosition.Center_Inner);
+            autoStartChooser.addOption(AutoStartPosition.Center_Outer.description, AutoStartPosition.Center_Outer);
+            autoStartChooser.setDefaultOption(AutoStartPosition.Outer_Most.description, AutoStartPosition.Center_Outer);
 
-                SmartDashboard.putData("Auto Start Position", autoStartChooser);
+            SmartDashboard.putData("Auto Start Position", autoStartChooser);
 
-                // Setup chooser for auto sequence
-                autoSequenceChooser = new SendableChooser<>();
-                autoSequenceChooser.setDefaultOption(AutoSequence.Do_Nothing.description, AutoSequence.Do_Nothing);
-                autoSequenceChooser.addOption(AutoSequence.Hi_Cone_Only.description, AutoSequence.Hi_Cone_Only);
-                autoSequenceChooser.addOption(AutoSequence.Mobility_Only.description, AutoSequence.Mobility_Only);
-                autoSequenceChooser.addOption(AutoSequence.Hi_Mobility.description, AutoSequence.Hi_Mobility);
-                autoSequenceChooser.addOption(AutoSequence.Hi_Balance.description, AutoSequence.Hi_Balance);
+            // Setup chooser for preload scoring
+            autoPreloadScoreChooser = new SendableChooser<>();
+            autoPreloadScoreChooser.addOption("No Preload Scoring", AutoPreloadScore.No_Preload);
+            autoPreloadScoreChooser.setDefaultOption("Score Hi Cone", AutoPreloadScore.Hi_Cone);
 
-                SmartDashboard.putData("Auto Sequence", autoSequenceChooser);
+            SmartDashboard.putData("Preload Score?", autoPreloadScoreChooser);
+
+            // Setup chooser for auto sequence
+            autoSequenceChooser = new SendableChooser<>();
+            autoSequenceChooser.setDefaultOption(AutoSequence.Do_Nothing.description, AutoSequence.Do_Nothing);
+            autoSequenceChooser.addOption(AutoSequence.Mobility_Only.description, AutoSequence.Mobility_Only);
+            autoSequenceChooser.addOption(AutoSequence.Balance.description, AutoSequence.Balance);
+
+            SmartDashboard.putData("Auto Sequence", autoSequenceChooser);
+
         }
 
-        public AutoStartPosition getAutoStartPositioString() {
-                return autoStartChooser.getSelected();
+        public AutoStartPosition getAutoStartPosition() {
+            return autoStartChooser.getSelected();
+        }
+
+        public AutoPreloadScore getAutoPreloadScore() {
+            return autoPreloadScoreChooser.getSelected();
         }
 
         public AutoSequence getAutoSequence() {
-                return autoSequenceChooser.getSelected();
+            return autoSequenceChooser.getSelected();
         }
 
         public boolean autoStartCompatible() {
-                // Returns true if the Auto Start Position is valid for the current selected
-                // sequence
-                return autoSequenceChooser.getSelected().allowedStartPositions.contains(
-                                autoStartChooser.getSelected());
+            // Returns true if the Auto Start Position is valid for the current selected
+            // sequence
+            return autoSequenceChooser.getSelected().allowedStartPositions.contains(
+                    autoStartChooser.getSelected());
         }
 
         public Command buildAutoCommand() {
-                Pose2d startingPose;
-                Command initialScoreCommand;
-                PathPlannerTrajectory autoPath;
+            Pose2d startingPose;
+            Command preloadScore;
+            PathPlannerTrajectory autoPath;
 
-                if (!autoStartCompatible()) {
-                        // We have
-                        return new InstantCommand();
-                } else {
-                        // TODO
-                        return new InstantCommand();
+            if (!autoStartCompatible()) {
+                // We have incompatible starting position for sequence. Do NOTHING!
+                return new InstantCommand();
+            } else {
+                // Record the proper starting pose
+                startingPose = getAutoStartPosition().startPose;
+
+                // Set the preload score command sequence
+                switch (getAutoPreloadScore()) {
+                    case No_Preload:
+                        preloadScore = new InstantCommand();
+                        break;
+                    case Hi_Cone:
+                        preloadScore = new InstantCommand();
+                        break;
+
                 }
+
+                // Now setup the path following command
+                switch (getAutoSequence()) {
+                    case Do_Nothing:
+                        break;
+                    case Mobility_Only:
+                        if (getAutoStartPosition() == AutoStartPosition.Inner_Most) {
+
+                        } else if (getAutoStartPosition() == AutoStartPosition.Outer_Most) {
+
+                        }
+                        break;
+                    case Balance:
+                        if (getAutoStartPosition() == AutoStartPosition.Center_Inner) {
+
+                        } else if (getAutoStartPosition() == AutoStartPosition.Center_Outer) {
+
+                        }
+                        break;
+                }
+
+                //
+
+                return new InstantCommand();
+            }
         }
 
         public CommandXboxController getController0() {
