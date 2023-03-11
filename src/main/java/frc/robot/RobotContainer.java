@@ -209,7 +209,7 @@ public class RobotContainer {
 
                 // -----------------------controller1-----------------------
                 // ABXY
-                controller1.y().whileTrue(new MoveIntake(mIntake, .5, .5));
+                controller1.y().whileTrue(new MoveIntake(mIntake, .5, -.5));
 
                 // Bumper/Trigger
                 controller1.leftBumper().whileTrue(new MoveSpindexer(mSpindexer, -0.9));
