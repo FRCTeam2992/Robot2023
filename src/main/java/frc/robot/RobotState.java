@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import javax.lang.model.element.ModuleElement.DirectiveKind;
+
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.lib.manipulator.Waypoint;
 
 /**
@@ -40,30 +43,57 @@ public class RobotState {
 
         public int targetIdBlue;
         public int targetIdRed;
-        public double allianceCoordinateCenterY;
 
         private TargetingGrid(int targetIdRed, int targetIdBlue) {
             this.targetIdBlue = targetIdBlue;
             this.targetIdRed = targetIdRed;
-            // TODO: add alliance coordinate center Y reference for grid
+        }
+
+        public int getTargetId() {
+            if (DriverStation.getAlliance() == DriverStation.Alliance.Red) {
+                return this.targetIdRed;
+            }
+            return this.targetIdBlue;
+        }
+
+        public double getGridCenterYMeters() {
+            switch (this.getTargetId()) {
+                case 1:
+                    return Constants.ScoringGridConstants.Red.grid1CenterYMeters;
+                case 2:
+                    return Constants.ScoringGridConstants.Red.grid2CenterYMeters;
+                case 3:
+                    return Constants.ScoringGridConstants.Red.grid3CenterYMeters;
+                case 6:
+                    return Constants.ScoringGridConstants.Blue.grid6CenterYMeters;
+                case 7:
+                    return Constants.ScoringGridConstants.Blue.grid7CenterYMeters;
+                case 8:
+                    return Constants.ScoringGridConstants.Blue.grid8CenterYMeters;
+                default:
+                    // NOTE: This case cannot happen due to the enum definition.
+                    return 0.0;                    
+            }
         }
     }
 
     public enum GridTargetingPosition {
-        HighLeft(Constants.TowerConstants.scoreConeHigh),
-        HighRight(Constants.TowerConstants.scoreConeHigh),
-        HighCenter(Constants.TowerConstants.scoreCubeHigh),
-        MidLeft(Constants.TowerConstants.scoreConeMid),
-        MidRight(Constants.TowerConstants.scoreConeMid),
-        MidCenter(Constants.TowerConstants.scoreCubeMid),
-        LowLeft(Constants.TowerConstants.scoreFloor),
-        LowRight(Constants.TowerConstants.scoreFloor),
-        LowCenter(Constants.TowerConstants.scoreFloor);
+        HighLeft(Constants.TowerConstants.scoreConeHigh, -Constants.ScoringGridConstants.conePoleOffsetYMeters),
+        HighRight(Constants.TowerConstants.scoreConeHigh, Constants.ScoringGridConstants.conePoleOffsetYMeters),
+        HighCenter(Constants.TowerConstants.scoreCubeHigh, 0.0),
+        MidLeft(Constants.TowerConstants.scoreConeMid, -Constants.ScoringGridConstants.conePoleOffsetYMeters),
+        MidRight(Constants.TowerConstants.scoreConeMid, Constants.ScoringGridConstants.conePoleOffsetYMeters),
+        MidCenter(Constants.TowerConstants.scoreCubeMid, 0.0),
+        LowLeft(Constants.TowerConstants.scoreFloor, -Constants.ScoringGridConstants.conePoleOffsetYMeters),
+        LowRight(Constants.TowerConstants.scoreFloor, Constants.ScoringGridConstants.conePoleOffsetYMeters),
+        LowCenter(Constants.TowerConstants.scoreFloor, 0.0);
 
         public Waypoint towerWaypoint;
+        public double lateralScoringOffsetMeters;
 
-        private GridTargetingPosition(Waypoint waypoint) {
+        private GridTargetingPosition(Waypoint waypoint, double yOffset) {
             this.towerWaypoint = waypoint;
+            this.lateralScoringOffsetMeters = yOffset;
         }
     }
 
