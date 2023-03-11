@@ -97,6 +97,11 @@ public class RobotState {
         }
     }
 
+    public double currentTargetYCoordinateMeters() {
+        return this.currentTargetedGrid.getGridCenterYMeters() + 
+            this.currentTargetPosition.lateralScoringOffsetMeters;
+    }
+
     public TargetingGrid currentTargetedGrid = TargetingGrid.GridDriverLeft;
     public GridTargetingPosition currentTargetPosition = GridTargetingPosition.MidCenter;
 }
