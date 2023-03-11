@@ -12,6 +12,7 @@ import frc.lib.autonomous.AutoStartPosition;
 import frc.lib.leds.Color;
 
 import frc.robot.Constants.TowerConstants;
+import frc.robot.RobotState.GridTargetingPosition;
 import frc.robot.commands.DeployButterflyWheels;
 import frc.robot.commands.DeployElevator;
 import frc.robot.commands.DriveSticks;
@@ -537,7 +538,11 @@ public class RobotContainer {
                         preloadScore = new InstantCommand();
                         break;
                     case Hi_Cone:
-                        preloadScore = new InstantCommand();
+                        preloadScore = new InstantCommand(() -> {
+                            mRobotState.setTargetPosition(GridTargetingPosition.HighRight);
+                        }).andThen((new DeployElevator(mElevator, ElevatorState.Deployed))
+                                .alongWith(new MoveTowerToScoringPosition(mElevator, mArm, mRobotState)))
+                                .andThen(new SetClawState(mClaw, ClawState.Opened));
                         break;
 
                 }
