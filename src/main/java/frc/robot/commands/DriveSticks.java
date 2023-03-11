@@ -210,7 +210,7 @@ public class DriveSticks extends CommandBase {
       }
       if (mDriveTrain.isLoadingMode()) {
         double rotationTarget = 90.0;
-        if (DriverStation.getAlliance() == DriverStation.Alliance.Red) {
+        if (DriverStation.getAlliance() == DriverStation.Alliance.Blue) {
           rotationTarget *= -1.0;
         }
         x2 = mDriveTrain.getGyroYaw() - rotationTarget;
