@@ -50,7 +50,7 @@ public class FollowTrajectoryCommand extends SequentialCommandGroup {
         }),
         new PPSwerveControllerCommand(
             traj,
-            mDrivetrain.swerveDriveOdometry::getPoseMeters, // Pose supplier
+            mDrivetrain.swerveDrivePoseEstimator::getEstimatedPosition, // Pose supplier
             mDrivetrain.swerveDriveKinematics, // SwerveDriveKinematics
             new PIDController(1, 0, 0), // X controller. Tune these values for your robot. Leaving them 0 will only use
                                         // feedforwards.

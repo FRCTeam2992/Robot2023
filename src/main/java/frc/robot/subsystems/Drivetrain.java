@@ -26,7 +26,10 @@ import frc.lib.drive.swerve.SwerveController;
 import frc.lib.drive.swerve.SwerveModuleFalconFalcon;
 import frc.lib.vision.LimeLight;
 import frc.lib.vision.LimeLight.CoordinateSpace;
+import edu.wpi.first.math.MatBuilder;
+import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
@@ -39,6 +42,9 @@ import edu.wpi.first.util.datalog.DoubleArrayLogEntry;
 import edu.wpi.first.util.datalog.IntegerLogEntry;
 import edu.wpi.first.util.datalog.StringLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -83,12 +89,12 @@ public class Drivetrain extends SubsystemBase {
 
   // Limelights
   public final LimeLight limeLightCamera11;
-  public final LimeLight limeLightCamera12;
+  // public final LimeLight limeLightCamera12;
 
   private DataLog mDataLog;
 
   private StringLogEntry limelight11JsonLog;
-  private StringLogEntry limelight12JsonLog;
+  // private StringLogEntry limelight12JsonLog;
 
   private DoubleArrayLogEntry ll11BotposeFieldSpaceLog;
   private DoubleArrayLogEntry ll12BotposeFieldSpaceLog;
@@ -98,18 +104,20 @@ public class Drivetrain extends SubsystemBase {
   private DoubleArrayLogEntry ll12BotposeRedLog;
   private IntegerLogEntry ll11TargetIDLog;
   private IntegerLogEntry ll12TargetIDLog;
+  private double[] limelight11BotPose;
 
   // Robot Gyro
   public AHRS navx;
   public double gyroOffset = 0.0;
 
   public Pose2d latestSwervePose = new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0.0));
+  public Pose2d latestVisionPose = new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0.0));
 
   // Swerve Drive Kinematics
   public final SwerveDriveKinematics swerveDriveKinematics;
 
   // Swerve Drive Odometry
-  public final SwerveDriveOdometry swerveDriveOdometry;
+  public final SwerveDrivePoseEstimator swerveDrivePoseEstimator;
   public SwerveModulePosition[] swerveDriveModulePositions = {
       new SwerveModulePosition(),
       new SwerveModulePosition(),
@@ -128,6 +136,7 @@ public class Drivetrain extends SubsystemBase {
   private boolean inSlowMode = false;
   private boolean doFieldOreint = true;
   private boolean scoringMode = false;
+  private boolean loadingMode = false;
 
   private int dashboardCounter = 0;
 
@@ -255,22 +264,26 @@ public class Drivetrain extends SubsystemBase {
 
     // Limelight
     limeLightCamera11 = new LimeLight("limelight-eleven");
-    limeLightCamera12 = new LimeLight("limelight-twelve");
+    // limeLightCamera12 = new LimeLight("limelight-twelve");
+    limelight11BotPose = new double[7];
 
     if (Constants.dataLogging) {
       mDataLog = DataLogManager.getLog();
 
       limelight11JsonLog = new StringLogEntry(mDataLog, "/ll/eleven/json");
-      limelight12JsonLog = new StringLogEntry(mDataLog, "/ll/twelve/json");
+      // limelight12JsonLog = new StringLogEntry(mDataLog, "/ll/twelve/json");
 
       ll11BotposeFieldSpaceLog = new DoubleArrayLogEntry(mDataLog, "/ll/eleven/botpose_field");
-      ll12BotposeFieldSpaceLog = new DoubleArrayLogEntry(mDataLog, "/ll/twelve/botpose_field");
+      // ll12BotposeFieldSpaceLog = new DoubleArrayLogEntry(mDataLog,
+      // "/ll/twelve/botpose_field");
       ll11BotposeBlueLog = new DoubleArrayLogEntry(mDataLog, "/ll/eleven/botpose_blue");
-      ll12BotposeBlueLog = new DoubleArrayLogEntry(mDataLog, "/ll/twelve/botpose_blue");
+      // ll12BotposeBlueLog = new DoubleArrayLogEntry(mDataLog,
+      // "/ll/twelve/botpose_blue");
       ll11BotposeRedLog = new DoubleArrayLogEntry(mDataLog, "/ll/eleven/botpose_red");
-      ll12BotposeRedLog = new DoubleArrayLogEntry(mDataLog, "/ll/twelve/botpose_red");
+      // ll12BotposeRedLog = new DoubleArrayLogEntry(mDataLog,
+      // "/ll/twelve/botpose_red");
       ll11TargetIDLog = new IntegerLogEntry(mDataLog, "/ll/eleven/target_id");
-      ll12TargetIDLog = new IntegerLogEntry(mDataLog, "/ll/twelve/target_id");
+      // ll12TargetIDLog = new IntegerLogEntry(mDataLog, "/ll/twelve/target_id");
 
     }
 
@@ -290,12 +303,16 @@ public class Drivetrain extends SubsystemBase {
         Constants.DrivetrainConstants.rearRightLocation);
 
     // Serve Drive Odometry
-    swerveDriveOdometry = new SwerveDriveOdometry(
+    swerveDrivePoseEstimator = new SwerveDrivePoseEstimator(
         swerveDriveKinematics,
         // Rotation2d.fromDegrees(navx.getYaw()),
         Rotation2d.fromDegrees(getGyroYaw()),
         swerveDriveModulePositions,
-        new Pose2d(0.0, 0.0, new Rotation2d()));
+        new Pose2d(0.0, 0.0, new Rotation2d()),
+        // State measurement standard deviations. X, Y, theta.
+        new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.02, 0.02, 0.01),
+        // Global measurement standard deviations. X, Y, and theta.
+        new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.1, 0.1, 0.05));
   }
 
   private void initTalonFX(TalonFX motorContollerName, boolean isInverted) {
@@ -315,22 +332,23 @@ public class Drivetrain extends SubsystemBase {
     swerveDriveModulePositions[2] = rearLeftModule.getPosition();
     swerveDriveModulePositions[3] = rearRightModule.getPosition();
 
-    latestSwervePose = swerveDriveOdometry.update(
+    latestSwervePose = swerveDrivePoseEstimator.updateWithTime(
+        Timer.getFPGATimestamp(),
         Rotation2d.fromDegrees(-getGyroYaw()),
         swerveDriveModulePositions);
 
     if (Constants.dataLogging) {
       limelight11JsonLog.append(limeLightCamera11.getLimelightJson());
-      limelight12JsonLog.append(limeLightCamera12.getLimelightJson());
+      // limelight12JsonLog.append(limeLightCamera12.getLimelightJson());
 
       ll11BotposeFieldSpaceLog.append(limeLightCamera11.getBotPose(CoordinateSpace.Field));
-      ll12BotposeFieldSpaceLog.append(limeLightCamera12.getBotPose(CoordinateSpace.Field));
+      // ll12BotposeFieldSpaceLog.append(limeLightCamera12.getBotPose(CoordinateSpace.Field));
       ll11BotposeBlueLog.append(limeLightCamera11.getBotPose(CoordinateSpace.Blue));
-      ll12BotposeBlueLog.append(limeLightCamera12.getBotPose(CoordinateSpace.Blue));
+      // ll12BotposeBlueLog.append(limeLightCamera12.getBotPose(CoordinateSpace.Blue));
       ll11BotposeRedLog.append(limeLightCamera11.getBotPose(CoordinateSpace.Red));
-      ll12BotposeRedLog.append(limeLightCamera12.getBotPose(CoordinateSpace.Red));
+      // ll12BotposeRedLog.append(limeLightCamera12.getBotPose(CoordinateSpace.Red));
       ll11TargetIDLog.append(limeLightCamera11.getTargetID());
-      ll12TargetIDLog.append(limeLightCamera12.getTargetID());
+      // ll12TargetIDLog.append(limeLightCamera12.getTargetID());
     }
 
     if (dashboardCounter++ >= 5) {
@@ -348,10 +366,39 @@ public class Drivetrain extends SubsystemBase {
       SmartDashboard.putNumber("Odometry X (m)", latestSwervePose.getX());
       SmartDashboard.putNumber("Odometry Y (m)", latestSwervePose.getY());
 
+      limelight11BotPose = limeLightCamera11.getBotPose(getAllianceCoordinateSpace());
+      // limelight11BotPose =
+      // limeLightCamera11.getBotPose(getAllianceCoordinateSpace());
+      if (limeLightCamera11.getTargetID() > 0) {
+        SmartDashboard.putNumber("Limelight Pose X (m)", limelight11BotPose[0]);
+        SmartDashboard.putNumber("Limelight Pose Y (m)", limelight11BotPose[1]);
+        SmartDashboard.putNumber("Limelight Pose Yaw (deg)", limelight11BotPose[5]);
+        // SmartDashboard.putNumber("Limelight Pose Latency (ms)",
+        // limelight11BotPose[6]);
+
+      }
+      SmartDashboard.putNumber("Limelight Tid", limeLightCamera11.getTargetID());
       dashboardCounter = 0;
+    }
+
+    /*
+     * TODO: Finish this once we test limelight botPose data
+     */
+    if (limeLightCamera11.getTargetID() > 0) {
+      limelight11BotPose = limeLightCamera11.getBotPose(getAllianceCoordinateSpace());
+      latestVisionPose = new Pose2d(limelight11BotPose[0], limelight11BotPose[1],
+          Rotation2d.fromDegrees(limelight11BotPose[5]));
+      swerveDrivePoseEstimator.addVisionMeasurement(latestVisionPose,
+          Timer.getFPGATimestamp());
     }
   }
 
+  public CoordinateSpace getAllianceCoordinateSpace() {
+    if (DriverStation.getAlliance() == DriverStation.Alliance.Red) {
+      return CoordinateSpace.Red;
+    }
+    return CoordinateSpace.Blue;
+  }
   public void setDriveNeutralMode(NeutralMode mode) {
     frontLeftDrive.setNeutralMode(mode);
     frontRightDrive.setNeutralMode(mode);
@@ -405,12 +452,13 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public void resetOdometry() {
-    swerveDriveOdometry.resetPosition(Rotation2d.fromDegrees(-getGyroYaw()), swerveDriveModulePositions,
+    swerveDrivePoseEstimator.resetPosition(Rotation2d.fromDegrees(-getGyroYaw()), swerveDriveModulePositions,
         new Pose2d(0.0, 0.0, new Rotation2d()));
   }
 
   public void resetOdometryToPose(Pose2d initialPose) {
-    swerveDriveOdometry.resetPosition(Rotation2d.fromDegrees(-getGyroYaw()), swerveDriveModulePositions, initialPose);
+    swerveDrivePoseEstimator.resetPosition(Rotation2d.fromDegrees(-getGyroYaw()), swerveDriveModulePositions,
+        initialPose);
     latestSwervePose = initialPose;
   }
 
@@ -461,9 +509,17 @@ public class Drivetrain extends SubsystemBase {
     this.scoringMode = scoringMode;
   }
 
+  public boolean isLoadingMode() {
+    return loadingMode;
+  }
+
+  public void setLoadingMode(boolean loadingMode) {
+    this.loadingMode = loadingMode;
+  }
+
   public void onDisable() {
-    setDriveNeutralMode(NeutralMode.Coast);
-    setTurnNeutralMode(NeutralMode.Coast);
+    setDriveNeutralMode(NeutralMode.Brake);
+    setTurnNeutralMode(NeutralMode.Brake);
     stopDrive();
   }
 

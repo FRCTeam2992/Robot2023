@@ -51,6 +51,8 @@ import frc.robot.subsystems.Spindexer;
 import frc.robot.subsystems.Claw.ClawState;
 import frc.robot.subsystems.Elevator.ElevatorState;
 import frc.robot.subsystems.IntakeDeploy.IntakeDeployState;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -176,13 +178,18 @@ public class RobotContainer {
                 controller0.a().onFalse(new InstantCommand(() -> {
                         mDrivetrain.setScoringMode(false);
                 }));
+                controller0.b().onTrue(
+                        new AutoLoadStationIntake(mElevator, mArm, mClaw, mIntake, mIntakeDeploy, mSpindexer));
+                controller0.b().onTrue(new InstantCommand(() -> {
+                        mDrivetrain.setLoadingMode(true);
+                }));
+                controller0.b().onFalse(new InstantCommand(() -> {
+                        mDrivetrain.setLoadingMode(false);
+                }));
                 controller0.x().onTrue(
                                 new AutoGroundIntakeCube(mElevator, mArm, mClaw, mIntake, mIntakeDeploy, mSpindexer));// cubes
                 controller0.y().onTrue(
                                 new AutoGroundIntakeCone(mElevator, mArm, mClaw, mIntake, mIntakeDeploy, mSpindexer));// cone
-                controller0.b().onTrue(
-                                new AutoLoadStationIntake(mElevator, mArm, mClaw, mIntake, mIntakeDeploy, mSpindexer));
-
                 // D-Pad
                 controller0.povLeft().whileTrue(new SetSwerveAngle(mDrivetrain, 45, -45, -45, 45));// X the wheels
 
@@ -310,6 +317,9 @@ public class RobotContainer {
                 SmartDashboard.putData("Spin Intake", new MoveSpindexer(mSpindexer, .5));
 
                 SmartDashboard.putData("Reset Odometry", mDrivetrain.ResetOdometry());
+                SmartDashboard.putData("Reset Odometry to Red Inner Cone",
+                        new InstantCommand(() -> mDrivetrain
+                                .resetOdometryToPose(new Pose2d(1.89, 3.0307, Rotation2d.fromDegrees(0.0)))));
                 SmartDashboard.putData("0 Wheels", new SetSwerveAngle(mDrivetrain, 0, 0, 0, 0));
 
                 SmartDashboard.putData("Home Intake", new RehomeIntakeDeploy(mIntakeDeploy));
