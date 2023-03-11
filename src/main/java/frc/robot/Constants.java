@@ -63,11 +63,21 @@ public final class Constants {
       public static final double turnD = 0.00005;
     }
 
+    public static class AutoScorePIDConstants {
+        public static final double scoreP = 2.0;
+        public static final double scoreI = 0.0;
+        public static final double scoreD = 0.1;
+
+        public static final double scoreCruise = 4.0; // m / sec
+        public static final double scoreAccel = 4.0; // m / sec^2
+    }
+
     // Gyro P
     public static final double driveGyroP = 0.005;
 
     // Drive Rotation P
-    public static final double driveRotationP = .021;
+    public static final double driveRotationP = .007;
+    public static final double autoAngleThreshold = 1.5;
 
     // Swerve Module Translations x=.591/2 y=.654/2
     public static final Translation2d frontLeftLocation = new Translation2d(0.289, 0.3335);
@@ -159,6 +169,26 @@ public final class Constants {
     public static class AutoSpin {
       public static double motorSpeed = 0.9; // percent output
       public static double timeoutForDirectionChange = 1.0; // seconds
+    }
+  }
+
+  public static class ScoringGridConstants {
+      public static final double fieldWidth = 8.0137;
+
+      public static final double autoAlignmentAreaMinXMeters = 1.95;
+    public static final double autoAlignmentAreaMaxXMeters = 2.4;
+    public static final double autoAlignmentMaxYErrorMeters = 1.0;
+    public static final double conePoleOffsetYMeters = 0.559;
+
+    public static class Red {
+        public static final double grid1CenterYMeters = 6.9417;
+        public static final double grid2CenterYMeters = 5.2657;
+        public static final double grid3CenterYMeters = 3.5897;
+    }
+    public static class Blue {
+      public static final double grid6CenterYMeters = 4.424;
+      public static final double grid7CenterYMeters = 2.748;
+      public static final double grid8CenterYMeters = 1.072;
     }
   }
 
