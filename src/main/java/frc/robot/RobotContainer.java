@@ -176,13 +176,18 @@ public class RobotContainer {
                 controller0.a().onFalse(new InstantCommand(() -> {
                         mDrivetrain.setScoringMode(false);
                 }));
+                controller0.b().onTrue(
+                        new AutoLoadStationIntake(mElevator, mArm, mClaw, mIntake, mIntakeDeploy, mSpindexer));
+                controller0.b().onTrue(new InstantCommand(() -> {
+                        mDrivetrain.setLoadingMode(true);
+                }));
+                controller0.b().onFalse(new InstantCommand(() -> {
+                        mDrivetrain.setLoadingMode(false);
+                }));
                 controller0.x().onTrue(
                                 new AutoGroundIntakeCube(mElevator, mArm, mClaw, mIntake, mIntakeDeploy, mSpindexer));// cubes
                 controller0.y().onTrue(
                                 new AutoGroundIntakeCone(mElevator, mArm, mClaw, mIntake, mIntakeDeploy, mSpindexer));// cone
-                controller0.b().onTrue(
-                                new AutoLoadStationIntake(mElevator, mArm, mClaw, mIntake, mIntakeDeploy, mSpindexer));
-
                 // D-Pad
                 controller0.povLeft().whileTrue(new SetSwerveAngle(mDrivetrain, 45, -45, -45, 45));// X the wheels
 
