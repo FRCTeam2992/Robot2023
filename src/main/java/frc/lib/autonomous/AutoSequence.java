@@ -5,18 +5,16 @@ import java.util.List;
 
 public enum AutoSequence {
     Do_Nothing("Do Nothing",
-            AutoStartPosition.Inner_Most,
-            AutoStartPosition.Center_Inner,
-            AutoStartPosition.Center_Outer,
-            AutoStartPosition.Outer_Most),
+            AutoStartPosition.LoadStationEnd,
+            AutoStartPosition.CenterLoadStationSide,
+            AutoStartPosition.CenterWallSide,
+            AutoStartPosition.WallEnd),
     Mobility_Only("Side Mobility Only",
-            AutoStartPosition.Inner_Most,
-            AutoStartPosition.Center_Inner,
-            AutoStartPosition.Center_Outer,
-            AutoStartPosition.Outer_Most),
+            AutoStartPosition.LoadStationEnd,
+            AutoStartPosition.WallEnd),
     Balance("Center Balance",
-            AutoStartPosition.Center_Inner,
-            AutoStartPosition.Center_Outer);
+            AutoStartPosition.CenterLoadStationSide,
+            AutoStartPosition.CenterWallSide);
 
     public String description;
     public List<AutoStartPosition> allowedStartPositions;

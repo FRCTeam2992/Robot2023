@@ -190,6 +190,8 @@ public final class Constants {
       public static final double grid7CenterYMeters = 2.748;
       public static final double grid8CenterYMeters = 1.072;
     }
+
+    public static final double autoStartXCoordMeters = 1.89;
   }
 
   public static class TowerConstants {
