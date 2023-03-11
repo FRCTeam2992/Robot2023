@@ -33,7 +33,7 @@ public class AutoGroundIntakeCone extends ParallelCommandGroup {
         new SafeDumbTowerToPosition(elevator, arm, Constants.TowerConstants.intakeBackstop).asProxy(),
         new SetClawState(claw, ClawState.Closed),
         new SetIntakeDeployState(intakeDeploy, IntakeDeployState.GroundIntake),
-        new SetIntakeSpeed(intake, 1.0, .7),
+        new SetIntakeSpeed(intake, 1.0, .85),
         new AutoSpinSpindexer(spindexer).repeatedly());
   }
 }
