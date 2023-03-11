@@ -97,8 +97,10 @@ public class DriveSticks extends CommandBase {
       double tempInverseDeadband = Constants.DrivetrainConstants.joystickRotationInverseDeadband;
 
       if (mDriveTrain.isInSlowMode()) {
-        // TODO -- Make this account also for endgame state
         tempInverseDeadband /= 0.3;
+      }
+      if (mRobotState.isInEndgameMode()) {
+        tempInverseDeadband /= 0.8;
       }
 
       if (x2 >= 0.0) {
@@ -129,10 +131,14 @@ public class DriveSticks extends CommandBase {
 
       // Check for Slow Mode
       if (mDriveTrain.isInSlowMode()) {
-        // TODO: Make this account for endgame mode also
         x1 *= 0.6;
         y1 *= 0.6;
         x2 *= 0.3;
+      }
+      // Check for Endgame Mode
+      if (mRobotState.isInEndgameMode()) {
+        x1 *= 0.8;
+        y1 *= 0.8;
       }
 
       // Gyro Input (-180 to 180)
@@ -196,6 +202,8 @@ public class DriveSticks extends CommandBase {
 
         x2 = Math.min(x2, .40);
         x2 = Math.max(x2, -.40);
+
+        gyroTargetRecorded = false;
       }
       // Calculate the Swerve States
       double[] swerveStates;

@@ -165,10 +165,10 @@ public final class Constants {
   public static class TowerConstants {
     public static Waypoint scoreFloor = new Waypoint(0.0, 117.0);
     public static Waypoint scoreConeMid = new Waypoint(0.0, 219.0);
-    public static Waypoint scoreConeHigh = new Waypoint(23.5, 199.0);
+    public static Waypoint scoreConeHigh = new Waypoint(25, 199.0);
     public static Waypoint scoreCubeMid = new Waypoint(0.0, 199.0);
     public static Waypoint scoreCubeHigh = new Waypoint(27.25, 166.0);
-    public static Waypoint intakeBackstop = new Waypoint(11.75, 40);
+    public static Waypoint intakeBackstop = new Waypoint(11.75, 45);
     public static Waypoint intakeGrab = new Waypoint(0.0, 0.0);
     public static Waypoint intakeRegrab = new Waypoint(7.75, 5.0);
     public static Waypoint floorGrab = new Waypoint(0.0, 92.0);
