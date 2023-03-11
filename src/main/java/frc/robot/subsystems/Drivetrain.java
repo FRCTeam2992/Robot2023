@@ -128,6 +128,7 @@ public class Drivetrain extends SubsystemBase {
   private boolean inSlowMode = false;
   private boolean doFieldOreint = true;
   private boolean scoringMode = false;
+  private boolean loadingMode = false;
 
   private int dashboardCounter = 0;
 
@@ -459,6 +460,14 @@ public class Drivetrain extends SubsystemBase {
 
   public void setScoringMode(boolean scoringMode) {
     this.scoringMode = scoringMode;
+  }
+
+  public boolean isLoadingMode() {
+    return loadingMode;
+  }
+
+  public void setLoadingMode(boolean loadingMode) {
+    this.loadingMode = loadingMode;
   }
 
   public void onDisable() {

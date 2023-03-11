@@ -4,6 +4,9 @@
 
 package frc.robot.commands;
 
+import java.sql.Driver;
+
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.lib.drive.swerve.SwerveModuleFalconFalcon;
@@ -119,7 +122,7 @@ public class DriveSticks extends CommandBase {
     // Lock Rotation to 0 for scoring
 
     // Check for Movement or autoDrieMode
-    if (Math.abs(x1) > 0.0 || Math.abs(y1) > 0.0 || Math.abs(x2) > 0.0 || mDriveTrain.isScoringMode()) {
+    if (Math.abs(x1) > 0.0 || Math.abs(y1) > 0.0 || Math.abs(x2) > 0.0 || mDriveTrain.isScoringMode() || mDriveTrain.isLoadingMode()) {
 
       // Demo Slow Mode
       // x1 /= 4;
@@ -197,6 +200,24 @@ public class DriveSticks extends CommandBase {
         x2 = mDriveTrain.getGyroYaw();
         if (x2 > 180) {
           x2 -= 360;
+        }
+        x2 = x2 * Constants.DrivetrainConstants.driveRotationP;
+
+        x2 = Math.min(x2, .40);
+        x2 = Math.max(x2, -.40);
+
+        gyroTargetRecorded = false;
+      }
+      if (mDriveTrain.isLoadingMode()) {
+        double rotationTarget = 90.0;
+        if (DriverStation.getAlliance() == DriverStation.Alliance.Red) {
+          rotationTarget *= -1.0;
+        }
+        x2 = mDriveTrain.getGyroYaw() - rotationTarget;
+        if (x2 > 180) {
+          x2 -= 360;
+        } else if (x2 < -180) {
+          x2 += 360;
         }
         x2 = x2 * Constants.DrivetrainConstants.driveRotationP;
 
