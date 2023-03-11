@@ -131,6 +131,9 @@ public class Robot extends TimedRobot {
     // Set the Drive Motors Current Limit
     mRobotContainer.mDrivetrain.setDriveCurrentLimit(60.0, 60.0);
 
+    // Zero the gyro
+    mRobotContainer.mDrivetrain.navx.zeroYaw();
+
     // Set the Drive Motors Ramp Rate
     mRobotContainer.mDrivetrain.setDriveRampRate(0.0);
 
