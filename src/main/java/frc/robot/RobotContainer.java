@@ -522,7 +522,7 @@ public class RobotContainer {
 
                 //
 
-                return new InstantCommand();
+                return new InstantCommand(() -> mDrivetrain.resetOdometryToPose(startingPose));
             }
         }
 
