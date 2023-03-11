@@ -202,6 +202,8 @@ public class DriveSticks extends CommandBase {
 
         x2 = Math.min(x2, .40);
         x2 = Math.max(x2, -.40);
+
+        gyroTargetRecorded = false;
       }
       // Calculate the Swerve States
       double[] swerveStates;
