@@ -4,6 +4,8 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.lib.drive.swerve.SwerveModuleFalconFalcon;
@@ -25,10 +27,18 @@ public class DriveSticks extends CommandBase {
   private double gyroTarget;
   private boolean gyroTargetRecorded;
 
+  private ProfiledPIDController scoreYController;
+
   public DriveSticks(Drivetrain subsystem, RobotState robotState) {
     // Subsystem Instance
     mDriveTrain = subsystem;
     mRobotState = robotState;
+
+    scoreYController = new ProfiledPIDController(Constants.DrivetrainConstants.AutoScorePIDConstants.scoreP,
+            Constants.DrivetrainConstants.AutoScorePIDConstants.scoreI,
+            Constants.DrivetrainConstants.AutoScorePIDConstants.scoreD,
+            new TrapezoidProfile.Constraints(Constants.DrivetrainConstants.AutoScorePIDConstants.scoreCruise,
+                    Constants.DrivetrainConstants.AutoScorePIDConstants.scoreAccel));
 
     // Set the Subsystem Requirement
     addRequirements(mDriveTrain);
@@ -193,6 +203,7 @@ public class DriveSticks extends CommandBase {
         // Reset the Target Recorded State
         gyroTargetRecorded = false;
       }
+      // Adjust the rotation to align to score
       if (mDriveTrain.isScoringMode()) {
         x2 = mDriveTrain.getGyroYaw();
         if (x2 > 180) {
@@ -204,7 +215,27 @@ public class DriveSticks extends CommandBase {
         x2 = Math.max(x2, -.40);
 
         gyroTargetRecorded = false;
-      }
+
+        // If inside the right X odometry range try to adjust left/right joystick to aim
+
+        double targetY = mRobotState.currentTargetYCoordinateMeters();
+        if ((mDriveTrain.getLatestSwervePose().getX() > Constants.ScoringGridConstants.autoAlignmentAreaMinXMeters) &&
+                (mDriveTrain.getLatestSwervePose().getX() < Constants.ScoringGridConstants.autoAlignmentAreaMaxXMeters)
+                &&
+                (Math.abs(mDriveTrain.getLatestSwervePose().getY()
+                        - targetY) < Constants.ScoringGridConstants.autoAlignmentMaxYErrorMeters)) {
+            // We are inside the "close enough" range where we can try to autosteer
+            x2 = scoreYController.calculate(mDriveTrain.getLatestSwervePose().getY(), targetY);
+
+            // Scale it to our max teleop drive speed
+            x2 /= Constants.DrivetrainConstants.swerveMaxSpeed;
+        } else {
+            // We are too far away so need to reset the profiled PID controller
+            scoreYController.reset(mDriveTrain.getLatestSwervePose().getY(),
+                    x2 * Constants.DrivetrainConstants.swerveMaxSpeed);
+        }
+    }
+
       // Calculate the Swerve States
       double[] swerveStates;
 

@@ -63,6 +63,15 @@ public final class Constants {
       public static final double turnD = 0.00005;
     }
 
+    public static class AutoScorePIDConstants {
+        public static final double scoreP = 0.5;
+        public static final double scoreI = 0.0;
+        public static final double scoreD = 0.0;
+
+        public static final double scoreCruise = 2.0; // m / sec
+        public static final double scoreAccel = 2.0; // m / sec^2
+    }
+
     // Gyro P
     public static final double driveGyroP = 0.005;
 
@@ -165,6 +174,7 @@ public final class Constants {
   public static class ScoringGridConstants {
     public static final double autoAlignmentAreaMinXMeters = 2.0;
     public static final double autoAlignmentAreaMaxXMeters = 2.4;
+    public static final double autoAlignmentMaxYErrorMeters = 1.0;
     public static final double conePoleOffsetYMeters = 0.559;
 
     public static class Red {
