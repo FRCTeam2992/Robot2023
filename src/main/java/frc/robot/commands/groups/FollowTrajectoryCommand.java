@@ -26,6 +26,11 @@ public class FollowTrajectoryCommand extends SequentialCommandGroup {
   public FollowTrajectoryCommand(Drivetrain mDrivetrain, PathPlannerTrajectory traj, boolean isFirstPath) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
+    if (traj == null) {
+        // No trajectory so just end
+        addCommands(new InstantCommand());
+        return;
+    }
     addCommands(
         new InstantCommand(() -> {
           // Reset odometry for the first path you run during auto
