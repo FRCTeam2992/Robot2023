@@ -123,6 +123,8 @@ public class Drivetrain extends SubsystemBase {
   public PathPlannerTrajectory driveStraight;
   public PathPlannerTrajectory curvePath;
   public PathPlannerTrajectory testPath;
+  public PathPlannerTrajectory innerMobility;
+  public PathPlannerTrajectory outerMobility;
 
   // State Variables
   private boolean inSlowMode = false;
@@ -472,6 +474,9 @@ public class Drivetrain extends SubsystemBase {
     driveStraight = PathPlanner.loadPath("DriveStraight", new PathConstraints(.5, .5));
     curvePath = PathPlanner.loadPath("CurvePath", new PathConstraints(.5, .5));
     testPath = PathPlanner.loadPath("TestPath", new PathConstraints(.5, .5));
+    innerMobility = PathPlanner.loadPath("Inner_Mobility", new PathConstraints(.5, .5));
+    outerMobility = PathPlanner.loadPath("Outer_Mobility", new PathConstraints(.5, .5));
+
   }
 
   public CommandBase ResetOdometry() {
