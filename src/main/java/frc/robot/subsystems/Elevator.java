@@ -9,7 +9,8 @@ import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
-import edu.wpi.first.wpilibj.DigitalOutput;
+import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -23,11 +24,13 @@ public class Elevator extends SubsystemBase {
 
   private Solenoid elevatorSolenoid;
 
-  private DigitalOutput elevatorLimitSwitch;
-
   private int dashboardCounter = 0;
 
   private double targetHeightInch = 0;
+
+  private Debouncer limit1Debounce;
+  private Debouncer limit2Debounce;
+  private boolean alreadyLimited = false; // Keep track of transitions and only limit on rise
 
   // Variables for managing "hold position" to prevent backdrive
   private boolean holdPositionRecorded = false; // Have we logged the hold position yet
@@ -59,6 +62,9 @@ public class Elevator extends SubsystemBase {
 
     elevatorSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM,
         Constants.ElevatorConstants.DeviceIDs.elevatorSolenoid);
+
+    limit1Debounce = new Debouncer(0.05, DebounceType.kRising);
+    limit2Debounce = new Debouncer(0.05, DebounceType.kRising);
   }
 
   @Override
@@ -71,6 +77,20 @@ public class Elevator extends SubsystemBase {
       SmartDashboard.putNumber("Elevator Inches", getElevatorInches());
 
       dashboardCounter = 0;
+    }
+
+    if ((limit1Debounce.calculate(elevatorMotorLead.getSensorCollection().isRevLimitSwitchClosed() == 1)) ||
+        (limit2Debounce.calculate(elevatorMotorFollow.getSensorCollection().isFwdLimitSwitchClosed() == 1))) {
+      if (!alreadyLimited) {
+        // New transition rise on limit switches
+        alreadyLimited = true;
+        zeroElevatorEncoders();
+      } else {
+        // Do nothing -- we already recorded the limit switch hit
+      }
+    } else {
+      // Off of the limit switches so reset state
+      alreadyLimited = false;
     }
   }
 
@@ -93,7 +113,7 @@ public class Elevator extends SubsystemBase {
   public void setElevatorSpeed(double speed) {
     holdPositionRecorded = false; // Hold position invalidated since we moved
     if (getElevatorInches() < Constants.ElevatorConstants.Limits.softStopBottom) {
-      speed = Math.max(0.0, speed);
+      speed = Math.max(-0.1, speed); // Allow down at slow speed if encoder out of sync
     } else if (getElevatorInches() > Constants.ElevatorConstants.Limits.softStopTop) {
       speed = Math.min(0.0, speed);
     }
@@ -114,10 +134,18 @@ public class Elevator extends SubsystemBase {
   }
 
   public void holdElevator() {
+    if (getElevatorInches() < 1.0) {
+      // We are at bottom or go encoder reset. Stop the holdPosition
+      holdPositionRecorded = false;
+      holdPosition = 0.0;
+      elevatorMotorLead.set(TalonFXControlMode.PercentOutput, 0.0);
+      return;
+    }
     if (!holdPositionRecorded) {
       // We haven't recorded where we are yet, so get it
       holdPosition = getLeadElevatorPostion();
       holdPositionRecorded = true;
+      elevatorMotorLead.set(TalonFXControlMode.PercentOutput, 0.0);
     } else {
       elevatorMotorLead.set(TalonFXControlMode.MotionMagic, holdPosition);
     }
@@ -158,6 +186,10 @@ public class Elevator extends SubsystemBase {
   }
 
   public void zeroElevatorEncoders() {
+    elevatorMotorLead.set(TalonFXControlMode.PercentOutput, 0.0);
+
+    holdPositionRecorded = false;
+    holdPosition = 0.0;
     elevatorMotorLead.getSensorCollection().setIntegratedSensorPosition(0.0, 100);
     elevatorMotorFollow.getSensorCollection().setIntegratedSensorPosition(0.0, 100);
   }
