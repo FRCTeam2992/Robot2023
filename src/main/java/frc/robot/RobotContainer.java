@@ -127,7 +127,7 @@ public class RobotContainer {
 
                 mRobotState = new RobotState();
 
-                mDrivetrain = new Drivetrain();
+                mDrivetrain = new Drivetrain(mRobotState);
                 mDrivetrain.setDefaultCommand(new DriveSticks(mDrivetrain, mRobotState));
 
                 mIntake = new Intake();
@@ -577,12 +577,22 @@ public class RobotContainer {
             }
         }
 
+        private Command balanceOnChargeStationCommand() {
+            // TODO: Figure out how to write this one and fill it in.
+            return new InstantCommand(() -> {
+                mRobotState.useLimelightOdometryUpdates = true;
+            });
+        }
+        
         public Command buildAutoCommand() {
             Pose2d startingPose;
             PathPlannerTrajectory initialScorepath;
             PathPlannerTrajectory autoPath = null;
             Command initialScoreCommand = null;
             Command afterInitialScoreCommand = null;
+            Command balanceCommand = null;
+
+            mRobotState.useLimelightOdometryUpdates = false;
 
             if (!autoStartCompatible()) {
                 // We have incompatible starting position for sequence. Do NOTHING!
@@ -597,6 +607,9 @@ public class RobotContainer {
 
                 // Now setup the path following command
                 autoPath = getAutoPath();
+
+                // Setup Charge Station balance command
+                balanceCommand = balanceOnChargeStationCommand();
 
                 // Build parallel group to move from scoring position while driving
                 if (getAutoPreloadScore() != AutoPreloadScore.No_Preload) {
@@ -614,6 +627,7 @@ public class RobotContainer {
                     return new InstantCommand(() -> mDrivetrain.resetOdometryToPose(startingPose))
                             .andThen(initialScoreCommand)
                             .andThen(afterInitialScoreCommand)
+                            .andThen(balanceCommand)
                             .andThen(mDrivetrain.XWheels());
                 }
             }
