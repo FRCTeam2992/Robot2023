@@ -136,6 +136,8 @@ public class Drivetrain extends SubsystemBase {
   public PathPlannerTrajectory wallMobility;
   public PathPlannerTrajectory centerBalanceLoadStationSide;
   public PathPlannerTrajectory centerBalanceWallSide;
+  public PathPlannerTrajectory wallMobilityBalance;
+  public PathPlannerTrajectory loadStationMobilityBalance;
 
   // State Variables
   private boolean inSlowMode = false;
@@ -535,9 +537,12 @@ public class Drivetrain extends SubsystemBase {
     testPath = PathPlanner.loadPath("TestPath", new PathConstraints(.5, .5));
     loadStationMobility = PathPlanner.loadPath("LoadStationMobility", new PathConstraints(.5, .5));
     wallMobility = PathPlanner.loadPath("WallMobility", new PathConstraints(.5, .5));
-    centerBalanceLoadStationSide = PathPlanner.loadPath("CenterBalanceLoadStationSide", new PathConstraints(.5, .5));
+    centerBalanceLoadStationSide = PathPlanner.loadPath("CenterBalanceLoadStationSide", new PathConstraints(2.8, 2.25));
     centerBalanceWallSide = PathPlanner.loadPath("CenterBalanceWallSide", new PathConstraints(2.8, 2.25));
-  }
+    wallMobilityBalance = PathPlanner.loadPath("WallMobilityBalance", new PathConstraints(2.8, 2.25));
+    loadStationMobilityBalance = PathPlanner.loadPath("LoadStationMobilityBalance", new PathConstraints(2.8, 2.25));
+
+}
 
   public CommandBase XWheels() {
     return new SetSwerveAngle(this, 45, -45, -45, 45);
