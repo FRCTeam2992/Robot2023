@@ -388,7 +388,7 @@ public class Drivetrain extends SubsystemBase {
     /*
      * TODO: Finish this once we test limelight botPose data
      */
-    if (limeLightCamera11.getTargetID() > 0) {
+    if (limeLightCamera11.getTargetID() > 0 && !DriverStation.isAutonomousEnabled()) {
       limelight11BotPose = limeLightCamera11.getBotPose(getAllianceCoordinateSpace());
       latestVisionPose = new Pose2d(limelight11BotPose[0], limelight11BotPose[1],
           Rotation2d.fromDegrees(limelight11BotPose[5]));
