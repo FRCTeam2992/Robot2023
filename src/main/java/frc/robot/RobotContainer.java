@@ -217,7 +217,7 @@ public class RobotContainer {
                 controller0.y().onTrue(
                                 new AutoGroundIntakeCone(mElevator, mArm, mClaw, mIntake, mIntakeDeploy, mSpindexer));// cone
                 // D-Pad
-                controller0.povLeft().whileTrue(new SetSwerveAngle(mDrivetrain, 45, -45, -45, 45));// X the wheels
+                controller0.povLeft().whileTrue(mDrivetrain.XWheels());// X the wheels
 
                 controller0.povRight().onTrue(new RehomeIntakeDeploy(mIntakeDeploy));
 
@@ -602,7 +602,8 @@ public class RobotContainer {
                 if (startingPose != null && initialScoreCommand != null) {
                     return new InstantCommand(() -> mDrivetrain.resetOdometryToPose(startingPose))
                             .andThen(initialScoreCommand)
-                            .andThen(afterInitialScoreCommand);
+                            .andThen(afterInitialScoreCommand)
+                            .andThen(mDrivetrain.XWheels());
                 }
             }
             return new InstantCommand();
