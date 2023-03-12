@@ -20,6 +20,8 @@ import frc.lib.manipulator.Waypoint;
  * constants are needed, to reduce verbosity.
  */
 public class RobotState {
+    public boolean useLimelightOdometryUpdates = false;
+
     public enum EndgameModeState {
         InEndgame,
         NotInEndgame

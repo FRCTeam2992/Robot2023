@@ -50,6 +50,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.RobotState;
 import frc.robot.commands.SetSwerveAngle;
 
 public class Drivetrain extends SubsystemBase {
@@ -93,6 +94,7 @@ public class Drivetrain extends SubsystemBase {
   // public final LimeLight limeLightCamera12;
 
   private DataLog mDataLog;
+  private RobotState mRobotState;
 
   private StringLogEntry limelight11JsonLog;
   // private StringLogEntry limelight12JsonLog;
@@ -141,7 +143,9 @@ public class Drivetrain extends SubsystemBase {
 
   private int dashboardCounter = 0;
 
-  public Drivetrain() {
+  public Drivetrain(RobotState robotState) {
+    this.mRobotState = robotState;
+
     // Motor Inits
     frontLeftDrive = new TalonFX(Constants.DrivetrainConstants.CanIDs.frontLeftDrive, "CanBus2");
     initTalonFX(frontLeftDrive, false);
@@ -385,7 +389,7 @@ public class Drivetrain extends SubsystemBase {
     /*
      * TODO: Finish this once we test limelight botPose data
      */
-    if (limeLightCamera11.getTargetID() > 0 && !DriverStation.isAutonomousEnabled()) {
+    if (this.mRobotState.useLimelightOdometryUpdates && limeLightCamera11.getTargetID() > 0) {
       limelight11BotPose = limeLightCamera11.getBotPose(getAllianceCoordinateSpace());
       latestVisionPose = new Pose2d(limelight11BotPose[0], limelight11BotPose[1],
           Rotation2d.fromDegrees(limelight11BotPose[5]));
