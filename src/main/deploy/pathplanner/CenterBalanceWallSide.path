@@ -2,7 +2,7 @@
   "waypoints": [
     {
       "anchorPoint": {
-        "x": 1.89,
+        "x": 1.84,
         "y": 2.189
       },
       "prevControl": null,
@@ -24,7 +24,7 @@
     },
     {
       "anchorPoint": {
-        "x": 4.3,
+        "x": 4.65,
         "y": 2.19
       },
       "prevControl": {
