@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import frc.lib.leds.Color;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.lib.manipulator.Waypoint;
 
@@ -21,6 +22,13 @@ import frc.lib.manipulator.Waypoint;
  */
 public final class Constants {
   public static final boolean dataLogging = true;
+
+  public static class LEDColors {
+    public static final Color purple = new Color(210, 75, 230);
+    public static final Color yellow = new Color(255, 160, 0);
+    public static final Color blue = new Color(0, 0, 255);
+    public static final Color white = new Color(210, 200, 180);
+  }
 
   public static class DrivetrainConstants {
     // Drive Variables
@@ -207,7 +215,8 @@ public final class Constants {
     public static Waypoint scoreCubeMid = new Waypoint(0.0, 199.0);
     public static Waypoint scoreCubeHigh = new Waypoint(27.25, 166.0);
     public static Waypoint intakeBackstop = new Waypoint(11.75, 45);
-    public static Waypoint intakeGrab = new Waypoint(0.0, 0.0);
+    public static Waypoint intakeGrabCube = new Waypoint(1.0, 5.5);
+    public static Waypoint intakeGrabCone = new Waypoint(0.0, -2.0);
     public static Waypoint intakeRegrab = new Waypoint(7.75, 5.0);
     public static Waypoint floorGrab = new Waypoint(0.0, 92.0);
   }

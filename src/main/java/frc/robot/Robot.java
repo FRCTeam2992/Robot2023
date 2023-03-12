@@ -55,7 +55,7 @@ public class Robot extends TimedRobot {
 
     mRobotContainer.mElevator.zeroElevatorEncoders();
 
-    mRobotContainer.setLEDsColor(mRobotContainer.blue);
+    mRobotContainer.setLEDsColor(Constants.LEDColors.blue);
 
     // DataLogManager.start();
     // DriverStation.startDataLog(DataLogManager.getLog());
@@ -96,6 +96,7 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
+    mRobotContainer.setLEDsColor(Constants.LEDColors.blue);
     mRobotContainer.mIntake.onDisable();
     mRobotContainer.mElevator.onDisable();
     mRobotContainer.mArm.onDisable();

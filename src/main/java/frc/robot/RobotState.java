@@ -33,6 +33,18 @@ public class RobotState {
         return endgameMode == EndgameModeState.InEndgame;
     }
 
+    public enum IntakeModeState {
+        Unknown,
+        Cube,
+        Cone
+    }
+
+    public IntakeModeState intakeMode = IntakeModeState.Unknown;
+
+    public IntakeModeState getIntakeMode() {
+        return intakeMode;
+    }
+
     public enum TargetingGrid {
         GridLoadingOuter(3, 6),
         GridCoopertition(2, 7),
