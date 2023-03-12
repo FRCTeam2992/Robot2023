@@ -13,6 +13,7 @@ import frc.lib.leds.Color;
 
 import frc.robot.Constants.TowerConstants;
 import frc.robot.RobotState.GridTargetingPosition;
+import frc.robot.commands.BalanceRobot;
 import frc.robot.commands.DeployButterflyWheels;
 import frc.robot.commands.DeployElevator;
 import frc.robot.commands.DriveSticks;
@@ -369,6 +370,7 @@ public class RobotContainer {
                 SmartDashboard.putNumber("ArmTestMoveAngle", 150);
                 SmartDashboard.putData("TestSafeDumbPath", new TestTowerSafeMove(mElevator, mArm));
 
+                SmartDashboard.putData("TestAutoBalance", new BalanceRobot(mDrivetrain));
         }
 
         public void addSubsystemsToDashboard() {
