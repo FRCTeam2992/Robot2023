@@ -12,6 +12,9 @@ public enum AutoSequence {
     SideMobilityOnly("Side Mobility Only",
             AutoStartPosition.LoadStationEnd,
             AutoStartPosition.WallEnd),
+    SideMobilityBalance("Side Mobility + Balance",
+            AutoStartPosition.LoadStationEnd,
+            AutoStartPosition.WallEnd),
     CenterBalance("Center Balance",
             AutoStartPosition.CenterLoadStationSide,
             AutoStartPosition.CenterWallSide);

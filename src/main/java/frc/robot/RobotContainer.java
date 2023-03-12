@@ -558,6 +558,12 @@ public class RobotContainer {
                     } else if (getAutoStartPosition() == AutoStartPosition.WallEnd) {
                         return mDrivetrain.wallMobility;
                     }
+                case SideMobilityBalance:
+                    if (getAutoStartPosition() == AutoStartPosition.LoadStationEnd) {
+                        return mDrivetrain.loadStationMobilityBalance;
+                    } else if (getAutoStartPosition() == AutoStartPosition.WallEnd) {
+                        return mDrivetrain.wallMobilityBalance;
+                    }
                 case CenterBalance:
                     if (getAutoStartPosition() == AutoStartPosition.CenterLoadStationSide) {
                         return mDrivetrain.centerBalanceLoadStationSide;
