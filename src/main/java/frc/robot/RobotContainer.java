@@ -524,13 +524,57 @@ public class RobotContainer {
                     autoStartChooser.getSelected());
         }
 
+        private Command setupAutoInitialScoreCommand(PathPlannerTrajectory initialScorePath) {
+            Command initialScoreCommand;
+            switch (getAutoPreloadScore()) {
+                case No_Preload:
+                    initialScoreCommand = new InstantCommand();
+                    break;
+                case Hi_Cone:
+                    initialScoreCommand = (new FollowTrajectoryCommand(mDrivetrain, initialScorePath, true)
+                            .alongWith(new SafeDumbTowerToPosition(mElevator, mArm,
+                                    GridTargetingPosition.HighRight.towerWaypoint))
+                            .alongWith(new DeployElevator(mElevator, ElevatorState.Deployed)));
+
+                    // Add Sequential Commands after initial move
+                    initialScoreCommand = initialScoreCommand
+                            .andThen(new WaitCommand(0.8))
+                            .andThen(new SetClawState(mClaw, ClawState.Opened))
+                            .andThen(new WaitCommand(0.8));
+                    break;
+                default:
+                    initialScoreCommand = new InstantCommand();
+            }
+            return initialScoreCommand;
+        }
+
+        private PathPlannerTrajectory getAutoPath() {
+            switch (getAutoSequence()) {
+                case Do_Nothing:
+                    return null;
+                case SideMobilityOnly:
+                    if (getAutoStartPosition() == AutoStartPosition.LoadStationEnd) {
+                        return mDrivetrain.loadStationMobility;
+                    } else if (getAutoStartPosition() == AutoStartPosition.WallEnd) {
+                        return mDrivetrain.wallMobility;
+                    }
+                case CenterBalance:
+                    if (getAutoStartPosition() == AutoStartPosition.CenterLoadStationSide) {
+                        return mDrivetrain.centerBalanceLoadStationSide;
+                    } else if (getAutoStartPosition() == AutoStartPosition.CenterWallSide) {
+                        return mDrivetrain.centerBalanceWallSide;
+                    }
+                default:
+                    return null;
+            }
+        }
+
         public Command buildAutoCommand() {
             Pose2d startingPose;
             PathPlannerTrajectory initialScorepath;
+            PathPlannerTrajectory autoPath = null;
             Command initialScoreCommand = null;
             Command afterInitialScoreCommand = null;
-            PathPlannerTrajectory autoPath = null;
-            Command withAutoPathCommand = null;
 
             if (!autoStartCompatible()) {
                 // We have incompatible starting position for sequence. Do NOTHING!
@@ -541,51 +585,10 @@ public class RobotContainer {
                 initialScorepath = getAutoStartPosition().getInitialTrajectory();
 
                 // Set the preload score command sequence
-                switch (getAutoPreloadScore()) {
-                    case No_Preload:
-                        initialScoreCommand = new InstantCommand();
-                        break;
-                    case Hi_Cone:
-                        initialScoreCommand = (new FollowTrajectoryCommand(mDrivetrain, initialScorepath, true)
-                                .alongWith(new SafeDumbTowerToPosition(mElevator, mArm,
-                                        GridTargetingPosition.HighRight.towerWaypoint))
-                                .alongWith(new DeployElevator(mElevator, ElevatorState.Deployed)));
-
-                        // Add Sequential Commands after initial move
-                        initialScoreCommand = initialScoreCommand
-                                .andThen(new WaitCommand(0.8))
-                                .andThen(new SetClawState(mClaw, ClawState.Opened))
-                                .andThen(new WaitCommand(0.8));
-                        break;
-                    default:
-                        initialScoreCommand = new InstantCommand();
-                }
+                initialScoreCommand = setupAutoInitialScoreCommand(initialScorepath);
 
                 // Now setup the path following command
-                switch (getAutoSequence()) {
-                    case Do_Nothing:
-                        autoPath = null;
-                        break;
-                    case SideMobilityOnly:
-                        withAutoPathCommand = new SafeDumbTowerToPosition(mElevator, mArm,
-                                TowerConstants.intakeBackstop)
-                                .alongWith(new DeployElevator(mElevator, ElevatorState.Undeployed));
-                        if (getAutoStartPosition() == AutoStartPosition.LoadStationEnd) {
-                            autoPath = mDrivetrain.loadStationMobility;
-                        } else if (getAutoStartPosition() == AutoStartPosition.WallEnd) {
-                            autoPath = mDrivetrain.wallMobility;
-                        }
-                        break;
-                    case CenterBalance:
-                        if (getAutoStartPosition() == AutoStartPosition.CenterLoadStationSide) {
-                            autoPath = mDrivetrain.centerBalanceLoadStationSide;
-                        } else if (getAutoStartPosition() == AutoStartPosition.CenterWallSide) {
-                            autoPath = mDrivetrain.centerBalanceWallSide;
-                        }
-                        break;
-                    default:
-                        autoPath = null;
-                }
+                autoPath = getAutoPath();
 
                 // Build parallel group to move from scoring position while driving
                 if (getAutoPreloadScore() != AutoPreloadScore.No_Preload) {
@@ -612,8 +615,6 @@ public class RobotContainer {
         public CommandXboxController getController0() {
                 return controller0;
         }
-
-
 
         public void setLEDsColor(Color color) {
                 for (var i = 0; i < m_ledBuffer.getLength(); i++) {
