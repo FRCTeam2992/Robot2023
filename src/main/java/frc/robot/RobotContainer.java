@@ -553,9 +553,9 @@ public class RobotContainer {
 
                         // Add Sequential Commands after initial move
                         initialScoreCommand = initialScoreCommand
-                                .andThen(new WaitCommand(0.5))
+                                .andThen(new WaitCommand(0.8))
                                 .andThen(new SetClawState(mClaw, ClawState.Opened))
-                                .andThen(new WaitCommand(0.5));
+                                .andThen(new WaitCommand(0.8));
                         break;
                     default:
                         initialScoreCommand = new InstantCommand();

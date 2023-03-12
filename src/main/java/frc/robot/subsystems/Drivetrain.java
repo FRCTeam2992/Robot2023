@@ -536,7 +536,7 @@ public class Drivetrain extends SubsystemBase {
     loadStationMobility = PathPlanner.loadPath("LoadStationMobility", new PathConstraints(.5, .5));
     wallMobility = PathPlanner.loadPath("WallMobility", new PathConstraints(.5, .5));
     centerBalanceLoadStationSide = PathPlanner.loadPath("CenterBalanceLoadStationSide", new PathConstraints(.5, .5));
-    centerBalanceWallSide = PathPlanner.loadPath("CenterBalanceWallSide", new PathConstraints(3.0, 2.0));
+    centerBalanceWallSide = PathPlanner.loadPath("CenterBalanceWallSide", new PathConstraints(2.8, 2.25));
   }
 
   public CommandBase XWheels() {
