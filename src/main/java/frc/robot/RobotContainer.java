@@ -60,12 +60,11 @@ import frc.robot.subsystems.Claw.ClawState;
 import frc.robot.subsystems.Elevator.ElevatorState;
 import frc.robot.subsystems.IntakeDeploy.IntakeDeployState;
 
-
 import com.pathplanner.lib.PathPlannerTrajectory;
 
 import edu.wpi.first.math.geometry.Pose2d;
 
-import edu.wpi.first.math.geometry.Pose2d;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
@@ -612,7 +611,13 @@ public class RobotContainer {
                 autoPath = getAutoPath();
 
                 // Setup Charge Station balance command
-                balanceCommand = balanceOnChargeStationCommand();
+                if (getAutoSequence() == AutoSequence.CenterBalance ||
+                        getAutoSequence() == AutoSequence.SideMobilityBalance) {
+                    balanceCommand = new BalanceRobot(mDrivetrain)
+                            .andThen(mDrivetrain.XWheels());
+                } else {
+                    balanceCommand = new InstantCommand();
+                }
 
                 // Build parallel group to move from scoring position while driving
                 if (getAutoPreloadScore() != AutoPreloadScore.No_Preload) {
@@ -630,8 +635,7 @@ public class RobotContainer {
                     return new InstantCommand(() -> mDrivetrain.resetOdometryToPose(startingPose))
                             .andThen(initialScoreCommand)
                             .andThen(afterInitialScoreCommand)
-                            .andThen(balanceCommand)
-                            .andThen(mDrivetrain.XWheels());
+                            .andThen(balanceCommand);
                 }
             }
             return new InstantCommand();
