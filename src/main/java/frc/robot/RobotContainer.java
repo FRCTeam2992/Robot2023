@@ -499,6 +499,8 @@ public class RobotContainer {
             autoSequenceChooser = new SendableChooser<>();
             autoSequenceChooser.setDefaultOption(AutoSequence.Do_Nothing.description, AutoSequence.Do_Nothing);
             autoSequenceChooser.addOption(AutoSequence.SideMobilityOnly.description, AutoSequence.SideMobilityOnly);
+            autoSequenceChooser.addOption(AutoSequence.SideMobilityBalance.description,
+                    AutoSequence.SideMobilityBalance);
             autoSequenceChooser.addOption(AutoSequence.CenterBalance.description, AutoSequence.CenterBalance);
 
             SmartDashboard.putData("Auto Sequence", autoSequenceChooser);
