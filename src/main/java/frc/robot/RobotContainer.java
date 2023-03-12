@@ -578,13 +578,6 @@ public class RobotContainer {
                     return null;
             }
         }
-
-        private Command balanceOnChargeStationCommand() {
-            // TODO: Figure out how to write this one and fill it in.
-            return new InstantCommand(() -> {
-                mRobotState.useLimelightOdometryUpdates = true;
-            });
-        }
         
         public Command buildAutoCommand() {
             Pose2d startingPose;
