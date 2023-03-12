@@ -32,7 +32,10 @@ public class HoldElevator extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (timer.get() > Constants.ElevatorConstants.holdPositionMaxTime) {
+    if (mElevator.getElevatorInches() < 1.0) {
+      // We are at bottom so turn off
+      mElevator.setElevatorSpeed(0.0);
+    } else if (timer.get() > Constants.ElevatorConstants.holdPositionMaxTime) {
       mElevator.setElevatorSpeed(0.0);
     } else {
       if (timer.get() > 0.150) {

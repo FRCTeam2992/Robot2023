@@ -109,13 +109,14 @@ public class RobotContainer {
 
         public final ButterflyWheels mButterflyWheels;
 
-
         private SendableChooser<AutoStartPosition> autoStartChooser;
         private SendableChooser<AutoSequence> autoSequenceChooser;
         private SendableChooser<AutoPreloadScore> autoPreloadScoreChooser;
 
         private Color purple;
         private Color yellow;
+        public Color blue;
+        public Color white;
 
         public AddressableLED m_led;
         public AddressableLEDBuffer m_ledBuffer;
@@ -165,6 +166,8 @@ public class RobotContainer {
 
                 purple = new Color(210, 75, 230);
                 yellow = new Color(255, 160, 0);
+                blue = new Color(0, 0, 255);
+                white = new Color(210, 200, 180);
 
                 // Add dashboard things
                 addSubsystemsToDashboard();
@@ -261,7 +264,7 @@ public class RobotContainer {
                 controller0.start().onTrue(new ResetGyro(mDrivetrain));
 
                 // Joysticks Buttons
-                controller0.rightStick().onTrue(new MoveIntake(mIntake, -.5, -.5).withTimeout(2));
+                controller0.rightStick().onTrue(new MoveIntake(mIntake, .5, .5).withTimeout(2));
                 controller0.rightStick().onTrue(new AutoSpinSpindexer(mSpindexer).repeatedly());
                 controller0.rightStick().onTrue(new SetIntakeDeployState(mIntakeDeploy, IntakeDeployState.Normal));
 
