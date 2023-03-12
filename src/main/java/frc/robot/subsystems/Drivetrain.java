@@ -557,15 +557,17 @@ public class Drivetrain extends SubsystemBase {
     }
 
     // Move robot straight at a heading and speed
-    public void moveRobot(double heading, double velocity) {
+    public void moveRobotFrontBack(boolean forward, double velocity) {
 
         // Calculate the Swerve States
         double[] swerveStates;
 
-        double x1 = velocity * Math.cos(Math.toRadians(heading - getGyroYaw()));
-        double y1 = velocity * Math.sin(Math.toRadians(heading - getGyroYaw()));
+        double y1 = velocity / Constants.DrivetrainConstants.swerveMaxSpeed;
+        if (!forward) {
+            y1 *= -1;
+        }
 
-        swerveStates = swerveController.calculate(x1, y1, 0.0);
+        swerveStates = swerveController.calculate(0.0, y1, 0.0);
 
         // Get the Swerve Modules
         SwerveModuleFalconFalcon frontLeft = frontLeftModule;

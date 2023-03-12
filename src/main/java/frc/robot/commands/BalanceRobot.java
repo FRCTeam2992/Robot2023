@@ -42,11 +42,11 @@ public class BalanceRobot extends CommandBase {
 
         if ((mDrivetrain.getRobotPitch() > Constants.DrivetrainConstants.pitchTolerance) &&
                 (currentPitchDelta > -Constants.DrivetrainConstants.pitchDeltaTolerance)) {
-            mDrivetrain.moveRobot(0.0, Constants.DrivetrainConstants.balanceMoveSpeed);
+            mDrivetrain.moveRobotFrontBack(true, Constants.DrivetrainConstants.balanceMoveSpeed);
             inToleranceCount = 0;
         } else if ((mDrivetrain.getRobotPitch() < -Constants.DrivetrainConstants.pitchTolerance) &&
                 (currentPitchDelta < Constants.DrivetrainConstants.pitchDeltaTolerance)) {
-            mDrivetrain.moveRobot(180.0, Constants.DrivetrainConstants.balanceMoveSpeed);
+            mDrivetrain.moveRobotFrontBack(false, Constants.DrivetrainConstants.balanceMoveSpeed);
             inToleranceCount = 0;
         } else {
             mDrivetrain.stopDrive();
@@ -62,7 +62,7 @@ public class BalanceRobot extends CommandBase {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return inToleranceCount >= 10;
+        return inToleranceCount >= 100;
     }
 
 }
