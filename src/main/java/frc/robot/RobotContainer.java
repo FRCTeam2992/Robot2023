@@ -190,11 +190,18 @@ public class RobotContainer {
                 controller0.povRight().onTrue(new RehomeIntakeDeploy(mIntakeDeploy));
 
                 controller0.povUp().onTrue(new SetLEDsColor(Constants.LEDColors.yellow));
+                controller0.povUp()
+                        .onTrue(new InstantCommand(() -> mRobotState.intakeMode = RobotState.IntakeModeState.Cone));
                 controller0.povDown().onTrue(new SetLEDsColor(Constants.LEDColors.purple));
+                controller0.povDown()
+                        .onTrue(new InstantCommand(() -> mRobotState.intakeMode = RobotState.IntakeModeState.Cube));
 
                 // Bumpers/Triggers
                 controller0.leftBumper().onTrue(new InstantCommand(
-                                () -> {
+                        () -> {
+                            controller0.povUp().onTrue(
+                                    new InstantCommand(() -> mRobotState.intakeMode = RobotState.IntakeModeState.Cone));
+
                                         mDrivetrain.setDoFieldOreint(false);
                                 }));// Disable Field Orient
                 controller0.leftBumper().onFalse(new InstantCommand(
@@ -240,7 +247,8 @@ public class RobotContainer {
                 controller1.leftBumper().whileTrue(new MoveSpindexer(mSpindexer, -0.9));
                 controller1.rightBumper().whileTrue(new MoveSpindexer(mSpindexer, 0.9));
                 controller1.leftTrigger(0.6).onTrue(
-                                new SpindexerGrabPiece(mElevator, mArm, mClaw, mIntake, mIntakeDeploy, mSpindexer));
+                        new SpindexerGrabPiece(mElevator, mArm, mClaw, mIntake, mIntakeDeploy, mSpindexer,
+                                mRobotState));
                 controller1.rightTrigger(0.6).onTrue(new SetScoringTarget(mRobotState, controller1));
 
                 // Back and Start
