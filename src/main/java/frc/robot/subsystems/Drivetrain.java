@@ -132,12 +132,6 @@ public class Drivetrain extends SubsystemBase {
   public PathPlannerTrajectory driveStraight;
   public PathPlannerTrajectory curvePath;
   public PathPlannerTrajectory testPath;
-  public PathPlannerTrajectory loadStationMobility;
-  public PathPlannerTrajectory wallMobility;
-  public PathPlannerTrajectory centerBalanceLoadStationSide;
-  public PathPlannerTrajectory centerBalanceWallSide;
-  public PathPlannerTrajectory wallMobilityBalance;
-  public PathPlannerTrajectory loadStationMobilityBalance;
 
   // State Variables
   private boolean inSlowMode = false;
@@ -535,13 +529,7 @@ public class Drivetrain extends SubsystemBase {
     driveStraight = PathPlanner.loadPath("DriveStraight", new PathConstraints(.5, .5));
     curvePath = PathPlanner.loadPath("CurvePath", new PathConstraints(.5, .5));
     testPath = PathPlanner.loadPath("TestPath", new PathConstraints(.5, .5));
-    loadStationMobility = PathPlanner.loadPath("LoadStationMobility", new PathConstraints(.5, .5));
-    wallMobility = PathPlanner.loadPath("WallMobility", new PathConstraints(.5, .5));
-    centerBalanceLoadStationSide = PathPlanner.loadPath("CenterBalanceLoadStationSide", new PathConstraints(2.8, 2.25));
-    centerBalanceWallSide = PathPlanner.loadPath("CenterBalanceWallSide", new PathConstraints(2.8, 2.25));
-    wallMobilityBalance = PathPlanner.loadPath("WallMobilityBalance", new PathConstraints(2.8, 2.25));
-    loadStationMobilityBalance = PathPlanner.loadPath("LoadStationMobilityBalance", new PathConstraints(2.8, 2.25));
-
+    // NOTE: Motion paths used in autonomous sequences have been moved to frc.lib.autonomous.AutonomousTrajectory.
 }
 
   public CommandBase XWheels() {

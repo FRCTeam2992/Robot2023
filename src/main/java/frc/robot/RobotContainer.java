@@ -8,7 +8,7 @@ package frc.robot;
 import frc.lib.autonomous.AutoPreloadScore;
 import frc.lib.autonomous.AutoSequence;
 import frc.lib.autonomous.AutoStartPosition;
-
+import frc.lib.autonomous.AutonomousTrajectory;
 import frc.lib.leds.Color;
 
 import frc.robot.Constants.TowerConstants;
@@ -556,21 +556,21 @@ public class RobotContainer {
                     return null;
                 case SideMobilityOnly:
                     if (getAutoStartPosition() == AutoStartPosition.LoadStationEnd) {
-                        return mDrivetrain.loadStationMobility;
+                        return AutonomousTrajectory.LoadStationMobility.trajectory;
                     } else if (getAutoStartPosition() == AutoStartPosition.WallEnd) {
-                        return mDrivetrain.wallMobility;
+                        return AutonomousTrajectory.WallMobility.trajectory;
                     }
                 case SideMobilityBalance:
                     if (getAutoStartPosition() == AutoStartPosition.LoadStationEnd) {
-                        return mDrivetrain.loadStationMobilityBalance;
+                        return AutonomousTrajectory.LoadStationMobilityBalance.trajectory;
                     } else if (getAutoStartPosition() == AutoStartPosition.WallEnd) {
-                        return mDrivetrain.wallMobilityBalance;
+                        return AutonomousTrajectory.WallMobilityBalance.trajectory;
                     }
                 case CenterBalance:
                     if (getAutoStartPosition() == AutoStartPosition.CenterLoadStationSide) {
-                        return mDrivetrain.centerBalanceLoadStationSide;
+                        return AutonomousTrajectory.CenterBalanceLoadStationSide.trajectory;
                     } else if (getAutoStartPosition() == AutoStartPosition.CenterWallSide) {
-                        return mDrivetrain.centerBalanceWallSide;
+                        return AutonomousTrajectory.CenterBalanceWallSide.trajectory;
                     }
                 default:
                     return null;
