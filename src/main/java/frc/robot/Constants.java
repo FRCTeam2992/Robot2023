@@ -75,6 +75,9 @@ public final class Constants {
     // Gyro P
     public static final double driveGyroP = 0.005;
 
+    // Gyro roll offset
+    public static final double gyroRollOffset = -1.9; // degrees -- its robot pitch but navx roll
+
     // Drive Rotation P
     public static final double driveRotationP = .007;
     public static final double autoAngleThreshold = 1.5;

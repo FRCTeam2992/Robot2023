@@ -360,6 +360,7 @@ public class Drivetrain extends SubsystemBase {
 
       SmartDashboard.putNumber("Gyro Yaw (raw deg)", navx.getYaw());
       SmartDashboard.putNumber("Gyro Yaw (adj deg)", getGyroYaw());
+      SmartDashboard.putNumber("Robot Gyro Pitch (raw deg)", getRobotPitch()); // Navx Roll
 
       SmartDashboard.putNumber("Odometry Rotation (deg)", latestSwervePose.getRotation().getDegrees());
       SmartDashboard.putNumber("Odometry X (in)", (latestSwervePose.getX() * (100 / 2.54)));
@@ -472,6 +473,10 @@ public class Drivetrain extends SubsystemBase {
       angle += 360;
     }
     return angle;
+  }
+
+  public double getRobotPitch() {
+      return -1 * (navx.getRoll() + Constants.DrivetrainConstants.gyroRollOffset);
   }
 
   public Pose2d getLatestSwervePose() {
