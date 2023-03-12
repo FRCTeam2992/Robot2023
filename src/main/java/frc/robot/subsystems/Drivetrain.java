@@ -50,6 +50,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.commands.SetSwerveAngle;
 
 public class Drivetrain extends SubsystemBase {
   /** Creates a new Drivetrain. */
@@ -536,6 +537,10 @@ public class Drivetrain extends SubsystemBase {
     wallMobility = PathPlanner.loadPath("WallMobility", new PathConstraints(.5, .5));
     centerBalanceLoadStationSide = PathPlanner.loadPath("CenterBalanceLoadStationSide", new PathConstraints(.5, .5));
     centerBalanceWallSide = PathPlanner.loadPath("CenterBalanceWallSide", new PathConstraints(3.0, 2.0));
+  }
+
+  public CommandBase XWheels() {
+    return new SetSwerveAngle(this, 45, -45, -45, 45);
   }
 
   public CommandBase ResetOdometry() {
