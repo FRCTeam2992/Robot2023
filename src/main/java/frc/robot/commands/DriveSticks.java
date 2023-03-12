@@ -238,8 +238,8 @@ public class DriveSticks extends CommandBase {
 
                     // Scale it to our max teleop drive speed
                     x1 /= Constants.DrivetrainConstants.swerveMaxSpeed;
-                    x1 = Math.min(x1, 0.6);
-                    x1 = Math.max(x1, -0.6);
+                    // x1 = Math.min(x1, 0.6);
+                    // x1 = Math.max(x1, -0.6);
                 } else {
                     // We are too far away so need to reset the profiled PID controller
                     scoreYController.reset(mDriveTrain.getLatestSwervePose().getY(),
