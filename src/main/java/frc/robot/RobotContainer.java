@@ -91,11 +91,6 @@ public class RobotContainer {
 
         public final ButterflyWheels mButterflyWheels;
 
-        public Color purple;
-        public Color yellow;
-        public Color blue;
-        public Color white;
-
         public AddressableLED m_led;
         public AddressableLEDBuffer m_ledBuffer;
 
@@ -140,11 +135,6 @@ public class RobotContainer {
                 // Set the data
                 m_led.setData(m_ledBuffer);
                 m_led.start();
-
-                purple = new Color(210, 75, 230);
-                yellow = new Color(255, 160, 0);
-                blue = new Color(0, 0, 255);
-                white = new Color(210, 200, 180);
 
                 // Add dashboard things
                 addSubsystemsToDashboard();
@@ -199,8 +189,8 @@ public class RobotContainer {
 
                 controller0.povRight().onTrue(new RehomeIntakeDeploy(mIntakeDeploy));
 
-                controller0.povUp().onTrue(new SetLEDsColor(yellow));
-                controller0.povDown().onTrue(new SetLEDsColor(purple));
+                controller0.povUp().onTrue(new SetLEDsColor(Constants.LEDColors.yellow));
+                controller0.povDown().onTrue(new SetLEDsColor(Constants.LEDColors.purple));
 
                 // Bumpers/Triggers
                 controller0.leftBumper().onTrue(new InstantCommand(

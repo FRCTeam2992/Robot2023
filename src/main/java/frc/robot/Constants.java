@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import frc.lib.leds.Color;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.lib.manipulator.Waypoint;
 
@@ -21,6 +22,13 @@ import frc.lib.manipulator.Waypoint;
  */
 public final class Constants {
   public static final boolean dataLogging = true;
+
+  public static class LEDColors {
+    public static final Color purple = new Color(210, 75, 230);
+    public static final Color yellow = new Color(255, 160, 0);
+    public static final Color blue = new Color(0, 0, 255);
+    public static final Color white = new Color(210, 200, 180);
+  }
 
   public static class DrivetrainConstants {
     // Drive Variables
