@@ -91,8 +91,10 @@ public class RobotContainer {
 
         public final ButterflyWheels mButterflyWheels;
 
-        private Color purple;
-        private Color yellow;
+        public Color purple;
+        public Color yellow;
+        public Color blue;
+        public Color white;
 
         public AddressableLED m_led;
         public AddressableLEDBuffer m_ledBuffer;
@@ -141,6 +143,8 @@ public class RobotContainer {
 
                 purple = new Color(210, 75, 230);
                 yellow = new Color(255, 160, 0);
+                blue = new Color(0, 0, 255);
+                white = new Color(210, 200, 180);
 
                 // Add dashboard things
                 addSubsystemsToDashboard();

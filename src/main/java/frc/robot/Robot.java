@@ -54,6 +54,8 @@ public class Robot extends TimedRobot {
 
     mRobotContainer.mElevator.zeroElevatorEncoders();
 
+    mRobotContainer.setLEDsColor(mRobotContainer.blue);
+
     DataLogManager.start();
     DriverStation.startDataLog(DataLogManager.getLog());
 
