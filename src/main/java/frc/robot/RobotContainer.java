@@ -141,6 +141,9 @@ public class RobotContainer {
                 m_led.setData(m_ledBuffer);
                 m_led.start();
 
+                // Setup the Auto Selectors
+                mAutoBuilder.setupAutoSelector();
+
                 // Add dashboard things
                 addSubsystemsToDashboard();
                 addRobotStateToDashboard();
@@ -151,9 +154,7 @@ public class RobotContainer {
                 configRealButtonBindings();
                 configTestButtonBindings();
 
-                // Setup the Auto Selectors
 
-                mAutoBuilder.setupAutoSelector();
         }
 
         /**
