@@ -161,7 +161,7 @@ public class RobotContainer {
                 // Add dashboard things
                 addSubsystemsToDashboard();
                 addRobotStateToDashboard();
-                addMatchStartChecksToDashboard();
+                updateMatchStartChecksToDashboard();
 
                 // Configure the trigger bindings
                 configureShuffleboardBindings();
@@ -341,12 +341,13 @@ public class RobotContainer {
                 SmartDashboard.putData("Move Elevator Up", new MoveElevator(mElevator, 0.1));
                 SmartDashboard.putData("Zero Elevator Encoder", new ZeroElevatorEncoders(mElevator));
 
-                SmartDashboard.putData("Spin Intake", new MoveSpindexer(mSpindexer, .5));
+                SmartDashboard.putData("Spin Spindexer", new MoveSpindexer(mSpindexer, .5));
 
                 SmartDashboard.putData("Reset Odometry", mDrivetrain.ResetOdometry());
-                SmartDashboard.putData("Reset Odometry to Red Inner Cone",
-                        new InstantCommand(() -> mDrivetrain
-                                .resetOdometryToPose(new Pose2d(1.89, 3.0307, Rotation2d.fromDegrees(0.0)))));
+                // SmartDashboard.putData("Reset Odometry to Red Inner Cone",
+                // new InstantCommand(() -> mDrivetrain
+                // .resetOdometryToPose(new Pose2d(1.89, 3.0307,
+                // Rotation2d.fromDegrees(0.0)))));
                 SmartDashboard.putData("0 Wheels", new SetSwerveAngle(mDrivetrain, 0, 0, 0, 0));
 
                 SmartDashboard.putData("Home Intake", new RehomeIntakeDeploy(mIntakeDeploy));
@@ -359,18 +360,20 @@ public class RobotContainer {
                 SmartDashboard.putData("Intake to Home",
                                 new SetIntakeDeployState(mIntakeDeploy, IntakeDeployState.Homed));
 
-                SmartDashboard.putData("Test Path Planner Path",
-                                new FollowTrajectoryCommand(mDrivetrain, mDrivetrain.testPath, true));
+                // SmartDashboard.putData("Test Path Planner Path",
+                // new FollowTrajectoryCommand(mDrivetrain, mDrivetrain.testPath, true));
 
-                SmartDashboard.putData("Deploy Butterfly Wheels", new DeployButterflyWheels(mButterflyWheels));
-                SmartDashboard.putData("Test Path Planner Path",
-                                new FollowTrajectoryCommand(mDrivetrain, mDrivetrain.testPath, true));
+                // SmartDashboard.putData("Deploy Butterfly Wheels", new
+                // DeployButterflyWheels(mButterflyWheels));
+                // SmartDashboard.putData("Test Path Planner Path",
+                // new FollowTrajectoryCommand(mDrivetrain, mDrivetrain.testPath, true));
 
-                SmartDashboard.putNumber("ElevTestMoveHeight", 20.0);
-                SmartDashboard.putNumber("ArmTestMoveAngle", 150);
-                SmartDashboard.putData("TestSafeDumbPath", new TestTowerSafeMove(mElevator, mArm));
+                // SmartDashboard.putNumber("ElevTestMoveHeight", 20.0);
+                // SmartDashboard.putNumber("ArmTestMoveAngle", 150);
+                // SmartDashboard.putData("TestSafeDumbPath", new TestTowerSafeMove(mElevator,
+                // mArm));
 
-                SmartDashboard.putData("TestAutoBalance", new BalanceRobot(mDrivetrain));
+                // SmartDashboard.putData("TestAutoBalance", new BalanceRobot(mDrivetrain));
         }
 
         public void addSubsystemsToDashboard() {
@@ -477,7 +480,15 @@ public class RobotContainer {
                         mRobotState.endgameMode == RobotState.EndgameModeState.InEndgame);
         }
 
-        public void addMatchStartChecksToDashboard() {
+        public void updateMatchStartChecksToDashboard() {
+            SmartDashboard.putString("Confirmed Auto Start Position",
+                    getAutoStartPosition().description);
+            if (autoStartCompatible()) {
+                SmartDashboard.putString("Confirmed Auto Sequence", getAutoSequence().description);
+            } else {
+                SmartDashboard.putString("Confirmed Auto Sequence", "INVALID SEQUENCE FOR THIS START POSN");
+            }
+            SmartDashboard.putString("Confirmed Auto Preload Score", getAutoPreloadScore().description);
             SmartDashboard.putBoolean("Valid Auto Sequence?", autoStartCompatible());
             SmartDashboard.putBoolean("Elevator Encoder Good?", Math.abs(mElevator.getElevatorInches()) <= 0.2);
             SmartDashboard.putBoolean("Arm Encoders Match?", Math.abs(mArm.getArmCANCoderPositionCorrected() - mArm.getArmMotorPositionDeg()) <= 1.0);

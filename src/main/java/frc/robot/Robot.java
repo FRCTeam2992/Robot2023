@@ -109,14 +109,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
-    // Confirm display selected auto status
-    SmartDashboard.putString("Confirmed Auto Start Position", mRobotContainer.getAutoStartPosition().description);
-    if (mRobotContainer.autoStartCompatible()) {
-      SmartDashboard.putString("Confirmed Auto Sequence", mRobotContainer.getAutoSequence().description);
-    } else {
-      SmartDashboard.putString("Confirmed Auto Sequence", "INVALID SEQUENCE FOR THIS START POSN");
-    }
-    SmartDashboard.putString("Confirmed Auto Preload Score", mRobotContainer.getAutoPreloadScore().description);
+      // Update prematch auto selector and robot setup checks
+      mRobotContainer.updateMatchStartChecksToDashboard();
 
   }
 

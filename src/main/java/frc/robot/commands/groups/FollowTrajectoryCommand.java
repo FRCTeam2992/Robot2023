@@ -42,11 +42,7 @@ public class FollowTrajectoryCommand extends SequentialCommandGroup {
                    startPose.getRotation().times(-1));
             }
             mDrivetrain.resetOdometryToPose(startPose);
-            System.out.println("DEBUG LOG: First path! Pose reset!");
-            SmartDashboard.putNumber("POST RESET: Odom X", mDrivetrain.getLatestSwervePose().getTranslation().getX());
-            SmartDashboard.putNumber("POST RESET: Odom Y", mDrivetrain.getLatestSwervePose().getTranslation().getY());
-            SmartDashboard.putNumber("POST RESET: Odom Rot",
-                mDrivetrain.getLatestSwervePose().getRotation().getDegrees());
+                    System.out.println("DEBUG LOG: First path! Pose reset!");
           }
         }),
         new InstantCommand(() -> {
