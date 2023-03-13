@@ -160,8 +160,8 @@ public class RobotContainer {
 
                 // Add dashboard things
                 addSubsystemsToDashboard();
-
                 addRobotStateToDashboard();
+                addMatchStartChecksToDashboard();
 
                 // Configure the trigger bindings
                 configureShuffleboardBindings();
@@ -475,6 +475,12 @@ public class RobotContainer {
 
                 SmartDashboard.putBoolean("Endgame Mode",
                         mRobotState.endgameMode == RobotState.EndgameModeState.InEndgame);
+        }
+
+        public void addMatchStartChecksToDashboard() {
+            SmartDashboard.putBoolean("Valid Auto Sequence?", autoStartCompatible());
+            SmartDashboard.putBoolean("Elevator Encoder Good?", Math.abs(mElevator.getElevatorInches()) <= 0.2);
+            SmartDashboard.putBoolean("Arm Encoders Match?", Math.abs(mArm.getArmCANCoderPositionCorrected() - mArm.getArmMotorPositionDeg()) <= 1.0);
         }
 
         private void setupAutoSelector() {
