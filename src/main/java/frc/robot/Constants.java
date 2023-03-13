@@ -21,7 +21,7 @@ import frc.lib.manipulator.Waypoint;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-  public static final boolean dataLogging = true;
+    public static final boolean dataLogging = false;
 
   public static class LEDColors {
     public static final Color purple = new Color(210, 75, 230);
