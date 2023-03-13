@@ -137,7 +137,7 @@ public class Robot extends TimedRobot {
     // Arm make sure encoders are current
     mRobotContainer.mArm.initArmMotorEncoder(); // Reset each time we enter Teleop or Auto
 
-    m_autonomousCommand = mRobotContainer.buildAutoCommand();
+    m_autonomousCommand = mRobotContainer.mAutoBuilder.buildAutoCommand();
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
