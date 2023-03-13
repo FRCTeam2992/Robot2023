@@ -536,9 +536,10 @@ public class RobotContainer {
 
         private Command setupAutoInitialScoreCommand(PathPlannerTrajectory initialScorePath) {
             Command initialScoreCommand;
+            Pose2d startingPose = getAutoStartPosition().getStartPose();
             switch (getAutoPreloadScore()) {
                 case No_Preload:
-                    initialScoreCommand = new InstantCommand();
+                    initialScoreCommand = new InstantCommand(() -> mDrivetrain.resetOdometryToPose(startingPose));
                     break;
                 case Hi_Cone:
                     initialScoreCommand = new SetIntakeDeployState(mIntakeDeploy, IntakeDeployState.Normal)
@@ -555,7 +556,7 @@ public class RobotContainer {
                             .andThen(new WaitCommand(0.8));
                     break;
                 default:
-                    initialScoreCommand = new InstantCommand();
+                initialScoreCommand = new InstantCommand(() -> mDrivetrain.resetOdometryToPose(startingPose));
             }
             return initialScoreCommand;
         }
@@ -649,11 +650,8 @@ public class RobotContainer {
                     afterInitialScoreCommand = autoPathCommand;
                 }
 
-                //
                 if (startingPose != null && initialScoreCommand != null) {
-                    return new InstantCommand(() -> mDrivetrain.resetOdometryToPose(startingPose))
-                            .andThen(initialScoreCommand)
-                            .andThen(afterInitialScoreCommand);
+                    return initialScoreCommand.andThen(afterInitialScoreCommand);
                 }
             }
             return new InstantCommand();
