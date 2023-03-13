@@ -42,13 +42,15 @@ public class FollowTrajectoryCommand extends SequentialCommandGroup {
                    startPose.getRotation().times(-1));
             }
             mDrivetrain.resetOdometryToPose(startPose);
-                    System.out.println("DEBUG LOG: First path! Pose reset!");
+                    // System.out.println("DEBUG LOG: First path! Pose reset!");
           }
         }),
-        new InstantCommand(() -> {
-          System.out.println("DEBUG LOG: initial holonomic pose = " + traj.getInitialHolonomicPose());
-          System.out.println("DEBUG LOG: initial gyro yaw (adj) = " + mDrivetrain.getGyroYaw());
-        }),
+            // new InstantCommand(() -> {
+            // System.out.println("DEBUG LOG: initial holonomic pose = " +
+            // traj.getInitialHolonomicPose());
+            // System.out.println("DEBUG LOG: initial gyro yaw (adj) = " +
+            // mDrivetrain.getGyroYaw());
+            // }),
         new PPSwerveControllerCommand(
             traj,
             mDrivetrain.swerveDrivePoseEstimator::getEstimatedPosition, // Pose supplier
@@ -62,10 +64,7 @@ public class FollowTrajectoryCommand extends SequentialCommandGroup {
             true, // Should the path be automatically mirrored depending on alliance color.
                   // Optional, defaults to true
             mDrivetrain // Requires this drive subsystem
-        ),
-        new InstantCommand(() -> {
-          System.out.println("DEBUG LOG: completed holonomic pose = " + mDrivetrain.getLatestSwervePose());
-          System.out.println("DEBUG LOG: completed gyro yaw (adj) = " + mDrivetrain.getGyroYaw());
-        }));
+            ));
+
   }
 }

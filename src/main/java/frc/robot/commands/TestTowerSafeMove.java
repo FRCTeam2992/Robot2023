@@ -32,7 +32,7 @@ public class TestTowerSafeMove extends CommandBase {
 
     height = SmartDashboard.getNumber("ElevTestMoveHeight", 10);
     angle = SmartDashboard.getNumber("ArmTestMoveAngle", 100);
-    System.out.println("TowerSafeMove running to " + height + "," + angle);
+    // System.out.println("TowerSafeMove running to " + height + "," + angle);
 
     CommandScheduler.getInstance().schedule(new SafeDumbTowerToPosition(mElevator, mArm,
         new Waypoint(height, angle)));
