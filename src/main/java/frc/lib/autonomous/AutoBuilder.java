@@ -134,7 +134,7 @@ public class AutoBuilder {
         return initialScoreCommand;
     }
 
-    private Command getAutoPathFollowCommand(boolean isFirstPath) {
+    private Command setupAutoPathFollowCommand(boolean isFirstPath) {
         PathPlannerTrajectory path = null;
         Command followCommand = new InstantCommand();
         switch (getAutoSequence()) {
@@ -205,7 +205,7 @@ public class AutoBuilder {
             // Starting position is compatible, so setup the path following command,
             // then build a parallel group to move from scoring position while driving
             if (getAutoPreloadScore() != AutoPreloadScore.No_Preload) {
-                autoPathCommand = getAutoPathFollowCommand(false);
+                autoPathCommand = setupAutoPathFollowCommand(false);
                 afterInitialScoreCommand = new SafeDumbTowerToPosition(mElevator, mArm, TowerConstants.intakeBackstop)
                         .alongWith(new DeployElevator(mElevator, ElevatorState.Undeployed))
                         .alongWith(new SetClawState(mClaw, ClawState.Closed))
@@ -215,7 +215,7 @@ public class AutoBuilder {
                 // reset is needed, and we can just follow the path directly.
                 // The path will be our first path, since no initial path is needed if
                 // we don't score a preload.
-                autoPathCommand = getAutoPathFollowCommand(true);
+                autoPathCommand = setupAutoPathFollowCommand(true);
                 afterInitialScoreCommand = autoPathCommand;
             }
 
