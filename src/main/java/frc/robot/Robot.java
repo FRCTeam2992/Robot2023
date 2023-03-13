@@ -57,8 +57,8 @@ public class Robot extends TimedRobot {
 
     mRobotContainer.setLEDsColor(Constants.LEDColors.blue);
 
-    // DataLogManager.start();
-    // DriverStation.startDataLog(DataLogManager.getLog());
+    DataLogManager.start();
+    DriverStation.startDataLog(DataLogManager.getLog());
 
     // PWM port 0
     // Must be a PWM header, not MXP or DIO
