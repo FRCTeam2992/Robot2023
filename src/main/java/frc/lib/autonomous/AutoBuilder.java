@@ -110,6 +110,8 @@ public class AutoBuilder {
         autoSequenceChooser.addOption(AutoSequence.SideMobilityOnly.description, AutoSequence.SideMobilityOnly);
         autoSequenceChooser.addOption(AutoSequence.SideMobilityBalance.description,
                 AutoSequence.SideMobilityBalance);
+        autoSequenceChooser.addOption(AutoSequence.SideMobilityIntake.description, AutoSequence.SideMobilityIntake);
+        autoSequenceChooser.addOption(AutoSequence.Side2Scores.description, AutoSequence.Side2Scores);
         autoSequenceChooser.addOption(AutoSequence.CenterBalance.description, AutoSequence.CenterBalance);
 
         SmartDashboard.putData("Auto Sequence", autoSequenceChooser);
