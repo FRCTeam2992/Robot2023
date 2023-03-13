@@ -27,7 +27,7 @@ public enum AutoStartPosition {
             new Pose2d(ScoringGridConstants.autoStartXCoordMeters,
                     ScoringGridConstants.Blue.grid7CenterYMeters + ScoringGridConstants.conePoleOffsetYMeters,
                     Rotation2d.fromDegrees(0.0)),
-            PathPlanner.loadPath("CenterWallSideInitialMove", new PathConstraints(.4, .4))),
+            PathPlanner.loadPath("CenterLoadStationSideInitialMove", new PathConstraints(.4, .4))),
     WallEnd("Wall End",
             new Pose2d(ScoringGridConstants.autoStartXCoordMeters,
                     ScoringGridConstants.Red.grid1CenterYMeters + ScoringGridConstants.conePoleOffsetYMeters,
