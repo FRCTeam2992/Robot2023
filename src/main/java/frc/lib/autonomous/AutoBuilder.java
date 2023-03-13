@@ -4,8 +4,7 @@
 
 package frc.lib.autonomous;
 
-import java.util.Map;
-
+import java.util.HashMap;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.commands.FollowPathWithEvents;
 
@@ -52,6 +51,8 @@ public class AutoBuilder {
     private SendableChooser<AutoSequence> autoSequenceChooser;
     private SendableChooser<AutoPreloadScore> autoPreloadScoreChooser;
 
+    private HashMap<String, Command> eventMap = new HashMap<>();
+
     public AutoBuilder(RobotState robotState, Drivetrain drivetrain, Elevator elevator,
             Arm arm, Claw claw, Intake intake, IntakeDeploy intakeDeploy, Spindexer spindexer) {
         mRobotState = robotState;
@@ -62,6 +63,25 @@ public class AutoBuilder {
         mIntake = intake;
         mIntakeDeploy = intakeDeploy;
         mSpindexer = spindexer;
+
+        eventMap.put("StartIntakeCube", new AutoGroundIntakeCube(mElevator, mArm, mClaw, mIntake,
+                mIntakeDeploy, mSpindexer));
+        eventMap.put("EndIntake", new MoveIntake(mIntake, .5, .5).withTimeout(2.0)
+                .alongWith(new SetIntakeDeployState(mIntakeDeploy, IntakeDeployState.Normal)));
+        eventMap.put("Balance", new BalanceRobot(mDrivetrain)
+                .andThen(mDrivetrain.XWheels()));
+        eventMap.put("ReadyHighConeScore", new SetIntakeDeployState(mIntakeDeploy, IntakeDeployState.Normal)
+                .withTimeout(0.1)
+                .alongWith(new SafeDumbTowerToPosition(mElevator, mArm,
+                        GridTargetingPosition.HighRight.towerWaypoint))
+                .alongWith(new DeployElevator(mElevator, ElevatorState.Deployed)));
+        eventMap.put("ReadyHighCubeScore", (new SetIntakeDeployState(mIntakeDeploy, IntakeDeployState.Normal)
+                .withTimeout(0.5).andThen(new SetIntakeDeployState(mIntakeDeploy, IntakeDeployState.Homed)))
+                .alongWith(new SafeDumbTowerToPosition(mElevator, mArm,
+                        GridTargetingPosition.HighCenter.towerWaypoint))
+                .alongWith(new DeployElevator(mElevator, ElevatorState.Deployed)));
+        eventMap.put("OpenClaw", (new WaitCommand(0.8)
+                .andThen(new SetClawState(mClaw, ClawState.Opened))));
     }
 
     public void setupAutoSelector() {
@@ -163,8 +183,7 @@ public class AutoBuilder {
                 break;
             case SideMobilityIntake:
                 if (getAutoStartPosition() == AutoStartPosition.LoadStationEnd) {
-                    // TODO: Add LoadStationMobilityIntake trajectory
-                    path = AutonomousTrajectory.LoadStationMobility.trajectory;
+                    path = AutonomousTrajectory.LoadStationMobilityIntake.trajectory;
                 } else if (getAutoStartPosition() == AutoStartPosition.WallEnd) {
                     path = AutonomousTrajectory.WallMobilityIntake.trajectory;
                 }
@@ -172,13 +191,22 @@ public class AutoBuilder {
                     followCommand = new FollowPathWithEvents(
                             new FollowTrajectoryCommand(mDrivetrain, path, isFirstPath),
                             path.getMarkers(),
-                            Map.ofEntries(
-                                    Map.entry(
-                                            "StartIntakeCube",
-                                            new AutoGroundIntakeCube(mElevator, mArm, mClaw, mIntake, mIntakeDeploy,
-                                                    mSpindexer))));
-                    followCommand = followCommand.andThen(new MoveIntake(mIntake, .5, .5).withTimeout(2.0)
-                            .alongWith(new SetIntakeDeployState(mIntakeDeploy, IntakeDeployState.Normal)));
+                            eventMap);
+                    followCommand = followCommand.andThen(eventMap.getOrDefault("EndIntake", new InstantCommand()));
+                }
+                break;
+            case Side2Scores:
+                if (getAutoStartPosition() == AutoStartPosition.LoadStationEnd) {
+                    path = AutonomousTrajectory.LoadStation2Scores.trajectory;
+                } else if (getAutoStartPosition() == AutoStartPosition.WallEnd) {
+                    path = AutonomousTrajectory.Wall2Scores.trajectory;
+                }
+                if (path != null) {
+                    followCommand = new FollowPathWithEvents(
+                            new FollowTrajectoryCommand(mDrivetrain, path, isFirstPath),
+                            path.getMarkers(),
+                            eventMap);
+                    followCommand = followCommand.andThen(eventMap.getOrDefault("OpenClaw", new InstantCommand()));
                 }
                 break;
             case SideMobilityBalance:
@@ -189,8 +217,7 @@ public class AutoBuilder {
                 }
                 if (path != null) {
                     followCommand = new FollowTrajectoryCommand(mDrivetrain, path, isFirstPath)
-                            .andThen(new BalanceRobot(mDrivetrain))
-                            .andThen(mDrivetrain.XWheels());
+                            .andThen(eventMap.getOrDefault("Balance", new InstantCommand()));
                 }
                 break;
             case CenterBalance:
@@ -201,8 +228,7 @@ public class AutoBuilder {
                 }
                 if (path != null) {
                     followCommand = new FollowTrajectoryCommand(mDrivetrain, path, isFirstPath)
-                            .andThen(new BalanceRobot(mDrivetrain))
-                            .andThen(mDrivetrain.XWheels());
+                            .andThen(eventMap.getOrDefault("Balance", new InstantCommand()));
                 }
                 break;
             default:
