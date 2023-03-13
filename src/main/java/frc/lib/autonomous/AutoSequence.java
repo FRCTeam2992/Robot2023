@@ -15,6 +15,9 @@ public enum AutoSequence {
     SideMobilityBalance("Side Mobility + Balance",
             AutoStartPosition.LoadStationEnd,
             AutoStartPosition.WallEnd),
+    SideMobilityIntake("Side Mobility + Grab Cube",
+            AutoStartPosition.LoadStationEnd,
+            AutoStartPosition.WallEnd),
     CenterBalance("Center Balance",
             AutoStartPosition.CenterLoadStationSide,
             AutoStartPosition.CenterWallSide);
