@@ -537,6 +537,9 @@ public class RobotContainer {
         private Command setupAutoInitialScoreCommand(PathPlannerTrajectory initialScorePath) {
             Command initialScoreCommand;
             Pose2d startingPose = getAutoStartPosition().getStartPose();
+            if (startingPose == null) {
+                return new InstantCommand();
+            }
             switch (getAutoPreloadScore()) {
                 case No_Preload:
                     initialScoreCommand = new InstantCommand(() -> mDrivetrain.resetOdometryToPose(startingPose));
@@ -561,7 +564,7 @@ public class RobotContainer {
             return initialScoreCommand;
         }
 
-        private Command getAutoPathFollowCommand() {
+        private Command getAutoPathFollowCommand(boolean isFirstPath) {
             PathPlannerTrajectory path = null;
             Command followCommand = new InstantCommand();
             switch (getAutoSequence()) {
@@ -574,7 +577,7 @@ public class RobotContainer {
                         path = AutonomousTrajectory.WallMobility.trajectory;
                     }
                     if (path != null) {
-                        followCommand = new FollowTrajectoryCommand(mDrivetrain, path, false);
+                        followCommand = new FollowTrajectoryCommand(mDrivetrain, path, isFirstPath);
                     }
                     break;
                 case SideMobilityBalance:
@@ -584,7 +587,7 @@ public class RobotContainer {
                         path = AutonomousTrajectory.WallMobilityBalance.trajectory;
                     }
                     if (path != null) {
-                        followCommand = new FollowTrajectoryCommand(mDrivetrain, path, false)
+                        followCommand = new FollowTrajectoryCommand(mDrivetrain, path, isFirstPath)
                                 .andThen(new BalanceRobot(mDrivetrain))
                                 .andThen(mDrivetrain.XWheels());
                     }
@@ -596,7 +599,7 @@ public class RobotContainer {
                         path = AutonomousTrajectory.CenterBalanceWallSide.trajectory;
                     }
                     if (path != null) {
-                        followCommand = new FollowTrajectoryCommand(mDrivetrain, path, false)
+                        followCommand = new FollowTrajectoryCommand(mDrivetrain, path, isFirstPath)
                                 .andThen(new BalanceRobot(mDrivetrain))
                                 .andThen(mDrivetrain.XWheels());
                     }
@@ -607,44 +610,52 @@ public class RobotContainer {
         }
         
         public Command buildAutoCommand() {
-            Pose2d startingPose;
             PathPlannerTrajectory initialScorepath;
             Command autoPathCommand = null;
             Command initialScoreCommand = null;
             Command afterInitialScoreCommand = null;
 
+            // Ensure Limelight odometry is turned off to prevent
+            // overcorrection upon AprilTag sightings during
+            // autonomous sequences
+            // (This should already be off as it is set in
+            // autonomousInit, but this is a failsafe.)
             mRobotState.useLimelightOdometryUpdates = false;
 
+            // Setup the initial preload scoring path and command sequence
+            initialScorepath = getAutoStartPosition().getInitialTrajectory();
+            initialScoreCommand = setupAutoInitialScoreCommand(initialScorepath);            
+
             if (!autoStartCompatible()) {
-                // We have incompatible starting position for sequence. Do NOTHING!
-                return new InstantCommand();
+                // We have incompatible starting position for sequence.
+                // Run only the initial score command, which in the case of
+                // No_Preload, just resets odometry and stops.
+                return initialScoreCommand;
             } else {
-                // Record the proper starting pose
-                startingPose = getAutoStartPosition().getStartPose();
-                initialScorepath = getAutoStartPosition().getInitialTrajectory();
-
-                // Set the preload score command sequence
-                initialScoreCommand = setupAutoInitialScoreCommand(initialScorepath);
-
-                // Now setup the path following command
-                autoPathCommand = getAutoPathFollowCommand();
-
-                // Build parallel group to move from scoring position while driving
+                // Starting position is compatible, so setup the path following command,
+                // then build a parallel group to move from scoring position while driving
                 if (getAutoPreloadScore() != AutoPreloadScore.No_Preload) {
-                    afterInitialScoreCommand = new SafeDumbTowerToPosition(mElevator, mArm,
-                            TowerConstants.intakeBackstop)
+                    autoPathCommand = getAutoPathFollowCommand(false);
+                    afterInitialScoreCommand = 
+                        new SafeDumbTowerToPosition(mElevator, mArm, TowerConstants.intakeBackstop)
                             .alongWith(new DeployElevator(mElevator, ElevatorState.Undeployed))
                             .alongWith(new SetClawState(mClaw, ClawState.Closed))
                             .alongWith(autoPathCommand);
                 } else {
+                    // In the case of No_Preload, we didn't score, so no arm/elevator/claw
+                    // reset is needed, and we can just follow the path directly.
+                    // The path will be our first path, since no initial path is needed if
+                    // we don't score a preload.
+                    autoPathCommand = getAutoPathFollowCommand(true);
                     afterInitialScoreCommand = autoPathCommand;
                 }
 
-                if (startingPose != null && initialScoreCommand != null) {
-                    return initialScoreCommand.andThen(afterInitialScoreCommand);
-                }
+                // If we've completed the above, we should always have a Command object for
+                // both initialScoreCommand and afterInitialScoreCommand (either or both of
+                // which may be just a dummy InstantCommand that does nothing), so we can now
+                // return a sequence of those Commands.
+                return initialScoreCommand.andThen(afterInitialScoreCommand);
             }
-            return new InstantCommand();
         }
 
         public CommandXboxController getController0() {
