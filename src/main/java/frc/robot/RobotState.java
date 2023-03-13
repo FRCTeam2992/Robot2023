@@ -20,6 +20,8 @@ import frc.lib.manipulator.Waypoint;
  * constants are needed, to reduce verbosity.
  */
 public class RobotState {
+    public boolean useLimelightOdometryUpdates = false;
+
     public enum EndgameModeState {
         InEndgame,
         NotInEndgame
@@ -114,4 +116,8 @@ public class RobotState {
 
     public TargetingGrid currentTargetedGrid = TargetingGrid.GridDriverLeft;
     public GridTargetingPosition currentTargetPosition = GridTargetingPosition.MidCenter;
+
+    public void setTargetPosition(GridTargetingPosition position) {
+        currentTargetPosition = position;
+    }
 }

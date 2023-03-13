@@ -4,8 +4,16 @@
 
 package frc.robot;
 
+
+import frc.lib.autonomous.AutoPreloadScore;
+import frc.lib.autonomous.AutoSequence;
+import frc.lib.autonomous.AutoStartPosition;
+import frc.lib.autonomous.AutonomousTrajectory;
 import frc.lib.leds.Color;
+
 import frc.robot.Constants.TowerConstants;
+import frc.robot.RobotState.GridTargetingPosition;
+import frc.robot.commands.BalanceRobot;
 import frc.robot.commands.DeployButterflyWheels;
 import frc.robot.commands.DeployElevator;
 import frc.robot.commands.DriveSticks;
@@ -51,14 +59,23 @@ import frc.robot.subsystems.Spindexer;
 import frc.robot.subsystems.Claw.ClawState;
 import frc.robot.subsystems.Elevator.ElevatorState;
 import frc.robot.subsystems.IntakeDeploy.IntakeDeployState;
+
+import com.pathplanner.lib.PathPlannerTrajectory;
+
 import edu.wpi.first.math.geometry.Pose2d;
+
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -91,8 +108,13 @@ public class RobotContainer {
 
         public final ButterflyWheels mButterflyWheels;
 
+        private SendableChooser<AutoStartPosition> autoStartChooser;
+        private SendableChooser<AutoSequence> autoSequenceChooser;
+        private SendableChooser<AutoPreloadScore> autoPreloadScoreChooser;
+        
         public AddressableLED m_led;
         public AddressableLEDBuffer m_ledBuffer;
+
 
         /**
          * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -101,7 +123,7 @@ public class RobotContainer {
 
                 mRobotState = new RobotState();
 
-                mDrivetrain = new Drivetrain();
+                mDrivetrain = new Drivetrain(mRobotState);
                 mDrivetrain.setDefaultCommand(new DriveSticks(mDrivetrain, mRobotState));
 
                 mIntake = new Intake();
@@ -111,7 +133,7 @@ public class RobotContainer {
                 mSpindexer.setDefaultCommand(new StopSpindexer(mSpindexer));
 
                 mIntakeDeploy = new IntakeDeploy();
-                mIntakeDeploy.setDefaultCommand(new StopIntakeDeploy(mIntakeDeploy));
+                // mIntakeDeploy.setDefaultCommand(new StopIntakeDeploy(mIntakeDeploy));
 
                 mElevator = new Elevator();
                 mElevator.setDefaultCommand(new HoldElevator(mElevator));
@@ -136,10 +158,13 @@ public class RobotContainer {
                 m_led.setData(m_ledBuffer);
                 m_led.start();
 
+                // Setup the Auto Selectors
+                setupAutoSelector();
+
                 // Add dashboard things
                 addSubsystemsToDashboard();
-
                 addRobotStateToDashboard();
+                updateMatchStartChecksToDashboard();
 
                 // Configure the trigger bindings
                 configureShuffleboardBindings();
@@ -185,7 +210,7 @@ public class RobotContainer {
                 controller0.y().onTrue(
                                 new AutoGroundIntakeCone(mElevator, mArm, mClaw, mIntake, mIntakeDeploy, mSpindexer));// cone
                 // D-Pad
-                controller0.povLeft().whileTrue(new SetSwerveAngle(mDrivetrain, 45, -45, -45, 45));// X the wheels
+                controller0.povLeft().whileTrue(mDrivetrain.XWheels());// X the wheels
 
                 controller0.povRight().onTrue(new RehomeIntakeDeploy(mIntakeDeploy));
 
@@ -316,12 +341,13 @@ public class RobotContainer {
                 SmartDashboard.putData("Move Elevator Up", new MoveElevator(mElevator, 0.1));
                 SmartDashboard.putData("Zero Elevator Encoder", new ZeroElevatorEncoders(mElevator));
 
-                SmartDashboard.putData("Spin Intake", new MoveSpindexer(mSpindexer, .5));
+                SmartDashboard.putData("Spin Spindexer", new MoveSpindexer(mSpindexer, .5));
 
                 SmartDashboard.putData("Reset Odometry", mDrivetrain.ResetOdometry());
-                SmartDashboard.putData("Reset Odometry to Red Inner Cone",
-                        new InstantCommand(() -> mDrivetrain
-                                .resetOdometryToPose(new Pose2d(1.89, 3.0307, Rotation2d.fromDegrees(0.0)))));
+                // SmartDashboard.putData("Reset Odometry to Red Inner Cone",
+                // new InstantCommand(() -> mDrivetrain
+                // .resetOdometryToPose(new Pose2d(1.89, 3.0307,
+                // Rotation2d.fromDegrees(0.0)))));
                 SmartDashboard.putData("0 Wheels", new SetSwerveAngle(mDrivetrain, 0, 0, 0, 0));
 
                 SmartDashboard.putData("Home Intake", new RehomeIntakeDeploy(mIntakeDeploy));
@@ -334,17 +360,20 @@ public class RobotContainer {
                 SmartDashboard.putData("Intake to Home",
                                 new SetIntakeDeployState(mIntakeDeploy, IntakeDeployState.Homed));
 
-                SmartDashboard.putData("Test Path Planner Path",
-                                new FollowTrajectoryCommand(mDrivetrain, mDrivetrain.testPath, true));
+                // SmartDashboard.putData("Test Path Planner Path",
+                // new FollowTrajectoryCommand(mDrivetrain, mDrivetrain.testPath, true));
 
-                SmartDashboard.putData("Deploy Butterfly Wheels", new DeployButterflyWheels(mButterflyWheels));
-                SmartDashboard.putData("Test Path Planner Path",
-                                new FollowTrajectoryCommand(mDrivetrain, mDrivetrain.testPath, true));
+                // SmartDashboard.putData("Deploy Butterfly Wheels", new
+                // DeployButterflyWheels(mButterflyWheels));
+                // SmartDashboard.putData("Test Path Planner Path",
+                // new FollowTrajectoryCommand(mDrivetrain, mDrivetrain.testPath, true));
 
-                SmartDashboard.putNumber("ElevTestMoveHeight", 20.0);
-                SmartDashboard.putNumber("ArmTestMoveAngle", 150);
-                SmartDashboard.putData("TestSafeDumbPath", new TestTowerSafeMove(mElevator, mArm));
+                // SmartDashboard.putNumber("ElevTestMoveHeight", 20.0);
+                // SmartDashboard.putNumber("ArmTestMoveAngle", 150);
+                // SmartDashboard.putData("TestSafeDumbPath", new TestTowerSafeMove(mElevator,
+                // mArm));
 
+                // SmartDashboard.putData("TestAutoBalance", new BalanceRobot(mDrivetrain));
         }
 
         public void addSubsystemsToDashboard() {
@@ -451,16 +480,194 @@ public class RobotContainer {
                         mRobotState.endgameMode == RobotState.EndgameModeState.InEndgame);
         }
 
+        public void updateMatchStartChecksToDashboard() {
+            SmartDashboard.putString("Confirmed Auto Start Position",
+                    getAutoStartPosition().description);
+            if (autoStartCompatible()) {
+                SmartDashboard.putString("Confirmed Auto Sequence", getAutoSequence().description);
+            } else {
+                SmartDashboard.putString("Confirmed Auto Sequence", "INVALID SEQUENCE FOR THIS START POSN");
+            }
+            SmartDashboard.putString("Confirmed Auto Preload Score", getAutoPreloadScore().description);
+            SmartDashboard.putBoolean("Valid Auto Sequence?", autoStartCompatible());
+            SmartDashboard.putBoolean("Elevator Encoder Good?", Math.abs(mElevator.getElevatorInches()) <= 0.2);
+            SmartDashboard.putBoolean("Arm Encoders Match?", Math.abs(mArm.getArmCANCoderPositionCorrected() - mArm.getArmMotorPositionDeg()) <= 1.0);
+        }
 
-        /**
-         * Use this to pass the autonomous command to the main {@link Robot} class.
-         *
-         * @return the command to run in autonomous
-         */
-        // public Command getAutonomousCommand() {
-        // // An example command will be run in autonomous
-        // return Autos.exampleAuto(m_exampleSubsystem);
-        // }
+        private void setupAutoSelector() {
+            // Setup choosers for start position
+            autoStartChooser = new SendableChooser<>();
+            autoStartChooser.addOption(AutoStartPosition.LoadStationEnd.description,
+                    AutoStartPosition.LoadStationEnd);
+            autoStartChooser.addOption(AutoStartPosition.CenterLoadStationSide.description,
+                    AutoStartPosition.CenterLoadStationSide);
+            autoStartChooser.addOption(AutoStartPosition.CenterWallSide.description, AutoStartPosition.CenterWallSide);
+            autoStartChooser.setDefaultOption(AutoStartPosition.WallEnd.description,
+                    AutoStartPosition.WallEnd);
+
+            SmartDashboard.putData("Auto Start Position", autoStartChooser);
+
+            // Setup chooser for preload scoring
+            autoPreloadScoreChooser = new SendableChooser<>();
+            autoPreloadScoreChooser.addOption(AutoPreloadScore.No_Preload.description, AutoPreloadScore.No_Preload);
+            autoPreloadScoreChooser.setDefaultOption(AutoPreloadScore.Hi_Cone.description, AutoPreloadScore.Hi_Cone);
+
+            SmartDashboard.putData("Preload Score?", autoPreloadScoreChooser);
+
+            // Setup chooser for auto sequence
+            autoSequenceChooser = new SendableChooser<>();
+            autoSequenceChooser.setDefaultOption(AutoSequence.Do_Nothing.description, AutoSequence.Do_Nothing);
+            autoSequenceChooser.addOption(AutoSequence.SideMobilityOnly.description, AutoSequence.SideMobilityOnly);
+            autoSequenceChooser.addOption(AutoSequence.SideMobilityBalance.description,
+                    AutoSequence.SideMobilityBalance);
+            autoSequenceChooser.addOption(AutoSequence.CenterBalance.description, AutoSequence.CenterBalance);
+
+            SmartDashboard.putData("Auto Sequence", autoSequenceChooser);
+
+        }
+
+        public AutoStartPosition getAutoStartPosition() {
+            return autoStartChooser.getSelected();
+        }
+
+        public AutoPreloadScore getAutoPreloadScore() {
+            return autoPreloadScoreChooser.getSelected();
+        }
+
+        public AutoSequence getAutoSequence() {
+            return autoSequenceChooser.getSelected();
+        }
+
+        public boolean autoStartCompatible() {
+            // Returns true if the Auto Start Position is valid for the current selected
+            // sequence
+            return autoSequenceChooser.getSelected().allowedStartPositions.contains(
+                    autoStartChooser.getSelected());
+        }
+
+        private Command setupAutoInitialScoreCommand(PathPlannerTrajectory initialScorePath) {
+            Command initialScoreCommand;
+            Pose2d startingPose = getAutoStartPosition().getStartPose();
+            if (startingPose == null) {
+                return new InstantCommand();
+            }
+            switch (getAutoPreloadScore()) {
+                case No_Preload:
+                    initialScoreCommand = new InstantCommand(() -> mDrivetrain.resetOdometryToPose(startingPose));
+                    break;
+                case Hi_Cone:
+                    initialScoreCommand = new SetIntakeDeployState(mIntakeDeploy, IntakeDeployState.Normal)
+                            .withTimeout(0.1)
+                            .alongWith(new SafeDumbTowerToPosition(mElevator, mArm,
+                                    GridTargetingPosition.HighRight.towerWaypoint))
+                            .alongWith(new DeployElevator(mElevator, ElevatorState.Deployed))
+                            .alongWith(new WaitCommand(1.5)
+                                    .andThen(new FollowTrajectoryCommand(mDrivetrain, initialScorePath, true)));
+                    // Add Sequential Commands after initial move
+                    initialScoreCommand = initialScoreCommand
+                            .andThen(new WaitCommand(0.8))
+                            .andThen(new SetClawState(mClaw, ClawState.Opened))
+                            .andThen(new WaitCommand(0.8));
+                    break;
+                default:
+                initialScoreCommand = new InstantCommand(() -> mDrivetrain.resetOdometryToPose(startingPose));
+            }
+            return initialScoreCommand;
+        }
+
+        private Command getAutoPathFollowCommand(boolean isFirstPath) {
+            PathPlannerTrajectory path = null;
+            Command followCommand = new InstantCommand();
+            switch (getAutoSequence()) {
+                case Do_Nothing:
+                    break;
+                case SideMobilityOnly:
+                    if (getAutoStartPosition() == AutoStartPosition.LoadStationEnd) {
+                        path = AutonomousTrajectory.LoadStationMobility.trajectory;
+                    } else if (getAutoStartPosition() == AutoStartPosition.WallEnd) {
+                        path = AutonomousTrajectory.WallMobility.trajectory;
+                    }
+                    if (path != null) {
+                        followCommand = new FollowTrajectoryCommand(mDrivetrain, path, isFirstPath);
+                    }
+                    break;
+                case SideMobilityBalance:
+                    if (getAutoStartPosition() == AutoStartPosition.LoadStationEnd) {
+                        path = AutonomousTrajectory.LoadStationMobilityBalance.trajectory;
+                    } else if (getAutoStartPosition() == AutoStartPosition.WallEnd) {
+                        path = AutonomousTrajectory.WallMobilityBalance.trajectory;
+                    }
+                    if (path != null) {
+                        followCommand = new FollowTrajectoryCommand(mDrivetrain, path, isFirstPath)
+                                .andThen(new BalanceRobot(mDrivetrain))
+                                .andThen(mDrivetrain.XWheels());
+                    }
+                    break;
+                case CenterBalance:
+                    if (getAutoStartPosition() == AutoStartPosition.CenterLoadStationSide) {
+                        path = AutonomousTrajectory.CenterBalanceLoadStationSide.trajectory;
+                    } else if (getAutoStartPosition() == AutoStartPosition.CenterWallSide) {
+                        path = AutonomousTrajectory.CenterBalanceWallSide.trajectory;
+                    }
+                    if (path != null) {
+                        followCommand = new FollowTrajectoryCommand(mDrivetrain, path, isFirstPath)
+                                .andThen(new BalanceRobot(mDrivetrain))
+                                .andThen(mDrivetrain.XWheels());
+                    }
+                    break;
+                default:
+            }
+            return followCommand;
+        }
+        
+        public Command buildAutoCommand() {
+            PathPlannerTrajectory initialScorepath;
+            Command autoPathCommand = null;
+            Command initialScoreCommand = null;
+            Command afterInitialScoreCommand = null;
+
+            // Ensure Limelight odometry is turned off to prevent
+            // overcorrection upon AprilTag sightings during
+            // autonomous sequences
+            // (This should already be off as it is set in
+            // autonomousInit, but this is a failsafe.)
+            mRobotState.useLimelightOdometryUpdates = false;
+
+            // Setup the initial preload scoring path and command sequence
+            initialScorepath = getAutoStartPosition().getInitialTrajectory();
+            initialScoreCommand = setupAutoInitialScoreCommand(initialScorepath);            
+
+            if (!autoStartCompatible()) {
+                // We have incompatible starting position for sequence.
+                // Run only the initial score command, which in the case of
+                // No_Preload, just resets odometry and stops.
+                return initialScoreCommand;
+            } else {
+                // Starting position is compatible, so setup the path following command,
+                // then build a parallel group to move from scoring position while driving
+                if (getAutoPreloadScore() != AutoPreloadScore.No_Preload) {
+                    autoPathCommand = getAutoPathFollowCommand(false);
+                    afterInitialScoreCommand = 
+                        new SafeDumbTowerToPosition(mElevator, mArm, TowerConstants.intakeBackstop)
+                            .alongWith(new DeployElevator(mElevator, ElevatorState.Undeployed))
+                            .alongWith(new SetClawState(mClaw, ClawState.Closed))
+                            .alongWith(autoPathCommand);
+                } else {
+                    // In the case of No_Preload, we didn't score, so no arm/elevator/claw
+                    // reset is needed, and we can just follow the path directly.
+                    // The path will be our first path, since no initial path is needed if
+                    // we don't score a preload.
+                    autoPathCommand = getAutoPathFollowCommand(true);
+                    afterInitialScoreCommand = autoPathCommand;
+                }
+
+                // If we've completed the above, we should always have a Command object for
+                // both initialScoreCommand and afterInitialScoreCommand (either or both of
+                // which may be just a dummy InstantCommand that does nothing), so we can now
+                // return a sequence of those Commands.
+                return initialScoreCommand.andThen(afterInitialScoreCommand);
+            }
+        }
 
         public CommandXboxController getController0() {
                 return controller0;
@@ -474,4 +681,5 @@ public class RobotContainer {
 
                 m_led.setData(m_ledBuffer);
         }
+
 }

@@ -21,7 +21,7 @@ import frc.lib.manipulator.Waypoint;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-  public static final boolean dataLogging = true;
+    public static final boolean dataLogging = false;
 
   public static class LEDColors {
     public static final Color purple = new Color(210, 75, 230);
@@ -40,7 +40,7 @@ public final class Constants {
     public static double joystickRotationSmoothFactor = 0.5;
     public static double joystickRotationInverseDeadband = 0.14;
 
-    // Length and Width of the Robot in Meters (Inches: 22.0 x 24.5)
+    // Length and Width of the Robot in Meters (Inches: 28 x 31.5)
     public static final double swerveWidth = 0.578;
     public static final double swerveLength = 0.667;
 
@@ -82,6 +82,12 @@ public final class Constants {
 
     // Gyro P
     public static final double driveGyroP = 0.005;
+
+    // Gyro balancing constants
+    public static final double gyroRollOffset = -1.9; // degrees -- its robot pitch but navx roll
+    public static final double pitchTolerance = 2.0; // degrees -- level if Abs() less than this
+    public static final double pitchDeltaTolerance = 0.05; // degrees/20ms robot cycle
+    public static final double balanceMoveSpeed = 0.3; // m/sec -- how fast to crawl for final balance
 
     // Drive Rotation P
     public static final double driveRotationP = .007;
@@ -198,12 +204,14 @@ public final class Constants {
       public static final double grid7CenterYMeters = 2.748;
       public static final double grid8CenterYMeters = 1.072;
     }
+
+    public static final double autoStartXCoordMeters = 1.89;
   }
 
   public static class TowerConstants {
     public static Waypoint scoreFloor = new Waypoint(0.0, 117.0);
     public static Waypoint scoreConeMid = new Waypoint(0.0, 219.0);
-    public static Waypoint scoreConeHigh = new Waypoint(25, 199.0);
+    public static Waypoint scoreConeHigh = new Waypoint(26.5, 199.0);
     public static Waypoint scoreCubeMid = new Waypoint(0.0, 199.0);
     public static Waypoint scoreCubeHigh = new Waypoint(27.25, 166.0);
     public static Waypoint intakeBackstop = new Waypoint(11.75, 45);

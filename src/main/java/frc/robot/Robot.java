@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.lib.leds.Color;
@@ -108,6 +109,9 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
+      // Update prematch auto selector and robot setup checks
+      mRobotContainer.updateMatchStartChecksToDashboard();
+
   }
 
   /**
@@ -124,11 +128,16 @@ public class Robot extends TimedRobot {
     // Set the Drive Motors Current Limit
     mRobotContainer.mDrivetrain.setDriveCurrentLimit(60.0, 60.0);
 
+    // Zero the gyro
+    mRobotContainer.mDrivetrain.navx.zeroYaw();
+
     // Set the Drive Motors Ramp Rate
     mRobotContainer.mDrivetrain.setDriveRampRate(0.0);
 
     // Arm make sure encoders are current
     mRobotContainer.mArm.initArmMotorEncoder(); // Reset each time we enter Teleop or Auto
+
+    m_autonomousCommand = mRobotContainer.buildAutoCommand();
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
@@ -152,13 +161,14 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
     }
 
-    mRobotContainer.mDrivetrain.navx.zeroYaw();
 
     mRobotContainer.mDrivetrain.setDriveNeutralMode(NeutralMode.Brake);
     mRobotContainer.mDrivetrain.setTurnNeutralMode(NeutralMode.Brake);
 
     mRobotContainer.mDrivetrain.setDriveCurrentLimit(40.0, 40.0);
     mRobotContainer.mDrivetrain.setDriveRampRate(0.25);
+
+    mRobotContainer.mRobotState.useLimelightOdometryUpdates = true;
 
     // Arm make sure encoders are current
     mRobotContainer.mArm.initArmMotorEncoder(); // Attempt reset at each teleop init
