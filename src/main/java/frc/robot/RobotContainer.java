@@ -133,7 +133,7 @@ public class RobotContainer {
                 mSpindexer.setDefaultCommand(new StopSpindexer(mSpindexer));
 
                 mIntakeDeploy = new IntakeDeploy();
-                mIntakeDeploy.setDefaultCommand(new StopIntakeDeploy(mIntakeDeploy));
+                // mIntakeDeploy.setDefaultCommand(new StopIntakeDeploy(mIntakeDeploy));
 
                 mElevator = new Elevator();
                 mElevator.setDefaultCommand(new HoldElevator(mElevator));
@@ -535,11 +535,13 @@ public class RobotContainer {
                     initialScoreCommand = new InstantCommand();
                     break;
                 case Hi_Cone:
-                    initialScoreCommand = (new FollowTrajectoryCommand(mDrivetrain, initialScorePath, true)
+                    initialScoreCommand = new SetIntakeDeployState(mIntakeDeploy, IntakeDeployState.Normal)
+                            .withTimeout(0.1)
                             .alongWith(new SafeDumbTowerToPosition(mElevator, mArm,
                                     GridTargetingPosition.HighRight.towerWaypoint))
-                            .alongWith(new DeployElevator(mElevator, ElevatorState.Deployed)));
-
+                            .alongWith(new DeployElevator(mElevator, ElevatorState.Deployed))
+                            .alongWith(new WaitCommand(1.5)
+                                    .andThen(new FollowTrajectoryCommand(mDrivetrain, initialScorePath, true)));
                     // Add Sequential Commands after initial move
                     initialScoreCommand = initialScoreCommand
                             .andThen(new WaitCommand(0.8))
@@ -552,37 +554,55 @@ public class RobotContainer {
             return initialScoreCommand;
         }
 
-        private PathPlannerTrajectory getAutoPath() {
+        private Command getAutoPathFollowCommand() {
+            PathPlannerTrajectory path = null;
+            Command followCommand = new InstantCommand();
             switch (getAutoSequence()) {
                 case Do_Nothing:
-                    return null;
+                    break;
                 case SideMobilityOnly:
                     if (getAutoStartPosition() == AutoStartPosition.LoadStationEnd) {
-                        return AutonomousTrajectory.LoadStationMobility.trajectory;
+                        path = AutonomousTrajectory.LoadStationMobility.trajectory;
                     } else if (getAutoStartPosition() == AutoStartPosition.WallEnd) {
-                        return AutonomousTrajectory.WallMobility.trajectory;
+                        path = AutonomousTrajectory.WallMobility.trajectory;
                     }
+                    if (path != null) {
+                        followCommand = new FollowTrajectoryCommand(mDrivetrain, path, false);
+                    }
+                    break;
                 case SideMobilityBalance:
                     if (getAutoStartPosition() == AutoStartPosition.LoadStationEnd) {
-                        return AutonomousTrajectory.LoadStationMobilityBalance.trajectory;
+                        path = AutonomousTrajectory.LoadStationMobilityBalance.trajectory;
                     } else if (getAutoStartPosition() == AutoStartPosition.WallEnd) {
-                        return AutonomousTrajectory.WallMobilityBalance.trajectory;
+                        path = AutonomousTrajectory.WallMobilityBalance.trajectory;
                     }
+                    if (path != null) {
+                        followCommand = new FollowTrajectoryCommand(mDrivetrain, path, false)
+                                .andThen(new BalanceRobot(mDrivetrain))
+                                .andThen(mDrivetrain.XWheels());
+                    }
+                    break;
                 case CenterBalance:
                     if (getAutoStartPosition() == AutoStartPosition.CenterLoadStationSide) {
-                        return AutonomousTrajectory.CenterBalanceLoadStationSide.trajectory;
+                        path = AutonomousTrajectory.CenterBalanceLoadStationSide.trajectory;
                     } else if (getAutoStartPosition() == AutoStartPosition.CenterWallSide) {
-                        return AutonomousTrajectory.CenterBalanceWallSide.trajectory;
+                        path = AutonomousTrajectory.CenterBalanceWallSide.trajectory;
                     }
+                    if (path != null) {
+                        followCommand = new FollowTrajectoryCommand(mDrivetrain, path, false)
+                                .andThen(new BalanceRobot(mDrivetrain))
+                                .andThen(mDrivetrain.XWheels());
+                    }
+                    break;
                 default:
-                    return null;
             }
+            return followCommand;
         }
         
         public Command buildAutoCommand() {
             Pose2d startingPose;
             PathPlannerTrajectory initialScorepath;
-            PathPlannerTrajectory autoPath = null;
+            Command autoPathCommand = null;
             Command initialScoreCommand = null;
             Command afterInitialScoreCommand = null;
             Command balanceCommand = null;
@@ -601,16 +621,16 @@ public class RobotContainer {
                 initialScoreCommand = setupAutoInitialScoreCommand(initialScorepath);
 
                 // Now setup the path following command
-                autoPath = getAutoPath();
+                autoPathCommand = getAutoPathFollowCommand();
 
-                // Setup Charge Station balance command
-                if (getAutoSequence() == AutoSequence.CenterBalance ||
-                        getAutoSequence() == AutoSequence.SideMobilityBalance) {
-                    balanceCommand = new BalanceRobot(mDrivetrain)
-                            .andThen(mDrivetrain.XWheels());
-                } else {
-                    balanceCommand = new InstantCommand();
-                }
+                // // Setup Charge Station balance command
+                // if (getAutoSequence() == AutoSequence.CenterBalance ||
+                // getAutoSequence() == AutoSequence.SideMobilityBalance) {
+                // balanceCommand = new BalanceRobot(mDrivetrain)
+                // .andThen(mDrivetrain.XWheels());
+                // } else {
+                // balanceCommand = new InstantCommand();
+                // }
 
                 // Build parallel group to move from scoring position while driving
                 if (getAutoPreloadScore() != AutoPreloadScore.No_Preload) {
@@ -618,17 +638,16 @@ public class RobotContainer {
                             TowerConstants.intakeBackstop)
                             .alongWith(new DeployElevator(mElevator, ElevatorState.Undeployed))
                             .alongWith(new SetClawState(mClaw, ClawState.Closed))
-                            .alongWith(new FollowTrajectoryCommand(mDrivetrain, autoPath, false));
+                            .alongWith(autoPathCommand);
                 } else {
-                    afterInitialScoreCommand = new FollowTrajectoryCommand(mDrivetrain, autoPath, false);
+                    afterInitialScoreCommand = autoPathCommand;
                 }
 
                 //
                 if (startingPose != null && initialScoreCommand != null) {
                     return new InstantCommand(() -> mDrivetrain.resetOdometryToPose(startingPose))
                             .andThen(initialScoreCommand)
-                            .andThen(afterInitialScoreCommand)
-                            .andThen(balanceCommand);
+                            .andThen(afterInitialScoreCommand);
                 }
             }
             return new InstantCommand();
