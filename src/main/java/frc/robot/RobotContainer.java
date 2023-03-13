@@ -612,7 +612,6 @@ public class RobotContainer {
             Command autoPathCommand = null;
             Command initialScoreCommand = null;
             Command afterInitialScoreCommand = null;
-            Command balanceCommand = null;
 
             mRobotState.useLimelightOdometryUpdates = false;
 
@@ -629,15 +628,6 @@ public class RobotContainer {
 
                 // Now setup the path following command
                 autoPathCommand = getAutoPathFollowCommand();
-
-                // // Setup Charge Station balance command
-                // if (getAutoSequence() == AutoSequence.CenterBalance ||
-                // getAutoSequence() == AutoSequence.SideMobilityBalance) {
-                // balanceCommand = new BalanceRobot(mDrivetrain)
-                // .andThen(mDrivetrain.XWheels());
-                // } else {
-                // balanceCommand = new InstantCommand();
-                // }
 
                 // Build parallel group to move from scoring position while driving
                 if (getAutoPreloadScore() != AutoPreloadScore.No_Preload) {
