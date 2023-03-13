@@ -128,7 +128,8 @@ public class RobotContainer {
 
                 m_led = new AddressableLED(0);
 
-                mAutoBuilder = new AutoBuilder(mRobotState, mDrivetrain, mElevator, mArm, mClaw, mIntakeDeploy);
+                mAutoBuilder = new AutoBuilder(mRobotState, mDrivetrain, mElevator, mArm,
+                        mClaw, mIntake, mIntakeDeploy, mSpindexer);
 
                 // Reuse buffer
                 // Default to a length of 60, start empty output

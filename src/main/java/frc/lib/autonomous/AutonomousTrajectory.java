@@ -7,6 +7,7 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 public enum AutonomousTrajectory {
     LoadStationMobility(PathPlanner.loadPath("LoadStationMobility", new PathConstraints(.5, .5))),
     WallMobility(PathPlanner.loadPath("WallMobility", new PathConstraints(.5, .5))),
+    WallMobilityIntake(PathPlanner.loadPath("WallMobilityIntake", 4.0, 3.0)),
     LoadStationMobilityBalance(PathPlanner.loadPath("LoadStationMobilityBalance", new PathConstraints(2.8, 2.25))),
     WallMobilityBalance(PathPlanner.loadPath("WallMobilityBalance", new PathConstraints(2.8, 2.25))),
     CenterBalanceLoadStationSide(PathPlanner.loadPath("CenterBalanceLoadStationSide", new PathConstraints(2.8, 2.25))),

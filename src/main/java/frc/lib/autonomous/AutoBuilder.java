@@ -4,7 +4,10 @@
 
 package frc.lib.autonomous;
 
+import java.util.Map;
+
 import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.commands.FollowPathWithEvents;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -17,8 +20,10 @@ import frc.robot.Constants.TowerConstants;
 import frc.robot.RobotState.GridTargetingPosition;
 import frc.robot.commands.BalanceRobot;
 import frc.robot.commands.DeployElevator;
+import frc.robot.commands.MoveIntake;
 import frc.robot.commands.SetClawState;
 import frc.robot.commands.SetIntakeDeployState;
+import frc.robot.commands.groups.AutoGroundIntakeCube;
 import frc.robot.commands.groups.FollowTrajectoryCommand;
 import frc.robot.commands.groups.SafeDumbTowerToPosition;
 import frc.robot.subsystems.Arm;
@@ -28,7 +33,9 @@ import frc.robot.subsystems.Claw.ClawState;
 import frc.robot.subsystems.Elevator.ElevatorState;
 import frc.robot.subsystems.IntakeDeploy.IntakeDeployState;
 import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.IntakeDeploy;
+import frc.robot.subsystems.Spindexer;
 
 /** Add your docs here. */
 public class AutoBuilder {
@@ -37,20 +44,24 @@ public class AutoBuilder {
     private Elevator mElevator;
     private Arm mArm;
     private Claw mClaw;
+    private Intake mIntake;
     private IntakeDeploy mIntakeDeploy;
+    private Spindexer mSpindexer;
 
     private SendableChooser<AutoStartPosition> autoStartChooser;
     private SendableChooser<AutoSequence> autoSequenceChooser;
     private SendableChooser<AutoPreloadScore> autoPreloadScoreChooser;
 
     public AutoBuilder(RobotState robotState, Drivetrain drivetrain, Elevator elevator,
-            Arm arm, Claw claw, IntakeDeploy IntakeDeploy) {
+            Arm arm, Claw claw, Intake intake, IntakeDeploy intakeDeploy, Spindexer spindexer) {
         mRobotState = robotState;
         mDrivetrain = drivetrain;
         mElevator = elevator;
         mArm = arm;
         mClaw = claw;
-        mIntakeDeploy = IntakeDeploy;
+        mIntake = intake;
+        mIntakeDeploy = intakeDeploy;
+        mSpindexer = spindexer;
     }
 
     public void setupAutoSelector() {
@@ -148,6 +159,26 @@ public class AutoBuilder {
                 }
                 if (path != null) {
                     followCommand = new FollowTrajectoryCommand(mDrivetrain, path, isFirstPath);
+                }
+                break;
+            case SideMobilityIntake:
+                if (getAutoStartPosition() == AutoStartPosition.LoadStationEnd) {
+                    // TODO: Add LoadStationMobilityIntake trajectory
+                    path = AutonomousTrajectory.LoadStationMobility.trajectory;
+                } else if (getAutoStartPosition() == AutoStartPosition.WallEnd) {
+                    path = AutonomousTrajectory.WallMobilityIntake.trajectory;
+                }
+                if (path != null) {
+                    followCommand = new FollowPathWithEvents(
+                            new FollowTrajectoryCommand(mDrivetrain, path, isFirstPath),
+                            path.getMarkers(),
+                            Map.ofEntries(
+                                    Map.entry(
+                                            "StartIntakeCube",
+                                            new AutoGroundIntakeCube(mElevator, mArm, mClaw, mIntake, mIntakeDeploy,
+                                                    mSpindexer))));
+                    followCommand = followCommand.andThen(new MoveIntake(mIntake, .5, .5).withTimeout(2.0)
+                            .alongWith(new SetIntakeDeployState(mIntakeDeploy, IntakeDeployState.Normal)));
                 }
                 break;
             case SideMobilityBalance:
