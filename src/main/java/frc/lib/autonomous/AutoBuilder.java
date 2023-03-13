@@ -17,14 +17,15 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.RobotState;
 import frc.robot.Constants.TowerConstants;
 import frc.robot.RobotState.GridTargetingPosition;
+import frc.robot.RobotState.IntakeModeState;
 import frc.robot.commands.BalanceRobot;
 import frc.robot.commands.DeployElevator;
-import frc.robot.commands.MoveIntake;
 import frc.robot.commands.SetClawState;
 import frc.robot.commands.SetIntakeDeployState;
 import frc.robot.commands.groups.AutoGroundIntakeCube;
 import frc.robot.commands.groups.FollowTrajectoryCommand;
 import frc.robot.commands.groups.SafeDumbTowerToPosition;
+import frc.robot.commands.groups.SpindexerGrabPiece;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Drivetrain;
@@ -65,11 +66,11 @@ public class AutoBuilder {
         mSpindexer = spindexer;
 
         eventMap.put("StartIntakeCube", new AutoGroundIntakeCube(mElevator, mArm, mClaw, mIntake,
-                mIntakeDeploy, mSpindexer));
-        eventMap.put("EndIntake", new MoveIntake(mIntake, .5, .5).withTimeout(2.0)
-                .alongWith(new SetIntakeDeployState(mIntakeDeploy, IntakeDeployState.Normal)));
-        eventMap.put("Balance", new BalanceRobot(mDrivetrain)
-                .andThen(mDrivetrain.XWheels()));
+                mIntakeDeploy, mSpindexer)
+                .alongWith(new InstantCommand(() -> mRobotState.intakeMode = IntakeModeState.Cube)));
+        eventMap.put("EndIntake",
+                new SpindexerGrabPiece(elevator, arm, claw, intake, intakeDeploy, spindexer, robotState));
+
         eventMap.put("ReadyHighConeScore", new SetIntakeDeployState(mIntakeDeploy, IntakeDeployState.Normal)
                 .withTimeout(0.1)
                 .alongWith(new SafeDumbTowerToPosition(mElevator, mArm,
@@ -219,7 +220,7 @@ public class AutoBuilder {
                 }
                 if (path != null) {
                     followCommand = new FollowTrajectoryCommand(mDrivetrain, path, isFirstPath)
-                            .andThen(eventMap.getOrDefault("Balance", new InstantCommand()));
+                            .andThen(new BalanceRobot(mDrivetrain).andThen(mDrivetrain.XWheels()));
                 }
                 break;
             case CenterBalance:
@@ -230,7 +231,7 @@ public class AutoBuilder {
                 }
                 if (path != null) {
                     followCommand = new FollowTrajectoryCommand(mDrivetrain, path, isFirstPath)
-                            .andThen(eventMap.getOrDefault("Balance", new InstantCommand()));
+                            .andThen(new BalanceRobot(mDrivetrain).andThen(mDrivetrain.XWheels()));
                 }
                 break;
             default:
