@@ -207,7 +207,7 @@ public final class Constants {
     public static Waypoint scoreCubeMid = new Waypoint(0.0, 199.0);
     public static Waypoint scoreCubeHigh = new Waypoint(27.25, 166.0);
     public static Waypoint intakeBackstop = new Waypoint(11.75, 45);
-    public static Waypoint intakeGrabCube = new Waypoint(1.0, 5.5);
+    public static Waypoint intakeGrabCube = new Waypoint(1.0, 11);
     public static Waypoint intakeGrabCone = new Waypoint(0.0, -2.0);
     public static Waypoint intakeRegrab = new Waypoint(7.75, 5.0);
     public static Waypoint floorGrab = new Waypoint(0.0, 92.0);
