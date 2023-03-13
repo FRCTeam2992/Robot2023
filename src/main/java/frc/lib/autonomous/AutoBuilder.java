@@ -6,7 +6,6 @@ package frc.lib.autonomous;
 
 import com.pathplanner.lib.PathPlannerTrajectory;
 
-import edu.wpi.first.hal.simulation.DriverStationDataJNI;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -29,7 +28,6 @@ import frc.robot.subsystems.Claw.ClawState;
 import frc.robot.subsystems.Elevator.ElevatorState;
 import frc.robot.subsystems.IntakeDeploy.IntakeDeployState;
 import frc.robot.subsystems.Elevator;
-import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.IntakeDeploy;
 
 /** Add your docs here. */

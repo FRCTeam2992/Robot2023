@@ -6,15 +6,9 @@ package frc.robot;
 
 
 import frc.lib.autonomous.AutoBuilder;
-import frc.lib.autonomous.AutoPreloadScore;
-import frc.lib.autonomous.AutoSequence;
-import frc.lib.autonomous.AutoStartPosition;
-import frc.lib.autonomous.AutonomousTrajectory;
 import frc.lib.leds.Color;
 
 import frc.robot.Constants.TowerConstants;
-import frc.robot.RobotState.GridTargetingPosition;
-import frc.robot.commands.BalanceRobot;
 import frc.robot.commands.DeployButterflyWheels;
 import frc.robot.commands.DeployElevator;
 import frc.robot.commands.DriveSticks;
@@ -35,9 +29,7 @@ import frc.robot.commands.SetIntakeSpeed;
 import frc.robot.commands.SetLEDsColor;
 import frc.robot.commands.SetScoringTarget;
 import frc.robot.commands.StopIntake;
-import frc.robot.commands.StopIntakeDeploy;
 import frc.robot.commands.StopSpindexer;
-import frc.robot.commands.TestTowerSafeMove;
 import frc.robot.commands.ToggleClawState;
 import frc.robot.commands.ToggleDeployElevator;
 import frc.robot.commands.ToggleEndgameState;
@@ -47,7 +39,6 @@ import frc.robot.commands.groups.AutoGroundIntakeCube;
 import frc.robot.commands.groups.AutoLoadStationIntake;
 import frc.robot.commands.groups.AutoSpinSpindexer;
 import frc.robot.commands.groups.SpindexerGrabPiece;
-import frc.robot.commands.groups.FollowTrajectoryCommand;
 import frc.robot.commands.groups.SafeDumbTowerToPosition;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.ButterflyWheels;
@@ -61,22 +52,13 @@ import frc.robot.subsystems.Claw.ClawState;
 import frc.robot.subsystems.Elevator.ElevatorState;
 import frc.robot.subsystems.IntakeDeploy.IntakeDeployState;
 
-import com.pathplanner.lib.PathPlannerTrajectory;
-
-import edu.wpi.first.math.geometry.Pose2d;
-
-
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -110,10 +92,6 @@ public class RobotContainer {
 
         public final ButterflyWheels mButterflyWheels;
 
-        private SendableChooser<AutoStartPosition> autoStartChooser;
-        private SendableChooser<AutoSequence> autoSequenceChooser;
-        private SendableChooser<AutoPreloadScore> autoPreloadScoreChooser;
-        
         public AddressableLED m_led;
         public AddressableLEDBuffer m_ledBuffer;
 

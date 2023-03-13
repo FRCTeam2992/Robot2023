@@ -1,8 +1,7 @@
 package frc.lib.manipulator;
 
 import frc.robot.Constants.ArmConstants;
-import frc.robot.Constants.ElevatorConstants;
-import frc.robot.Constants.TowerConstants;;
+import frc.robot.Constants.ElevatorConstants;;
 
 public final class Constants {
         public static final double MAX_HEIGHT_INCHES = ElevatorConstants.Limits.hardStopTop;
