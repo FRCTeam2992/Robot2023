@@ -385,9 +385,6 @@ public class Drivetrain extends SubsystemBase {
             dashboardCounter = 0;
         }
 
-        /*
-         * TODO: Finish this once we test limelight botPose data
-         */
         if (this.mRobotState.useLimelightOdometryUpdates && limeLightCamera11.getTargetID() > 0) {
             limelight11BotPose = limeLightCamera11.getBotPose(getAllianceCoordinateSpace());
             latestVisionPose = new Pose2d(limelight11BotPose[0], limelight11BotPose[1],
