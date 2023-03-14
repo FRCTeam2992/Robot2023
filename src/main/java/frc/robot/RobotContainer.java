@@ -466,11 +466,181 @@ public class RobotContainer {
                 return controller0;
         }
 
-        public void setLEDsColor(Color color) {
-                for (var i = 0; i < m_ledBuffer.getLength(); i++) {
+        public void setLEDStripColor(Color color) {
+                for (int i = 0; i < m_ledBuffer.getLength(); i++) {
                         // Sets the specified LED to the RGB values for red
                         m_ledBuffer.setRGB(i, color.r(), color.g(), color.b());
                 }
+
+                m_led.setData(m_ledBuffer);
+        }
+
+        public void setSingleLEDColor(int pixel, Color color) {
+                m_ledBuffer.setRGB(pixel, color.r(), color.g(), color.b());
+        }
+
+        public void colorChase(Color color1, Color color2) {
+                for (int i = 8; i > -1; i--) {
+                        setSingleLEDColor(i, color1);
+                }
+        }
+
+        public void geradColorChase(Color color1, Color color2) {
+
+                setSingleLEDColor(8, color1);
+                for (int i = 1; i < 9; i++) {
+                        setSingleLEDColor(8 + i, color1);
+                        setSingleLEDColor(8 - i, color1);
+                }
+
+                setSingleLEDColor(8, color2);
+                for (int i = 1; i < 9; i++) {
+                        setSingleLEDColor(8 + i, color2);
+                        setSingleLEDColor(8 - i, color2);
+                }
+        }
+
+        public void geradColorChase2(Color color1, Color color2) {
+
+                setSingleLEDColor(8, color2);
+                for (int i = 1; i < 3; i++) {
+                        setSingleLEDColor(8 + i, color1);
+                        setSingleLEDColor(9 + i, color2);
+                        setSingleLEDColor(10 + i, color2);
+                        setSingleLEDColor(11 + i, color2);
+                        setSingleLEDColor(12 + i, color1);
+                        setSingleLEDColor(13 + i, color1);
+                        setSingleLEDColor(14 + i, color2);
+                        setSingleLEDColor(15 + i, color2);
+                        setSingleLEDColor(16 + i, color2);
+
+                        setSingleLEDColor(8 - i, color1);
+                        setSingleLEDColor(7 - i, color2);
+                        setSingleLEDColor(6 - i, color2);
+                        setSingleLEDColor(5 - i, color2);
+                        setSingleLEDColor(4 - i, color1);
+                        setSingleLEDColor(3 - i, color1);
+                        setSingleLEDColor(2 - i, color2);
+                        setSingleLEDColor(1 - i, color2);
+                        setSingleLEDColor(0 - i, color2);
+                }
+
+                for (int i = 1; i < 4; i++) {
+                        setSingleLEDColor(8 + i, color2);
+                        setSingleLEDColor(9 + i, color1);
+                        setSingleLEDColor(10 + i, color1);
+                        setSingleLEDColor(11 + i, color2);
+                        setSingleLEDColor(12 + i, color2);
+                        setSingleLEDColor(13 + i, color2);
+                        setSingleLEDColor(14 + i, color1);
+                        setSingleLEDColor(15 + i, color1);
+                        setSingleLEDColor(16 + i, color2);
+
+                        setSingleLEDColor(8 - i, color2);
+                        setSingleLEDColor(7 - i, color1);
+                        setSingleLEDColor(6 - i, color1);
+                        setSingleLEDColor(5 - i, color2);
+                        setSingleLEDColor(4 - i, color2);
+                        setSingleLEDColor(3 - i, color2);
+                        setSingleLEDColor(2 - i, color1);
+                        setSingleLEDColor(1 - i, color1);
+                        setSingleLEDColor(0 - i, color2);
+                }
+
+        }
+
+        public void reidColorChaseFrame1(Color color1, Color color2) {
+
+                // ------+++++------
+                setSingleLEDColor(8, color1);
+
+                setSingleLEDColor(7, color1);
+                setSingleLEDColor(6, color1);
+
+                setSingleLEDColor(9, color1);
+                setSingleLEDColor(10, color1);
+
+                // ---+++-----+++---
+                setSingleLEDColor(5, color2);
+                setSingleLEDColor(4, color2);
+                setSingleLEDColor(3, color2);
+
+                setSingleLEDColor(11, color2);
+                setSingleLEDColor(12, color2);
+                setSingleLEDColor(13, color2);
+
+                // +++-----------+++
+                setSingleLEDColor(2, color1);
+                setSingleLEDColor(1, color1);
+                setSingleLEDColor(0, color1);
+
+                setSingleLEDColor(14, color1);
+                setSingleLEDColor(15, color1);
+                setSingleLEDColor(16, color1);
+
+                m_led.setData(m_ledBuffer);
+        }
+
+        public void reidColorChaseFrame2(Color color1, Color color2) {
+                // --------+--------
+                setSingleLEDColor(8, color2);
+
+                // -----+++-+++-----
+                setSingleLEDColor(7, color1);
+                setSingleLEDColor(6, color1);
+                setSingleLEDColor(5, color1);
+
+                setSingleLEDColor(9, color1);
+                setSingleLEDColor(10, color1);
+                setSingleLEDColor(11, color1);
+
+                // --+++-------+++--
+                setSingleLEDColor(4, color2);
+                setSingleLEDColor(3, color2);
+                setSingleLEDColor(2, color2);
+
+                setSingleLEDColor(12, color2);
+                setSingleLEDColor(13, color2);
+                setSingleLEDColor(14, color2);
+
+                // ++-------------++
+                setSingleLEDColor(1, color1);
+                setSingleLEDColor(0, color1);
+
+                setSingleLEDColor(15, color1);
+                setSingleLEDColor(16, color1);
+
+                m_led.setData(m_ledBuffer);
+        }
+
+        public void reidColorChaseFrame3(Color color1, Color color2) {
+                // -------+++-------
+                setSingleLEDColor(8, color2);
+                setSingleLEDColor(7, color2);
+                setSingleLEDColor(9, color2);
+
+                // ----+++---+++----
+                setSingleLEDColor(6, color1);
+                setSingleLEDColor(5, color1);
+                setSingleLEDColor(4, color1);
+
+                setSingleLEDColor(10, color1);
+                setSingleLEDColor(11, color1);
+                setSingleLEDColor(12, color1);
+
+                // -+++---------+++-
+                setSingleLEDColor(3, color2);
+                setSingleLEDColor(2, color2);
+                setSingleLEDColor(1, color2);
+
+                setSingleLEDColor(13, color2);
+                setSingleLEDColor(14, color2);
+                setSingleLEDColor(15, color2);
+
+                // +---------------+
+                setSingleLEDColor(0, color1);
+
+                setSingleLEDColor(16, color1);
 
                 m_led.setData(m_ledBuffer);
         }

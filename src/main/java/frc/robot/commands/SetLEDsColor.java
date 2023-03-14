@@ -20,7 +20,7 @@ public class SetLEDsColor extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    Robot.mRobotContainer.setLEDsColor(mColor);
+    Robot.mRobotContainer.setLEDStripColor(mColor);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
