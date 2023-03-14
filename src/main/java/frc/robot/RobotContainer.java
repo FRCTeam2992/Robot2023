@@ -294,6 +294,9 @@ public class RobotContainer {
                 SmartDashboard.putData("Spin Spindexer", new MoveSpindexer(mSpindexer, .5));
 
                 SmartDashboard.putData("Reset Odometry", mDrivetrain.ResetOdometry());
+
+                SmartDashboard.putData("Re-init Arm Encoder", new InstantCommand(() -> mArm.initArmMotorEncoder()));
+
                 // SmartDashboard.putData("Reset Odometry to Red Inner Cone",
                 // new InstantCommand(() -> mDrivetrain
                 // .resetOdometryToPose(new Pose2d(1.89, 3.0307,
