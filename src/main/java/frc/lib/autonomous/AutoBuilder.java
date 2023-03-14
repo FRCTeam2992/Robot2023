@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.Constants;
 import frc.robot.RobotState;
 import frc.robot.Constants.TowerConstants;
 import frc.robot.RobotState.GridTargetingPosition;
@@ -22,6 +23,7 @@ import frc.robot.commands.BalanceRobot;
 import frc.robot.commands.DeployElevator;
 import frc.robot.commands.SetClawState;
 import frc.robot.commands.SetIntakeDeployState;
+import frc.robot.commands.SetIntakeSpeed;
 import frc.robot.commands.groups.AutoGroundIntakeCube;
 import frc.robot.commands.groups.FollowTrajectoryCommand;
 import frc.robot.commands.groups.SafeDumbTowerToPosition;
@@ -67,10 +69,14 @@ public class AutoBuilder {
 
         eventMap.put("AutoGroundIntakeCube", new AutoGroundIntakeCube(mElevator, mArm, mClaw, mIntake,
                 mIntakeDeploy, mSpindexer));
+        eventMap.put("IntakeDeployGround", new SetIntakeDeployState(intakeDeploy, IntakeDeployState.GroundIntake));
+        eventMap.put("IntakeSpeedCube", new SetIntakeSpeed(mIntake, 0.75, 0.0));
+        eventMap.put("IntakeStop", new SetIntakeSpeed(mIntake, 0.0, 0.0));
         eventMap.put("SetIntakeModeCube", new InstantCommand(() -> mRobotState.intakeMode = IntakeModeState.Cube));
         eventMap.put("SpindexerGrabPiece",
                 new SpindexerGrabPiece(elevator, arm, claw, intake, intakeDeploy, spindexer, robotState));
-
+        eventMap.put("TowerMoveBackstop", new SafeDumbTowerToPosition(elevator, arm,
+                Constants.TowerConstants.intakeBackstop));
         eventMap.put("IntakeDeployNormal", new SetIntakeDeployState(mIntakeDeploy, IntakeDeployState.Normal));
         eventMap.put("TowerMoveHighRight", new SafeDumbTowerToPosition(mElevator, mArm,
                 GridTargetingPosition.HighRight.towerWaypoint));
@@ -145,18 +151,17 @@ public class AutoBuilder {
                 initialScoreCommand = new InstantCommand(() -> mDrivetrain.resetOdometryToPose(startingPose));
                 break;
             case Hi_Cone:
-                initialScoreCommand = new SetIntakeDeployState(mIntakeDeploy, IntakeDeployState.Normal)
-                        .withTimeout(0.1)
-                        .alongWith(new SafeDumbTowerToPosition(mElevator, mArm,
-                                GridTargetingPosition.HighRight.towerWaypoint))
-                        .alongWith(new DeployElevator(mElevator, ElevatorState.Deployed))
-                        .alongWith(new WaitCommand(1.5)
-                                .andThen(new FollowTrajectoryCommand(mDrivetrain, initialScorePath, true)));
+                initialScoreCommand = new DeployElevator(mElevator, ElevatorState.Deployed)
+                        .andThen(new SetIntakeDeployState(mIntakeDeploy, IntakeDeployState.Normal).withTimeout(0.01)
+                                .alongWith((new SafeDumbTowerToPosition(mElevator, mArm,
+                                        GridTargetingPosition.HighRight.towerWaypoint)))
+                                .alongWith(new WaitCommand(1.7)
+                                        .andThen(new FollowTrajectoryCommand(mDrivetrain, initialScorePath, true))));
                 // Add Sequential Commands after initial move
                 initialScoreCommand = initialScoreCommand
-                        .andThen(new WaitCommand(0.8))
+                        .andThen(new WaitCommand(0.2))
                         .andThen(new SetClawState(mClaw, ClawState.Opened))
-                        .andThen(new WaitCommand(0.8));
+                        .andThen(new WaitCommand(0.2));
                 break;
             default:
                 initialScoreCommand = new InstantCommand(() -> mDrivetrain.resetOdometryToPose(startingPose));
@@ -215,7 +220,9 @@ public class AutoBuilder {
                     path = AutonomousTrajectory.WallMobilityBalance.trajectory;
                 }
                 if (path != null) {
-                    followCommand = new FollowTrajectoryCommand(mDrivetrain, path, isFirstPath)
+                    followCommand = (new FollowPathWithEvents(
+                            new FollowTrajectoryCommand(mDrivetrain, path, isFirstPath),
+                            path.getMarkers(), eventMap))
                             .andThen(new BalanceRobot(mDrivetrain).andThen(mDrivetrain.XWheels()));
                 }
                 break;
@@ -262,10 +269,7 @@ public class AutoBuilder {
             // then build a parallel group to move from scoring position while driving
             if (getAutoPreloadScore() != AutoPreloadScore.No_Preload) {
                 autoPathCommand = setupAutoPathFollowCommand(false);
-                afterInitialScoreCommand = new SetClawState(mClaw, ClawState.Closed)
-                        .andThen(new SafeDumbTowerToPosition(mElevator, mArm, TowerConstants.intakeBackstop)
-                        .alongWith(new DeployElevator(mElevator, ElevatorState.Undeployed))
-                                .alongWith(autoPathCommand));
+                afterInitialScoreCommand = autoPathCommand;
             } else {
                 // In the case of No_Preload, we didn't score, so no arm/elevator/claw
                 // reset is needed, and we can just follow the path directly.
