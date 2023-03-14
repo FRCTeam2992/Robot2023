@@ -24,16 +24,41 @@
     },
     {
       "anchorPoint": {
-        "x": 5.7,
-        "y": 4.623119346124035
+        "x": 6.89,
+        "y": 4.5905055912675925
       },
       "prevControl": {
-        "x": 4.807075010142578,
-        "y": 5.07332481309231
+        "x": 5.892435949740175,
+        "y": 4.660262065011718
       },
       "nextControl": {
-        "x": 6.557381319890846,
-        "y": 4.190834706455738
+        "x": 7.847855129828984,
+        "y": 4.523525835734914
+    },
+    "holonomicAngle": -4.0,
+    "isReversal": false,
+    "velOverride": null,
+    "isLocked": false,
+    "isStopPoint": false,
+    "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+    }
+},
+{
+    "anchorPoint": {
+        "x": 6.35,
+        "y": 3.8
+    },
+    "prevControl": {
+        "x": 7.152115562183948,
+        "y": 4.226492409695655
+    },
+    "nextControl": {
+        "x": 5.582801064409575,
+        "y": 3.3920730899859235
       },
       "holonomicAngle": 0,
       "isReversal": false,
@@ -49,16 +74,16 @@
     },
     {
       "anchorPoint": {
-        "x": 5.72378204585469,
-        "y": 3.32
+        "x": 5.06,
+        "y": 3.2
       },
       "prevControl": {
-        "x": 6.6322341087758305,
-        "y": 3.32
+        "x": 5.566177500220262,
+        "y": 3.177451740301985
       },
       "nextControl": {
-        "x": 4.854875508484466,
-        "y": 3.32
+        "x": 4.553822499779737,
+        "y": 3.2225482596980153
       },
       "holonomicAngle": 0,
       "isReversal": false,
@@ -74,12 +99,12 @@
     },
     {
       "anchorPoint": {
-        "x": 2.75,
-        "y": 3.32
+        "x": 2.9,
+        "y": 3.2
       },
       "prevControl": {
-        "x": 3.2531586643957064,
-        "y": 3.32
+        "x": 3.4031586643957064,
+        "y": 3.2
       },
       "nextControl": null,
       "holonomicAngle": 0,
@@ -95,5 +120,27 @@
       }
     }
   ],
-  "markers": []
+"markers": [
+    {
+        "position": 0.05,
+        "names": [
+            "UndeployElevator",
+            "TowerMoveBackstop",
+            "IntakeSpeedCube",
+            "IntakeDeployGround"
+        ]
+    },
+    {
+        "position": 1.5709090909091006,
+        "names": [
+            "IntakeDeployHome"
+        ]
+    },
+    {
+        "position": 2.210909090909049,
+        "names": [
+            "IntakeStop"
+        ]
+    }
+]
 }
