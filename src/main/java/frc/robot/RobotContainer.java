@@ -249,7 +249,9 @@ public class RobotContainer {
                                 .whileTrue(new MoveTowerToScoringPosition(mElevator, mArm, mRobotState));
                 controller0.leftTrigger(0.6)
                                 .onTrue(new SetIntakeDeployState(mIntakeDeploy, IntakeDeploy.IntakeDeployState.Homed));
-                controller0.leftTrigger(0.6).onTrue(new DeployElevator(mElevator, ElevatorState.Deployed));
+                controller0.leftTrigger(0.6).onTrue(new DeployElevator(mElevator, ElevatorState.Deployed)
+                        .unless(() -> (mRobotState.currentTargetPosition.towerWaypoint == Constants.TowerConstants.scoreFloor)));
+
                 controller0.leftTrigger(0.6)
                                 .onFalse(new SafeDumbTowerToPosition(mElevator, mArm, TowerConstants.intakeBackstop));
                 controller0.leftTrigger(0.6).onFalse(new DeployElevator(mElevator, ElevatorState.Undeployed));
