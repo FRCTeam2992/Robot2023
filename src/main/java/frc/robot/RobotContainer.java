@@ -59,6 +59,7 @@ import frc.robot.subsystems.Spindexer;
 import frc.robot.subsystems.Claw.ClawState;
 import frc.robot.subsystems.Elevator.ElevatorState;
 import frc.robot.subsystems.IntakeDeploy.IntakeDeployState;
+// import frc.robot.testing.TestControllers;
 
 import com.pathplanner.lib.PathPlannerTrajectory;
 
@@ -91,8 +92,6 @@ public class RobotContainer {
         // Replace with CommandPS4Controller or CommandJoystick if needed
         private final CommandXboxController controller0 = new CommandXboxController(0);
         private final CommandXboxController controller1 = new CommandXboxController(1);
-        private final CommandXboxController testController0 = new CommandXboxController(2);
-        private final CommandXboxController testController1 = new CommandXboxController(3);
 
         public final RobotState mRobotState;
 
@@ -169,7 +168,7 @@ public class RobotContainer {
                 // Configure the trigger bindings
                 configureShuffleboardBindings();
                 configRealButtonBindings();
-                configTestButtonBindings();
+                // (new TestControllers()).configTestButtonBindings(this);
         }
 
         /**
@@ -292,40 +291,6 @@ public class RobotContainer {
                 controller1.axisGreaterThan(XboxController.Axis.kRightY.value, 0.6).whileTrue(
                                 new MoveElevator(mElevator, -0.2));
                 controller1.rightStick().onTrue(new ToggleDeployElevator(mElevator));
-
-        }
-
-        private void configTestButtonBindings() {
-                /*
-                 * DO NOT USE "controller0" or "controller1" here
-                 */
-                testController0.povUp().whileTrue(new MoveIntakeDeploy(mIntakeDeploy, -0.3));
-                testController0.povDown().whileTrue(new MoveIntakeDeploy(mIntakeDeploy, 0.10));
-                testController0.povRight().onTrue(new RehomeIntakeDeploy(mIntakeDeploy));
-
-                testController0.a().whileTrue(new SetIntakeSpeed(mIntake, 1, 1));
-                testController0.b().whileTrue(new SetIntakeSpeed(mIntake, .75, 0));
-
-                testController1.povUp().whileTrue(new MoveElevator(mElevator, .1));
-                testController1.povDown().whileTrue(new MoveElevator(mElevator, -.1));
-
-                testController1.povLeft().whileTrue(new MoveArm(mArm, .1));
-                testController1.povRight().whileTrue(new MoveArm(mArm, -.1));
-
-                testController1.a().onTrue(new DeployElevator(mElevator, ElevatorState.Deployed));
-                testController1.b().onTrue(new DeployElevator(mElevator, ElevatorState.Undeployed));
-
-                testController1.leftBumper().onTrue(new InstantCommand(() -> {
-                        mDrivetrain.setInSlowMode(true);
-                }));
-                testController1.leftBumper().onFalse(new InstantCommand(() -> {
-                        mDrivetrain.setInSlowMode(false);
-                }));
-
-                testController1.axisGreaterThan(XboxController.Axis.kRightTrigger.value, .3)
-                                .onTrue(new SetClawState(mClaw, ClawState.Closed));
-                testController1.axisGreaterThan(XboxController.Axis.kRightTrigger.value, .3)
-                                .onFalse(new SetClawState(mClaw, ClawState.Opened));
 
         }
 
