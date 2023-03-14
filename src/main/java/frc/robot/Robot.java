@@ -55,7 +55,7 @@ public class Robot extends TimedRobot {
 
     mRobotContainer.mElevator.zeroElevatorEncoders();
 
-    mRobotContainer.setLEDStripColor(Constants.LEDColors.blue);
+    mRobotContainer.mLEDs.setLEDStripColor(Constants.LEDColors.blue);
 
     DataLogManager.start();
     DriverStation.startDataLog(DataLogManager.getLog());
@@ -96,7 +96,7 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
-    mRobotContainer.setLEDStripColor(Constants.LEDColors.blue);
+    mRobotContainer.mLEDs.setLEDStripColor(Constants.LEDColors.blue);
     mRobotContainer.mIntake.onDisable();
     mRobotContainer.mElevator.onDisable();
     mRobotContainer.mArm.onDisable();
@@ -111,17 +111,17 @@ public class Robot extends TimedRobot {
   public void disabledPeriodic() {
     if (ledsLoopCounter == 5) {
       if (ledsFrameCounter == 1) {
-        mRobotContainer.reidColorChaseFrame1(Constants.LEDColors.blue, Constants.LEDColors.white);
+        mRobotContainer.mLEDs.cjColorChaseFrame1(Constants.LEDColors.blue, Constants.LEDColors.white);
       } else if (ledsFrameCounter == 2) {
-        mRobotContainer.reidColorChaseFrame2(Constants.LEDColors.blue, Constants.LEDColors.white);
+        mRobotContainer.mLEDs.cjColorChaseFrame2(Constants.LEDColors.blue, Constants.LEDColors.white);
       } else if (ledsFrameCounter == 3) {
-        mRobotContainer.reidColorChaseFrame3(Constants.LEDColors.blue, Constants.LEDColors.white);
+        mRobotContainer.mLEDs.cjColorChaseFrame3(Constants.LEDColors.blue, Constants.LEDColors.white);
       } else if (ledsFrameCounter == 4) {
-        mRobotContainer.reidColorChaseFrame1(Constants.LEDColors.white, Constants.LEDColors.blue);
+        mRobotContainer.mLEDs.cjColorChaseFrame1(Constants.LEDColors.white, Constants.LEDColors.blue);
       } else if (ledsFrameCounter == 5) {
-        mRobotContainer.reidColorChaseFrame2(Constants.LEDColors.white, Constants.LEDColors.blue);
+        mRobotContainer.mLEDs.cjColorChaseFrame2(Constants.LEDColors.white, Constants.LEDColors.blue);
       } else if (ledsFrameCounter == 6) {
-        mRobotContainer.reidColorChaseFrame3(Constants.LEDColors.white, Constants.LEDColors.blue);
+        mRobotContainer.mLEDs.cjColorChaseFrame3(Constants.LEDColors.white, Constants.LEDColors.blue);
       }
       if (ledsFrameCounter == 6) {
         ledsFrameCounter = 0;
