@@ -65,24 +65,20 @@ public class AutoBuilder {
         mIntakeDeploy = intakeDeploy;
         mSpindexer = spindexer;
 
-        eventMap.put("StartIntakeCube", new AutoGroundIntakeCube(mElevator, mArm, mClaw, mIntake,
-                mIntakeDeploy, mSpindexer)
-                .alongWith(new InstantCommand(() -> mRobotState.intakeMode = IntakeModeState.Cube)));
-        eventMap.put("EndIntake",
+        eventMap.put("AutoGroundIntakeCube", new AutoGroundIntakeCube(mElevator, mArm, mClaw, mIntake,
+                mIntakeDeploy, mSpindexer));
+        eventMap.put("SetIntakeModeCube", new InstantCommand(() -> mRobotState.intakeMode = IntakeModeState.Cube));
+        eventMap.put("SpindexerGrabPiece",
                 new SpindexerGrabPiece(elevator, arm, claw, intake, intakeDeploy, spindexer, robotState));
 
-        eventMap.put("ReadyHighConeScore", new SetIntakeDeployState(mIntakeDeploy, IntakeDeployState.Normal)
-                .withTimeout(0.1)
-                .alongWith(new SafeDumbTowerToPosition(mElevator, mArm,
-                        GridTargetingPosition.HighRight.towerWaypoint))
-                .alongWith(new DeployElevator(mElevator, ElevatorState.Deployed)));
-        eventMap.put("ReadyHighCubeScore", (new SetIntakeDeployState(mIntakeDeploy, IntakeDeployState.Normal)
-                .withTimeout(0.5).andThen(new SetIntakeDeployState(mIntakeDeploy, IntakeDeployState.Homed)))
-                .alongWith(new SafeDumbTowerToPosition(mElevator, mArm,
-                        GridTargetingPosition.HighCenter.towerWaypoint))
-                .alongWith(new DeployElevator(mElevator, ElevatorState.Deployed)));
-        eventMap.put("OpenClaw", (new WaitCommand(0.8)
-                .andThen(new SetClawState(mClaw, ClawState.Opened))));
+        eventMap.put("IntakeDeployNormal", new SetIntakeDeployState(mIntakeDeploy, IntakeDeployState.Normal));
+        eventMap.put("TowerMoveHighRight", new SafeDumbTowerToPosition(mElevator, mArm,
+                GridTargetingPosition.HighRight.towerWaypoint));
+        eventMap.put("DeployElevator", new DeployElevator(mElevator, ElevatorState.Deployed));
+        eventMap.put("UndeployElevator", new DeployElevator(mElevator, ElevatorState.Undeployed));
+        eventMap.put("IntakeDeployHome", new SetIntakeDeployState(mIntakeDeploy, IntakeDeployState.Homed));
+        eventMap.put("TowerMoveHighCenter", new SafeDumbTowerToPosition(mElevator, mArm,
+                GridTargetingPosition.HighCenter.towerWaypoint));
     }
 
     public void setupAutoSelector() {
@@ -195,7 +191,6 @@ public class AutoBuilder {
                             new FollowTrajectoryCommand(mDrivetrain, path, isFirstPath),
                             path.getMarkers(),
                             eventMap);
-                    followCommand = followCommand.andThen(eventMap.getOrDefault("EndIntake", new InstantCommand()));
                 }
                 break;
             case Side2Scores:
@@ -209,7 +204,8 @@ public class AutoBuilder {
                             new FollowTrajectoryCommand(mDrivetrain, path, isFirstPath),
                             path.getMarkers(),
                             eventMap);
-                    followCommand = followCommand.andThen(eventMap.getOrDefault("OpenClaw", new InstantCommand()));
+                    followCommand = followCommand
+                            .andThen(new WaitCommand(0.8).andThen(new SetClawState(mClaw, ClawState.Opened)));
                 }
                 break;
             case SideMobilityBalance:
@@ -266,10 +262,10 @@ public class AutoBuilder {
             // then build a parallel group to move from scoring position while driving
             if (getAutoPreloadScore() != AutoPreloadScore.No_Preload) {
                 autoPathCommand = setupAutoPathFollowCommand(false);
-                afterInitialScoreCommand = new SafeDumbTowerToPosition(mElevator, mArm, TowerConstants.intakeBackstop)
+                afterInitialScoreCommand = new SetClawState(mClaw, ClawState.Closed)
+                        .andThen(new SafeDumbTowerToPosition(mElevator, mArm, TowerConstants.intakeBackstop)
                         .alongWith(new DeployElevator(mElevator, ElevatorState.Undeployed))
-                        .alongWith(new SetClawState(mClaw, ClawState.Closed))
-                        .alongWith(autoPathCommand);
+                                .alongWith(autoPathCommand));
             } else {
                 // In the case of No_Preload, we didn't score, so no arm/elevator/claw
                 // reset is needed, and we can just follow the path directly.

@@ -139,7 +139,7 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [],
-        "executionBehavior": "parallel",
+        "executionBehavior": "sequential",
         "waitBehavior": "none",
         "waitTime": 0
       }
@@ -147,21 +147,36 @@
   ],
   "markers": [
     {
-      "position": 0.4,
+    "position": 0.25454545454546074,
       "names": [
-        "StartIntakeCube"
+        "AutoGroundIntakeCube",
+        "UndeployElevator",
+        "SetIntakeModeCube"
       ]
     },
     {
-      "position": 2.0727272727271355,
+    "position": 2.2909090909089818,
       "names": [
-        "EndIntake"
+        "SpindexerGrabPiece"
       ]
     },
     {
-      "position": 3.236363636363619,
+    "position": 3.200000000000014,
       "names": [
-        "ReadyHighCubeScore"
+        "DeployElevator"
+    ]
+},
+{
+    "position": 3.3,
+    "names": [
+        "IntakeDeployNormal"
+    ]
+},
+{
+    "position": 3.5,
+    "names": [
+        "TowerMoveHighCenter",
+        "IntakeDeployHome"
       ]
     }
   ]
