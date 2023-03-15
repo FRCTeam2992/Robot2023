@@ -24,16 +24,12 @@ import frc.robot.commands.MoveTowerToScoringPosition;
 import frc.robot.commands.SetSwerveAngle;
 import frc.robot.commands.MoveElevator;
 import frc.robot.commands.MoveIntake;
-import frc.robot.commands.MoveIntakeDeploy;
 import frc.robot.commands.SetClawState;
 import frc.robot.commands.SetIntakeDeployState;
-import frc.robot.commands.SetIntakeSpeed;
 import frc.robot.commands.SetLEDsColor;
 import frc.robot.commands.SetScoringTarget;
 import frc.robot.commands.StopIntake;
-import frc.robot.commands.StopIntakeDeploy;
 import frc.robot.commands.StopSpindexer;
-import frc.robot.commands.TestTowerSafeMove;
 import frc.robot.commands.ToggleClawState;
 import frc.robot.commands.ToggleDeployElevator;
 import frc.robot.commands.ToggleEndgameState;
@@ -58,16 +54,8 @@ import frc.robot.subsystems.Claw.ClawState;
 import frc.robot.subsystems.Elevator.ElevatorState;
 import frc.robot.subsystems.IntakeDeploy.IntakeDeployState;
 // import frc.robot.testing.TestControllers;
-
 import com.pathplanner.lib.PathPlannerTrajectory;
-
 import edu.wpi.first.math.geometry.Pose2d;
-
-
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.AddressableLED;
-import edu.wpi.first.wpilibj.AddressableLEDBuffer;
-
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
