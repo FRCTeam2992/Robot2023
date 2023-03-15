@@ -60,6 +60,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -229,7 +230,8 @@ public class RobotContainer {
                 controller0.axisGreaterThan(XboxController.Axis.kRightTrigger.value, .3)
                                 .onTrue(new ToggleClawState(mClaw));
                 controller0.leftTrigger(0.6)
-                                .whileTrue(new MoveTowerToScoringPosition(mElevator, mArm, mRobotState));
+                        .whileTrue(new WaitCommand(0.5)
+                                .andThen(new MoveTowerToScoringPosition(mElevator, mArm, mRobotState)));
                 controller0.leftTrigger(0.6)
                                 .onTrue(new SetIntakeDeployState(mIntakeDeploy, IntakeDeploy.IntakeDeployState.Homed));
                 controller0.leftTrigger(0.6).onTrue(new DeployElevator(mElevator, ElevatorState.Deployed)

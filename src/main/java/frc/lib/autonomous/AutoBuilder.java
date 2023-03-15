@@ -70,6 +70,7 @@ public class AutoBuilder {
         eventMap.put("AutoGroundIntakeCube", new AutoGroundIntakeCube(mElevator, mArm, mClaw, mIntake,
                 mIntakeDeploy, mSpindexer));
         eventMap.put("IntakeDeployGround", new SetIntakeDeployState(intakeDeploy, IntakeDeployState.GroundIntake));
+        eventMap.put("IntakeSpeedCone", new SetIntakeSpeed(mIntake, 1.0, 0.85));
         eventMap.put("IntakeSpeedCube", new SetIntakeSpeed(mIntake, 0.75, 0.0));
         eventMap.put("IntakeStop", new SetIntakeSpeed(mIntake, 0.0, 0.0));
         eventMap.put("SetIntakeModeCube", new InstantCommand(() -> mRobotState.intakeMode = IntakeModeState.Cube));
@@ -153,7 +154,7 @@ public class AutoBuilder {
             case Hi_Cone:
                 initialScoreCommand = new DeployElevator(mElevator, ElevatorState.Deployed)
                         .andThen(new SetIntakeDeployState(mIntakeDeploy, IntakeDeployState.Normal).withTimeout(0.01)
-                                .alongWith((new SafeDumbTowerToPosition(mElevator, mArm,
+                                .alongWith(new WaitCommand(0.5).andThen(new SafeDumbTowerToPosition(mElevator, mArm,
                                         GridTargetingPosition.HighRight.towerWaypoint)))
                                 .alongWith(new WaitCommand(1.7)
                                         .andThen(new FollowTrajectoryCommand(mDrivetrain, initialScorePath, true))));
@@ -233,7 +234,11 @@ public class AutoBuilder {
                     path = AutonomousTrajectory.CenterBalanceWallSide.trajectory;
                 }
                 if (path != null) {
-                    followCommand = new FollowTrajectoryCommand(mDrivetrain, path, isFirstPath)
+                    followCommand = new DeployElevator(mElevator, ElevatorState.Undeployed)
+                            .andThen(new WaitCommand(2.0))
+                            .andThen(new SafeDumbTowerToPosition(mElevator, mArm,
+                                    Constants.TowerConstants.intakeBackstop))
+                            .andThen(new FollowTrajectoryCommand(mDrivetrain, path, isFirstPath))
                             .andThen(new BalanceRobot(mDrivetrain).andThen(mDrivetrain.XWheels()));
                 }
                 break;
