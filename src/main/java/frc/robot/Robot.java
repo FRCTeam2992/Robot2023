@@ -32,6 +32,7 @@ public class Robot extends TimedRobot {
 
   private int slowLoopCounter = 0;
   private int ledsLoopCounter = 0;
+  private int ledsFrameCounter = 1;
 
   // public static AddressableLED m_led;
   // public static AddressableLEDBuffer m_ledBuffer;
@@ -55,7 +56,7 @@ public class Robot extends TimedRobot {
 
     mRobotContainer.mElevator.zeroElevatorEncoders();
 
-    mRobotContainer.setLEDsColor(Constants.LEDColors.blue);
+    mRobotContainer.mLEDs.setLEDStripColor(Constants.LEDColors.blue);
 
     DataLogManager.start();
     DriverStation.startDataLog(DataLogManager.getLog());
@@ -96,7 +97,7 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
-    mRobotContainer.setLEDsColor(Constants.LEDColors.blue);
+    mRobotContainer.mLEDs.setLEDStripColor(Constants.LEDColors.blue);
     mRobotContainer.mIntake.onDisable();
     mRobotContainer.mElevator.onDisable();
     mRobotContainer.mArm.onDisable();
@@ -109,9 +110,19 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
-      // Update prematch auto selector and robot setup checks
-      mRobotContainer.updateMatchStartChecksToDashboard();
+    if (ledsLoopCounter == 5) {
+      mRobotContainer.mLEDs.showNextCycleColor(
+        Constants.LEDColors.blue,
+        Constants.LEDColors.white,
+        ledsFrameCounter);
+      if (ledsFrameCounter == 6) { ledsFrameCounter = 0; }
+      ledsLoopCounter = 0;
+      ledsFrameCounter++;
+    }
+    ledsLoopCounter++;
 
+    // Update prematch auto selector and robot setup checks
+    mRobotContainer.updateMatchStartChecksToDashboard();
   }
 
   /**
