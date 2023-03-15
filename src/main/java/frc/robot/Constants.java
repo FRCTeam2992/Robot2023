@@ -72,8 +72,8 @@ public final class Constants {
     }
 
     public static class AutoScorePIDConstants {
-        public static final double scoreP = 2.0;
-        public static final double scoreI = 0.0;
+        public static final double scoreP = 3.25;
+        public static final double scoreI = 0.001;
         public static final double scoreD = 0.1;
 
         public static final double scoreCruise = 4.0; // m / sec
@@ -91,7 +91,7 @@ public final class Constants {
 
     // Drive Rotation P
     public static final double driveRotationP = .007;
-    public static final double autoAngleThreshold = 1.5;
+    public static final double autoAngleThreshold = 0.5;
 
     // Swerve Module Translations x=.591/2 y=.654/2
     public static final Translation2d frontLeftLocation = new Translation2d(0.289, 0.3335);
@@ -189,8 +189,8 @@ public final class Constants {
   public static class ScoringGridConstants {
       public static final double fieldWidth = 8.0137;
 
-      public static final double autoAlignmentAreaMinXMeters = 1.95;
-    public static final double autoAlignmentAreaMaxXMeters = 2.4;
+      public static final double autoAlignmentAreaMinXMeters = 1.8;
+    public static final double autoAlignmentAreaMaxXMeters = 2.7;
     public static final double autoAlignmentMaxYErrorMeters = 1.0;
     public static final double conePoleOffsetYMeters = 0.559;
 
