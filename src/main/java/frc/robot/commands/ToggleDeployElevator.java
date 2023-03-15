@@ -6,13 +6,10 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Elevator;
-import frc.robot.subsystems.Elevator.ElevatorState;
 
 public class ToggleDeployElevator extends CommandBase {
   /** Creates a new DeployIntake. */
   private Elevator mElevator;
-
-  private ElevatorState mElevatorState;
 
   public ToggleDeployElevator(Elevator subsystem) {
     // Use addRequirements() here to declare subsystem dependencies.

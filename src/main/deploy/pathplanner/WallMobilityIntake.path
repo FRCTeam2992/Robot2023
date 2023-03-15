@@ -1,0 +1,93 @@
+{
+  "waypoints": [
+    {
+      "anchorPoint": {
+        "x": 1.893889312108176,
+        "y": 0.513
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 3.0174391972715573,
+        "y": 0.513862566186671
+      },
+      "holonomicAngle": 0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 6.420351302241066,
+        "y": 0.9477909554109699
+      },
+      "prevControl": {
+        "x": 5.803716222817061,
+        "y": 0.9706292916859333
+      },
+      "nextControl": {
+        "x": 7.584532131708485,
+        "y": 0.904673146912176
+      },
+      "holonomicAngle": 2.862405226111784,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 6.3975129659661025,
+        "y": 1.5872643711099388
+      },
+      "prevControl": {
+        "x": 7.322465585102109,
+        "y": 1.6329410436598657
+      },
+      "nextControl": null,
+      "holonomicAngle": 1.301952672578749,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    }
+  ],
+  "maxVelocity": 2.8,
+  "maxAcceleration": 2.0,
+  "isReversed": null,
+  "markers": [
+    {
+      "position": 0.05,
+      "names": [
+        "UndeployElevator",
+        "TowerMoveBackstop",
+        "IntakeSpeedCube",
+        "IntakeDeployGround"
+      ]
+    },
+    {
+      "position": 1.469090909090892,
+      "names": [
+        "IntakeDeployHome"
+      ]
+    }
+  ]
+}

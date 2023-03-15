@@ -141,7 +141,6 @@ public class SwerveModuleFalconFalcon {
         setVelocityMeters(speed);
         setTurnAngle(angle);
     }
-    // TODO finish this
 
     public double getWheelPositionMeters() {
         double position = driveMotor.getSelectedSensorPosition();

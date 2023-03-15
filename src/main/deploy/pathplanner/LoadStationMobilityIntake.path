@@ -1,0 +1,93 @@
+{
+  "waypoints": [
+    {
+      "anchorPoint": {
+        "x": 1.893889312108176,
+        "y": 4.983
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.893889312108174,
+        "y": 4.983
+      },
+      "holonomicAngle": 0.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 7.012736955551604,
+        "y": 4.586403445836859
+      },
+      "prevControl": {
+        "x": 6.012736955551604,
+        "y": 4.586403445836859
+      },
+      "nextControl": {
+        "x": 7.584532131708485,
+        "y": 3.786403445836859
+      },
+      "holonomicAngle": -2.862405226111784,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 6.3975129659661025,
+        "y": 3.786403445836859
+      },
+      "prevControl": {
+        "x": 7.322465585102109,
+        "y": 3.786403445836859
+      },
+      "nextControl": null,
+      "holonomicAngle": -1.301952672578749,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    }
+  ],
+  "maxVelocity": 2.8,
+  "maxAcceleration": 2.0,
+  "isReversed": null,
+  "markers": [
+    {
+      "position": 0.05,
+      "names": [
+        "UndeployElevator",
+        "TowerMoveBackstop",
+        "IntakeSpeedCube",
+        "IntakeDeployGround"
+      ]
+    },
+    {
+      "position": 1.469090909090892,
+      "names": [
+        "IntakeDeployHome"
+      ]
+    }
+  ]
+}

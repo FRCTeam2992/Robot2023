@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.RobotState;
 import frc.robot.commands.MoveIntake;
-import frc.robot.commands.MoveSpindexer;
 import frc.robot.commands.SetClawState;
 import frc.robot.commands.SetIntakeDeployState;
 import frc.robot.commands.StopSpindexer;
