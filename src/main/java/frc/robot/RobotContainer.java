@@ -4,13 +4,10 @@
 
 package frc.robot;
 
-
 import frc.lib.autonomous.AutoPreloadScore;
 import frc.lib.autonomous.AutoSequence;
 import frc.lib.autonomous.AutoStartPosition;
 import frc.lib.autonomous.AutonomousTrajectory;
-import frc.lib.leds.Color;
-
 import frc.robot.Constants.TowerConstants;
 import frc.robot.RobotState.GridTargetingPosition;
 import frc.robot.commands.BalanceRobot;

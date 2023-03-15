@@ -111,22 +111,11 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledPeriodic() {
     if (ledsLoopCounter == 5) {
-      if (ledsFrameCounter == 1) {
-        mRobotContainer.mLEDs.cjColorChaseFrame1(Constants.LEDColors.blue, Constants.LEDColors.white);
-      } else if (ledsFrameCounter == 2) {
-        mRobotContainer.mLEDs.cjColorChaseFrame2(Constants.LEDColors.blue, Constants.LEDColors.white);
-      } else if (ledsFrameCounter == 3) {
-        mRobotContainer.mLEDs.cjColorChaseFrame3(Constants.LEDColors.blue, Constants.LEDColors.white);
-      } else if (ledsFrameCounter == 4) {
-        mRobotContainer.mLEDs.cjColorChaseFrame1(Constants.LEDColors.white, Constants.LEDColors.blue);
-      } else if (ledsFrameCounter == 5) {
-        mRobotContainer.mLEDs.cjColorChaseFrame2(Constants.LEDColors.white, Constants.LEDColors.blue);
-      } else if (ledsFrameCounter == 6) {
-        mRobotContainer.mLEDs.cjColorChaseFrame3(Constants.LEDColors.white, Constants.LEDColors.blue);
-      }
-      if (ledsFrameCounter == 6) {
-        ledsFrameCounter = 0;
-      }
+      mRobotContainer.mLEDs.showNextCycleColor(
+        Constants.LEDColors.blue,
+        Constants.LEDColors.white,
+        ledsFrameCounter);
+      if (ledsFrameCounter == 6) { ledsFrameCounter = 0; }
       ledsLoopCounter = 0;
       ledsFrameCounter++;
     }

@@ -8,11 +8,15 @@ import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.leds.Color;
+import frc.robot.Constants.LEDColors;
 
 public class LEDs extends SubsystemBase {
   /** Creates a new LEDs. */
   public AddressableLED m_led;
   public AddressableLEDBuffer m_ledBuffer;
+
+  private int ledsFrameCounter = 0;
+  private int ledsLoopCounter = 0;
 
   private int[] colorChaseArr = {};
 
@@ -33,6 +37,15 @@ public class LEDs extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+  }
+
+
+  public void showNextCycleColor(Color color1, Color color2, int frameCounter) {
+    if (frameCounter / 3 == 0) {
+      cjColorChaseFrame1(color1, color2);
+    } else {
+      cjColorChaseFrame3(color2, color1);
+    }
   }
 
   public void setSingleLEDColor(int pixel, Color color) {
