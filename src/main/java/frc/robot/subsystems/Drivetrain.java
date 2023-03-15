@@ -50,489 +50,535 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.RobotState;
+import frc.robot.commands.SetSwerveAngle;
 
 public class Drivetrain extends SubsystemBase {
-  /** Creates a new Drivetrain. */
-  // Motor Contollers
-  private TalonFX frontLeftDrive;
-  private TalonFX frontLeftTurn;
+    /** Creates a new Drivetrain. */
+    // Motor Contollers
+    private TalonFX frontLeftDrive;
+    private TalonFX frontLeftTurn;
 
-  private TalonFX frontRightDrive;
-  private TalonFX frontRightTurn;
+    private TalonFX frontRightDrive;
+    private TalonFX frontRightTurn;
 
-  private TalonFX rearLeftDrive;
-  private TalonFX rearLeftTurn;
+    private TalonFX rearLeftDrive;
+    private TalonFX rearLeftTurn;
 
-  private TalonFX rearRightDrive;
-  private TalonFX rearRightTurn;
+    private TalonFX rearRightDrive;
+    private TalonFX rearRightTurn;
 
-  // Module CAN Encoders
-  private final CANCoder frontLeftEncoder;
-  private final CANCoder frontRightEncoder;
-  private final CANCoder rearLeftEncoder;
-  private final CANCoder rearRightEncoder;
+    // Module CAN Encoders
+    private final CANCoder frontLeftEncoder;
+    private final CANCoder frontRightEncoder;
+    private final CANCoder rearLeftEncoder;
+    private final CANCoder rearRightEncoder;
 
-  // Turn PID Controllers
-  private final PIDController frontLeftController;
-  private final PIDController frontRightController;
-  private final PIDController rearLeftController;
-  private final PIDController rearRightController;
-
-  // Swerve Modules
-  public final SwerveModuleFalconFalcon frontLeftModule;
-  public final SwerveModuleFalconFalcon frontRightModule;
-  public final SwerveModuleFalconFalcon rearLeftModule;
-  public final SwerveModuleFalconFalcon rearRightModule;
-
-  // Swerve Controller
-  public final SwerveController swerveController;
-
-  // Limelights
-  public final LimeLight limeLightCamera11;
-  // public final LimeLight limeLightCamera12;
-
-  private DataLog mDataLog;
-
-  private StringLogEntry limelight11JsonLog;
-  // private StringLogEntry limelight12JsonLog;
-
-  private DoubleArrayLogEntry ll11BotposeFieldSpaceLog;
-  private DoubleArrayLogEntry ll12BotposeFieldSpaceLog;
-  private DoubleArrayLogEntry ll11BotposeBlueLog;
-  private DoubleArrayLogEntry ll12BotposeBlueLog;
-  private DoubleArrayLogEntry ll11BotposeRedLog;
-  private DoubleArrayLogEntry ll12BotposeRedLog;
-  private IntegerLogEntry ll11TargetIDLog;
-  private IntegerLogEntry ll12TargetIDLog;
-  private double[] limelight11BotPose;
-
-  // Robot Gyro
-  public AHRS navx;
-  public double gyroOffset = 0.0;
-
-  public Pose2d latestSwervePose = new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0.0));
-  public Pose2d latestVisionPose = new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0.0));
-
-  // Swerve Drive Kinematics
-  public final SwerveDriveKinematics swerveDriveKinematics;
-
-  // Swerve Drive Odometry
-  public final SwerveDrivePoseEstimator swerveDrivePoseEstimator;
-  public SwerveModulePosition[] swerveDriveModulePositions = {
-      new SwerveModulePosition(),
-      new SwerveModulePosition(),
-      new SwerveModulePosition(),
-      new SwerveModulePosition()
-  };
-
-  public Transform2d moved;
-
-  // public PathPlannerTrajectory testPath;
-  public PathPlannerTrajectory driveStraight;
-  public PathPlannerTrajectory curvePath;
-  public PathPlannerTrajectory testPath;
-
-  // State Variables
-  private boolean inSlowMode = false;
-  private boolean doFieldOreint = true;
-  private boolean scoringMode = false;
-  private boolean loadingMode = false;
-
-  private int dashboardCounter = 0;
-
-  public Drivetrain() {
-    // Motor Inits
-    frontLeftDrive = new TalonFX(Constants.DrivetrainConstants.CanIDs.frontLeftDrive, "CanBus2");
-    initTalonFX(frontLeftDrive, false);
-
-    frontLeftTurn = new TalonFX(Constants.DrivetrainConstants.CanIDs.frontLeftTurn, "CanBus2");
-    initTalonFX(frontLeftTurn, true);
-
-    frontRightDrive = new TalonFX(Constants.DrivetrainConstants.CanIDs.frontRightDrive, "CanBus2");
-    initTalonFX(frontRightDrive, false);
-
-    frontRightTurn = new TalonFX(Constants.DrivetrainConstants.CanIDs.frontRightTurn, "CanBus2");
-    initTalonFX(frontRightTurn, true);
-
-    rearRightDrive = new TalonFX(Constants.DrivetrainConstants.CanIDs.rearRightDrive, "CanBus2");
-    initTalonFX(rearRightDrive, false);
-
-    rearRightTurn = new TalonFX(Constants.DrivetrainConstants.CanIDs.rearRightTurn, "CanBus2");
-    initTalonFX(rearRightTurn, true);
-
-    rearLeftDrive = new TalonFX(Constants.DrivetrainConstants.CanIDs.rearLeftDrive, "CanBus2");
-    initTalonFX(rearLeftDrive, false);
-
-    rearLeftTurn = new TalonFX(Constants.DrivetrainConstants.CanIDs.rearLeftTurn, "CanBus2");
-    initTalonFX(rearLeftTurn, true);
-
-    frontRightEncoder = new CANCoder(Constants.DrivetrainConstants.CanIDs.frontRightEncoder, "CanBus2");
-    initCANCoder(frontRightEncoder, AbsoluteSensorRange.Signed_PlusMinus180, true);
-
-    frontLeftEncoder = new CANCoder(Constants.DrivetrainConstants.CanIDs.frontLeftEncoder, "CanBus2");
-    initCANCoder(frontLeftEncoder, AbsoluteSensorRange.Signed_PlusMinus180, true);
-
-    rearRightEncoder = new CANCoder(Constants.DrivetrainConstants.CanIDs.rearRightEncoder, "CanBus2");
-    initCANCoder(rearRightEncoder, AbsoluteSensorRange.Signed_PlusMinus180, true);
-
-    rearLeftEncoder = new CANCoder(Constants.DrivetrainConstants.CanIDs.rearLeftEncoder, "CanBus2");
-    initCANCoder(rearLeftEncoder, AbsoluteSensorRange.Signed_PlusMinus180, true);
-
-    setDriveNeutralMode(NeutralMode.Coast);
-    setTurnNeutralMode(NeutralMode.Brake);
-
-    setDriveCurrentLimit(40.0, 40.0);
-    setTurnCurrentLimit(60.0); // potentially unused
-
-    frontLeftController = new PIDController(Constants.DrivetrainConstants.PIDConstants.turnP,
-        Constants.DrivetrainConstants.PIDConstants.turnI,
-        Constants.DrivetrainConstants.PIDConstants.turnD);
-    frontLeftController.enableContinuousInput(-180.0, 180.0);
-    frontLeftController.setTolerance(2.0);
-
-    frontRightController = new PIDController(Constants.DrivetrainConstants.PIDConstants.turnP,
-        Constants.DrivetrainConstants.PIDConstants.turnI,
-        Constants.DrivetrainConstants.PIDConstants.turnD);
-    frontRightController.enableContinuousInput(-180.0, 180.0);
-    frontRightController.setTolerance(2.0);
-
-    rearLeftController = new PIDController(Constants.DrivetrainConstants.PIDConstants.turnP,
-        Constants.DrivetrainConstants.PIDConstants.turnI,
-        Constants.DrivetrainConstants.PIDConstants.turnD);
-    rearLeftController.enableContinuousInput(-180.0, 180.0);
-    rearLeftController.setTolerance(2.0);
-
-    rearRightController = new PIDController(Constants.DrivetrainConstants.PIDConstants.turnP,
-        Constants.DrivetrainConstants.PIDConstants.turnI,
-        Constants.DrivetrainConstants.PIDConstants.turnD);
-    rearRightController.enableContinuousInput(-180.0, 180.0);
-    rearRightController.setTolerance(2.0);
-
-    // Set the Drive PID Controllers
-    frontLeftDrive.config_kP(0, Constants.DrivetrainConstants.PIDConstants.driveP);
-    frontLeftDrive.config_kI(0, Constants.DrivetrainConstants.PIDConstants.driveI);
-    frontLeftDrive.config_kD(0, Constants.DrivetrainConstants.PIDConstants.driveD);
-    frontLeftDrive.config_kF(0, Constants.DrivetrainConstants.PIDConstants.driveF);
-
-    frontRightDrive.config_kP(0, Constants.DrivetrainConstants.PIDConstants.driveP);
-    frontRightDrive.config_kI(0, Constants.DrivetrainConstants.PIDConstants.driveI);
-    frontRightDrive.config_kD(0, Constants.DrivetrainConstants.PIDConstants.driveD);
-    frontRightDrive.config_kF(0, Constants.DrivetrainConstants.PIDConstants.driveF);
-
-    rearLeftDrive.config_kP(0, Constants.DrivetrainConstants.PIDConstants.driveP);
-    rearLeftDrive.config_kI(0, Constants.DrivetrainConstants.PIDConstants.driveI);
-    rearLeftDrive.config_kD(0, Constants.DrivetrainConstants.PIDConstants.driveD);
-    rearLeftDrive.config_kF(0, Constants.DrivetrainConstants.PIDConstants.driveF);
-
-    rearRightDrive.config_kP(0, Constants.DrivetrainConstants.PIDConstants.driveP);
-    rearRightDrive.config_kI(0, Constants.DrivetrainConstants.PIDConstants.driveI);
-    rearRightDrive.config_kD(0, Constants.DrivetrainConstants.PIDConstants.driveD);
-    rearRightDrive.config_kF(0, Constants.DrivetrainConstants.PIDConstants.driveF);
+    // Turn PID Controllers
+    private final PIDController frontLeftController;
+    private final PIDController frontRightController;
+    private final PIDController rearLeftController;
+    private final PIDController rearRightController;
 
     // Swerve Modules
-    frontLeftModule = new SwerveModuleFalconFalcon(frontLeftDrive, frontLeftTurn, frontLeftEncoder,
-        Constants.DrivetrainConstants.frontLeftOffset, frontLeftController,
-        Constants.DrivetrainConstants.driveWheelDiameter,
-        Constants.DrivetrainConstants.driveGearRatio,
-        Constants.DrivetrainConstants.swerveMaxSpeed);
-
-    frontRightModule = new SwerveModuleFalconFalcon(frontRightDrive, frontRightTurn, frontRightEncoder,
-        Constants.DrivetrainConstants.frontRightOffset, frontRightController,
-        Constants.DrivetrainConstants.driveWheelDiameter,
-        Constants.DrivetrainConstants.driveGearRatio,
-        Constants.DrivetrainConstants.swerveMaxSpeed);
-
-    rearLeftModule = new SwerveModuleFalconFalcon(rearLeftDrive, rearLeftTurn, rearLeftEncoder,
-        Constants.DrivetrainConstants.rearLeftOffset,
-        rearLeftController, Constants.DrivetrainConstants.driveWheelDiameter,
-        Constants.DrivetrainConstants.driveGearRatio,
-        Constants.DrivetrainConstants.swerveMaxSpeed);
-
-    rearRightModule = new SwerveModuleFalconFalcon(rearRightDrive, rearRightTurn, rearRightEncoder,
-        Constants.DrivetrainConstants.rearRightOffset, rearRightController,
-        Constants.DrivetrainConstants.driveWheelDiameter,
-        Constants.DrivetrainConstants.driveGearRatio,
-        Constants.DrivetrainConstants.swerveMaxSpeed);
+    public final SwerveModuleFalconFalcon frontLeftModule;
+    public final SwerveModuleFalconFalcon frontRightModule;
+    public final SwerveModuleFalconFalcon rearLeftModule;
+    public final SwerveModuleFalconFalcon rearRightModule;
 
     // Swerve Controller
-    swerveController = new SwerveController(
-        Constants.DrivetrainConstants.swerveLength,
-        Constants.DrivetrainConstants.swerveWidth);
+    public final SwerveController swerveController;
 
-    // Load Motion Paths
-    loadMotionPaths();
+    // Limelights
+    public final LimeLight limeLightCamera11;
+    // public final LimeLight limeLightCamera12;
 
-    // Limelight
-    limeLightCamera11 = new LimeLight("limelight-eleven");
-    // limeLightCamera12 = new LimeLight("limelight-twelve");
-    limelight11BotPose = new double[7];
+    private DataLog mDataLog;
+    private RobotState mRobotState;
 
-    if (Constants.dataLogging) {
-      mDataLog = DataLogManager.getLog();
+    private StringLogEntry limelight11JsonLog;
+    // private StringLogEntry limelight12JsonLog;
 
-      limelight11JsonLog = new StringLogEntry(mDataLog, "/ll/eleven/json");
-      // limelight12JsonLog = new StringLogEntry(mDataLog, "/ll/twelve/json");
+    private DoubleArrayLogEntry ll11BotposeFieldSpaceLog;
+    private DoubleArrayLogEntry ll12BotposeFieldSpaceLog;
+    private DoubleArrayLogEntry ll11BotposeBlueLog;
+    private DoubleArrayLogEntry ll12BotposeBlueLog;
+    private DoubleArrayLogEntry ll11BotposeRedLog;
+    private DoubleArrayLogEntry ll12BotposeRedLog;
+    private IntegerLogEntry ll11TargetIDLog;
+    private IntegerLogEntry ll12TargetIDLog;
+    private double[] limelight11BotPose;
 
-      ll11BotposeFieldSpaceLog = new DoubleArrayLogEntry(mDataLog, "/ll/eleven/botpose_field");
-      // ll12BotposeFieldSpaceLog = new DoubleArrayLogEntry(mDataLog,
-      // "/ll/twelve/botpose_field");
-      ll11BotposeBlueLog = new DoubleArrayLogEntry(mDataLog, "/ll/eleven/botpose_blue");
-      // ll12BotposeBlueLog = new DoubleArrayLogEntry(mDataLog,
-      // "/ll/twelve/botpose_blue");
-      ll11BotposeRedLog = new DoubleArrayLogEntry(mDataLog, "/ll/eleven/botpose_red");
-      // ll12BotposeRedLog = new DoubleArrayLogEntry(mDataLog,
-      // "/ll/twelve/botpose_red");
-      ll11TargetIDLog = new IntegerLogEntry(mDataLog, "/ll/eleven/target_id");
-      // ll12TargetIDLog = new IntegerLogEntry(mDataLog, "/ll/twelve/target_id");
+    // Robot Gyro
+    public AHRS navx;
+    public double gyroOffset = 0.0;
 
-    }
-
-    // robot gyro initialization
-    navx = new AHRS(SPI.Port.kMXP, (byte) 50);
-
-    swerveDriveModulePositions[0] = frontLeftModule.getPosition();
-    swerveDriveModulePositions[1] = frontRightModule.getPosition();
-    swerveDriveModulePositions[2] = rearLeftModule.getPosition();
-    swerveDriveModulePositions[3] = rearRightModule.getPosition();
+    public Pose2d latestSwervePose = new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0.0));
+    public Pose2d latestVisionPose = new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(0.0));
 
     // Swerve Drive Kinematics
-    swerveDriveKinematics = new SwerveDriveKinematics(
-        Constants.DrivetrainConstants.frontLeftLocation,
-        Constants.DrivetrainConstants.frontRightLocation,
-        Constants.DrivetrainConstants.rearLeftLocation,
-        Constants.DrivetrainConstants.rearRightLocation);
+    public final SwerveDriveKinematics swerveDriveKinematics;
 
-    // Serve Drive Odometry
-    swerveDrivePoseEstimator = new SwerveDrivePoseEstimator(
-        swerveDriveKinematics,
-        // Rotation2d.fromDegrees(navx.getYaw()),
-        Rotation2d.fromDegrees(getGyroYaw()),
-        swerveDriveModulePositions,
-        new Pose2d(0.0, 0.0, new Rotation2d()),
-        // State measurement standard deviations. X, Y, theta.
-        new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.02, 0.02, 0.01),
-        // Global measurement standard deviations. X, Y, and theta.
-        new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.1, 0.1, 0.05));
-  }
+    // Swerve Drive Odometry
+    public final SwerveDrivePoseEstimator swerveDrivePoseEstimator;
+    public SwerveModulePosition[] swerveDriveModulePositions = {
+            new SwerveModulePosition(),
+            new SwerveModulePosition(),
+            new SwerveModulePosition(),
+            new SwerveModulePosition()
+    };
 
-  private void initTalonFX(TalonFX motorContollerName, boolean isInverted) {
-    motorContollerName.setInverted(isInverted);
-  }
+    public Transform2d moved;
 
-  private void initCANCoder(CANCoder CANCoderName, AbsoluteSensorRange sensorRange, boolean sensorDirection) {
-    CANCoderName.configAbsoluteSensorRange(sensorRange);
-    CANCoderName.configSensorDirection(sensorDirection);
-  }
+    // public PathPlannerTrajectory testPath;
+    public PathPlannerTrajectory driveStraight;
+    public PathPlannerTrajectory curvePath;
+    public PathPlannerTrajectory testPath;
 
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-    swerveDriveModulePositions[0] = frontLeftModule.getPosition();
-    swerveDriveModulePositions[1] = frontRightModule.getPosition();
-    swerveDriveModulePositions[2] = rearLeftModule.getPosition();
-    swerveDriveModulePositions[3] = rearRightModule.getPosition();
+    // State Variables
+    private boolean inSlowMode = false;
+    private boolean doFieldOreint = true;
+    private boolean scoringMode = false;
+    private boolean loadingMode = false;
 
-    latestSwervePose = swerveDrivePoseEstimator.updateWithTime(
-        Timer.getFPGATimestamp(),
-        Rotation2d.fromDegrees(-getGyroYaw()),
-        swerveDriveModulePositions);
+    private int dashboardCounter = 0;
 
-    if (Constants.dataLogging) {
-      limelight11JsonLog.append(limeLightCamera11.getLimelightJson());
-      // limelight12JsonLog.append(limeLightCamera12.getLimelightJson());
+    public Drivetrain(RobotState robotState) {
+        this.mRobotState = robotState;
 
-      ll11BotposeFieldSpaceLog.append(limeLightCamera11.getBotPose(CoordinateSpace.Field));
-      // ll12BotposeFieldSpaceLog.append(limeLightCamera12.getBotPose(CoordinateSpace.Field));
-      ll11BotposeBlueLog.append(limeLightCamera11.getBotPose(CoordinateSpace.Blue));
-      // ll12BotposeBlueLog.append(limeLightCamera12.getBotPose(CoordinateSpace.Blue));
-      ll11BotposeRedLog.append(limeLightCamera11.getBotPose(CoordinateSpace.Red));
-      // ll12BotposeRedLog.append(limeLightCamera12.getBotPose(CoordinateSpace.Red));
-      ll11TargetIDLog.append(limeLightCamera11.getTargetID());
-      // ll12TargetIDLog.append(limeLightCamera12.getTargetID());
+        // Motor Inits
+        frontLeftDrive = new TalonFX(Constants.DrivetrainConstants.CanIDs.frontLeftDrive, "CanBus2");
+        initTalonFX(frontLeftDrive, false);
+
+        frontLeftTurn = new TalonFX(Constants.DrivetrainConstants.CanIDs.frontLeftTurn, "CanBus2");
+        initTalonFX(frontLeftTurn, true);
+
+        frontRightDrive = new TalonFX(Constants.DrivetrainConstants.CanIDs.frontRightDrive, "CanBus2");
+        initTalonFX(frontRightDrive, false);
+
+        frontRightTurn = new TalonFX(Constants.DrivetrainConstants.CanIDs.frontRightTurn, "CanBus2");
+        initTalonFX(frontRightTurn, true);
+
+        rearRightDrive = new TalonFX(Constants.DrivetrainConstants.CanIDs.rearRightDrive, "CanBus2");
+        initTalonFX(rearRightDrive, false);
+
+        rearRightTurn = new TalonFX(Constants.DrivetrainConstants.CanIDs.rearRightTurn, "CanBus2");
+        initTalonFX(rearRightTurn, true);
+
+        rearLeftDrive = new TalonFX(Constants.DrivetrainConstants.CanIDs.rearLeftDrive, "CanBus2");
+        initTalonFX(rearLeftDrive, false);
+
+        rearLeftTurn = new TalonFX(Constants.DrivetrainConstants.CanIDs.rearLeftTurn, "CanBus2");
+        initTalonFX(rearLeftTurn, true);
+
+        frontRightEncoder = new CANCoder(Constants.DrivetrainConstants.CanIDs.frontRightEncoder, "CanBus2");
+        initCANCoder(frontRightEncoder, AbsoluteSensorRange.Signed_PlusMinus180, true);
+
+        frontLeftEncoder = new CANCoder(Constants.DrivetrainConstants.CanIDs.frontLeftEncoder, "CanBus2");
+        initCANCoder(frontLeftEncoder, AbsoluteSensorRange.Signed_PlusMinus180, true);
+
+        rearRightEncoder = new CANCoder(Constants.DrivetrainConstants.CanIDs.rearRightEncoder, "CanBus2");
+        initCANCoder(rearRightEncoder, AbsoluteSensorRange.Signed_PlusMinus180, true);
+
+        rearLeftEncoder = new CANCoder(Constants.DrivetrainConstants.CanIDs.rearLeftEncoder, "CanBus2");
+        initCANCoder(rearLeftEncoder, AbsoluteSensorRange.Signed_PlusMinus180, true);
+
+        setDriveNeutralMode(NeutralMode.Coast);
+        setTurnNeutralMode(NeutralMode.Brake);
+
+        setDriveCurrentLimit(40.0, 40.0);
+        setTurnCurrentLimit(60.0); // potentially unused
+
+        frontLeftController = new PIDController(Constants.DrivetrainConstants.PIDConstants.turnP,
+                Constants.DrivetrainConstants.PIDConstants.turnI,
+                Constants.DrivetrainConstants.PIDConstants.turnD);
+        frontLeftController.enableContinuousInput(-180.0, 180.0);
+        frontLeftController.setTolerance(2.0);
+
+        frontRightController = new PIDController(Constants.DrivetrainConstants.PIDConstants.turnP,
+                Constants.DrivetrainConstants.PIDConstants.turnI,
+                Constants.DrivetrainConstants.PIDConstants.turnD);
+        frontRightController.enableContinuousInput(-180.0, 180.0);
+        frontRightController.setTolerance(2.0);
+
+        rearLeftController = new PIDController(Constants.DrivetrainConstants.PIDConstants.turnP,
+                Constants.DrivetrainConstants.PIDConstants.turnI,
+                Constants.DrivetrainConstants.PIDConstants.turnD);
+        rearLeftController.enableContinuousInput(-180.0, 180.0);
+        rearLeftController.setTolerance(2.0);
+
+        rearRightController = new PIDController(Constants.DrivetrainConstants.PIDConstants.turnP,
+                Constants.DrivetrainConstants.PIDConstants.turnI,
+                Constants.DrivetrainConstants.PIDConstants.turnD);
+        rearRightController.enableContinuousInput(-180.0, 180.0);
+        rearRightController.setTolerance(2.0);
+
+        // Set the Drive PID Controllers
+        frontLeftDrive.config_kP(0, Constants.DrivetrainConstants.PIDConstants.driveP);
+        frontLeftDrive.config_kI(0, Constants.DrivetrainConstants.PIDConstants.driveI);
+        frontLeftDrive.config_kD(0, Constants.DrivetrainConstants.PIDConstants.driveD);
+        frontLeftDrive.config_kF(0, Constants.DrivetrainConstants.PIDConstants.driveF);
+
+        frontRightDrive.config_kP(0, Constants.DrivetrainConstants.PIDConstants.driveP);
+        frontRightDrive.config_kI(0, Constants.DrivetrainConstants.PIDConstants.driveI);
+        frontRightDrive.config_kD(0, Constants.DrivetrainConstants.PIDConstants.driveD);
+        frontRightDrive.config_kF(0, Constants.DrivetrainConstants.PIDConstants.driveF);
+
+        rearLeftDrive.config_kP(0, Constants.DrivetrainConstants.PIDConstants.driveP);
+        rearLeftDrive.config_kI(0, Constants.DrivetrainConstants.PIDConstants.driveI);
+        rearLeftDrive.config_kD(0, Constants.DrivetrainConstants.PIDConstants.driveD);
+        rearLeftDrive.config_kF(0, Constants.DrivetrainConstants.PIDConstants.driveF);
+
+        rearRightDrive.config_kP(0, Constants.DrivetrainConstants.PIDConstants.driveP);
+        rearRightDrive.config_kI(0, Constants.DrivetrainConstants.PIDConstants.driveI);
+        rearRightDrive.config_kD(0, Constants.DrivetrainConstants.PIDConstants.driveD);
+        rearRightDrive.config_kF(0, Constants.DrivetrainConstants.PIDConstants.driveF);
+
+        // Swerve Modules
+        frontLeftModule = new SwerveModuleFalconFalcon(frontLeftDrive, frontLeftTurn, frontLeftEncoder,
+                Constants.DrivetrainConstants.frontLeftOffset, frontLeftController,
+                Constants.DrivetrainConstants.driveWheelDiameter,
+                Constants.DrivetrainConstants.driveGearRatio,
+                Constants.DrivetrainConstants.swerveMaxSpeed);
+
+        frontRightModule = new SwerveModuleFalconFalcon(frontRightDrive, frontRightTurn, frontRightEncoder,
+                Constants.DrivetrainConstants.frontRightOffset, frontRightController,
+                Constants.DrivetrainConstants.driveWheelDiameter,
+                Constants.DrivetrainConstants.driveGearRatio,
+                Constants.DrivetrainConstants.swerveMaxSpeed);
+
+        rearLeftModule = new SwerveModuleFalconFalcon(rearLeftDrive, rearLeftTurn, rearLeftEncoder,
+                Constants.DrivetrainConstants.rearLeftOffset,
+                rearLeftController, Constants.DrivetrainConstants.driveWheelDiameter,
+                Constants.DrivetrainConstants.driveGearRatio,
+                Constants.DrivetrainConstants.swerveMaxSpeed);
+
+        rearRightModule = new SwerveModuleFalconFalcon(rearRightDrive, rearRightTurn, rearRightEncoder,
+                Constants.DrivetrainConstants.rearRightOffset, rearRightController,
+                Constants.DrivetrainConstants.driveWheelDiameter,
+                Constants.DrivetrainConstants.driveGearRatio,
+                Constants.DrivetrainConstants.swerveMaxSpeed);
+
+        // Swerve Controller
+        swerveController = new SwerveController(
+                Constants.DrivetrainConstants.swerveLength,
+                Constants.DrivetrainConstants.swerveWidth);
+
+        // Load Motion Paths
+        loadMotionPaths();
+
+        // Limelight
+        limeLightCamera11 = new LimeLight("limelight-eleven");
+        // limeLightCamera12 = new LimeLight("limelight-twelve");
+        limelight11BotPose = new double[7];
+
+        if (Constants.dataLogging) {
+            mDataLog = DataLogManager.getLog();
+
+            limelight11JsonLog = new StringLogEntry(mDataLog, "/ll/eleven/json");
+            // limelight12JsonLog = new StringLogEntry(mDataLog, "/ll/twelve/json");
+
+            ll11BotposeFieldSpaceLog = new DoubleArrayLogEntry(mDataLog, "/ll/eleven/botpose_field");
+            // ll12BotposeFieldSpaceLog = new DoubleArrayLogEntry(mDataLog,
+            // "/ll/twelve/botpose_field");
+            ll11BotposeBlueLog = new DoubleArrayLogEntry(mDataLog, "/ll/eleven/botpose_blue");
+            // ll12BotposeBlueLog = new DoubleArrayLogEntry(mDataLog,
+            // "/ll/twelve/botpose_blue");
+            ll11BotposeRedLog = new DoubleArrayLogEntry(mDataLog, "/ll/eleven/botpose_red");
+            // ll12BotposeRedLog = new DoubleArrayLogEntry(mDataLog,
+            // "/ll/twelve/botpose_red");
+            ll11TargetIDLog = new IntegerLogEntry(mDataLog, "/ll/eleven/target_id");
+            // ll12TargetIDLog = new IntegerLogEntry(mDataLog, "/ll/twelve/target_id");
+
+        }
+
+        // robot gyro initialization
+        navx = new AHRS(SPI.Port.kMXP, (byte) 50);
+
+        swerveDriveModulePositions[0] = frontLeftModule.getPosition();
+        swerveDriveModulePositions[1] = frontRightModule.getPosition();
+        swerveDriveModulePositions[2] = rearLeftModule.getPosition();
+        swerveDriveModulePositions[3] = rearRightModule.getPosition();
+
+        // Swerve Drive Kinematics
+        swerveDriveKinematics = new SwerveDriveKinematics(
+                Constants.DrivetrainConstants.frontLeftLocation,
+                Constants.DrivetrainConstants.frontRightLocation,
+                Constants.DrivetrainConstants.rearLeftLocation,
+                Constants.DrivetrainConstants.rearRightLocation);
+
+        // Serve Drive Odometry
+        swerveDrivePoseEstimator = new SwerveDrivePoseEstimator(
+                swerveDriveKinematics,
+                // Rotation2d.fromDegrees(navx.getYaw()),
+                Rotation2d.fromDegrees(getGyroYaw()),
+                swerveDriveModulePositions,
+                new Pose2d(0.0, 0.0, new Rotation2d()),
+                // State measurement standard deviations. X, Y, theta.
+                new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.02, 0.02, 0.01),
+                // Global measurement standard deviations. X, Y, and theta.
+                new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.1, 0.1, 0.05));
     }
 
-    if (dashboardCounter++ >= 5) {
-      SmartDashboard.putNumber("front left encoder", frontLeftModule.getEncoderAngle());
-      SmartDashboard.putNumber("front right encoder", frontRightModule.getEncoderAngle());
-      SmartDashboard.putNumber("back left encoder", rearLeftModule.getEncoderAngle());
-      SmartDashboard.putNumber("back right encoder", rearRightModule.getEncoderAngle());
-
-      SmartDashboard.putNumber("Gyro Yaw (raw deg)", navx.getYaw());
-      SmartDashboard.putNumber("Gyro Yaw (adj deg)", getGyroYaw());
-
-      SmartDashboard.putNumber("Odometry Rotation (deg)", latestSwervePose.getRotation().getDegrees());
-      SmartDashboard.putNumber("Odometry X (in)", (latestSwervePose.getX() * (100 / 2.54)));
-      SmartDashboard.putNumber("Odometry Y (in)", (latestSwervePose.getY() * (100 / 2.54)));
-      SmartDashboard.putNumber("Odometry X (m)", latestSwervePose.getX());
-      SmartDashboard.putNumber("Odometry Y (m)", latestSwervePose.getY());
-
-      limelight11BotPose = limeLightCamera11.getBotPose(getAllianceCoordinateSpace());
-      // limelight11BotPose =
-      // limeLightCamera11.getBotPose(getAllianceCoordinateSpace());
-      if (limeLightCamera11.getTargetID() > 0) {
-        SmartDashboard.putNumber("Limelight Pose X (m)", limelight11BotPose[0]);
-        SmartDashboard.putNumber("Limelight Pose Y (m)", limelight11BotPose[1]);
-        SmartDashboard.putNumber("Limelight Pose Yaw (deg)", limelight11BotPose[5]);
-        // SmartDashboard.putNumber("Limelight Pose Latency (ms)",
-        // limelight11BotPose[6]);
-
-      }
-      SmartDashboard.putNumber("Limelight Tid", limeLightCamera11.getTargetID());
-      dashboardCounter = 0;
+    private void initTalonFX(TalonFX motorContollerName, boolean isInverted) {
+        motorContollerName.setInverted(isInverted);
     }
 
-    /*
-     * TODO: Finish this once we test limelight botPose data
-     */
-    if (limeLightCamera11.getTargetID() > 0) {
-      limelight11BotPose = limeLightCamera11.getBotPose(getAllianceCoordinateSpace());
-      latestVisionPose = new Pose2d(limelight11BotPose[0], limelight11BotPose[1],
-          Rotation2d.fromDegrees(limelight11BotPose[5]));
-      swerveDrivePoseEstimator.addVisionMeasurement(latestVisionPose,
-          Timer.getFPGATimestamp());
+    private void initCANCoder(CANCoder CANCoderName, AbsoluteSensorRange sensorRange, boolean sensorDirection) {
+        CANCoderName.configAbsoluteSensorRange(sensorRange);
+        CANCoderName.configSensorDirection(sensorDirection);
     }
-  }
 
-  public CoordinateSpace getAllianceCoordinateSpace() {
-    if (DriverStation.getAlliance() == DriverStation.Alliance.Red) {
-      return CoordinateSpace.Red;
+    @Override
+    public void periodic() {
+        // This method will be called once per scheduler run
+        swerveDriveModulePositions[0] = frontLeftModule.getPosition();
+        swerveDriveModulePositions[1] = frontRightModule.getPosition();
+        swerveDriveModulePositions[2] = rearLeftModule.getPosition();
+        swerveDriveModulePositions[3] = rearRightModule.getPosition();
+
+        latestSwervePose = swerveDrivePoseEstimator.updateWithTime(
+                Timer.getFPGATimestamp(),
+                Rotation2d.fromDegrees(-getGyroYaw()),
+                swerveDriveModulePositions);
+
+        if (Constants.dataLogging) {
+            limelight11JsonLog.append(limeLightCamera11.getLimelightJson());
+            // limelight12JsonLog.append(limeLightCamera12.getLimelightJson());
+
+            ll11BotposeFieldSpaceLog.append(limeLightCamera11.getBotPose(CoordinateSpace.Field));
+            // ll12BotposeFieldSpaceLog.append(limeLightCamera12.getBotPose(CoordinateSpace.Field));
+            ll11BotposeBlueLog.append(limeLightCamera11.getBotPose(CoordinateSpace.Blue));
+            // ll12BotposeBlueLog.append(limeLightCamera12.getBotPose(CoordinateSpace.Blue));
+            ll11BotposeRedLog.append(limeLightCamera11.getBotPose(CoordinateSpace.Red));
+            // ll12BotposeRedLog.append(limeLightCamera12.getBotPose(CoordinateSpace.Red));
+            ll11TargetIDLog.append(limeLightCamera11.getTargetID());
+            // ll12TargetIDLog.append(limeLightCamera12.getTargetID());
+        }
+
+        if (dashboardCounter++ >= 5) {
+            SmartDashboard.putNumber("front left encoder", frontLeftModule.getEncoderAngle());
+            SmartDashboard.putNumber("front right encoder", frontRightModule.getEncoderAngle());
+            SmartDashboard.putNumber("back left encoder", rearLeftModule.getEncoderAngle());
+            SmartDashboard.putNumber("back right encoder", rearRightModule.getEncoderAngle());
+
+            SmartDashboard.putNumber("Gyro Yaw (raw deg)", navx.getYaw());
+            SmartDashboard.putNumber("Gyro Yaw (adj deg)", getGyroYaw());
+            SmartDashboard.putNumber("Robot Gyro Pitch (raw deg)", getRobotPitch()); // Navx Roll
+
+            SmartDashboard.putNumber("Odometry Rotation (deg)", latestSwervePose.getRotation().getDegrees());
+            SmartDashboard.putNumber("Odometry X (in)", (latestSwervePose.getX() * (100 / 2.54)));
+            SmartDashboard.putNumber("Odometry Y (in)", (latestSwervePose.getY() * (100 / 2.54)));
+            SmartDashboard.putNumber("Odometry X (m)", latestSwervePose.getX());
+            SmartDashboard.putNumber("Odometry Y (m)", latestSwervePose.getY());
+
+            limelight11BotPose = limeLightCamera11.getBotPose(getAllianceCoordinateSpace());
+            // limelight11BotPose =
+            // limeLightCamera11.getBotPose(getAllianceCoordinateSpace());
+            if (limeLightCamera11.getTargetID() > 0) {
+                SmartDashboard.putNumber("Limelight Pose X (m)", limelight11BotPose[0]);
+                SmartDashboard.putNumber("Limelight Pose Y (m)", limelight11BotPose[1]);
+                SmartDashboard.putNumber("Limelight Pose Yaw (deg)", limelight11BotPose[5]);
+                // SmartDashboard.putNumber("Limelight Pose Latency (ms)",
+                // limelight11BotPose[6]);
+
+            }
+            SmartDashboard.putNumber("Limelight Tid", limeLightCamera11.getTargetID());
+            dashboardCounter = 0;
+        }
+
+        /*
+         * TODO: Finish this once we test limelight botPose data
+         */
+        if (this.mRobotState.useLimelightOdometryUpdates && limeLightCamera11.getTargetID() > 0) {
+            limelight11BotPose = limeLightCamera11.getBotPose(getAllianceCoordinateSpace());
+            latestVisionPose = new Pose2d(limelight11BotPose[0], limelight11BotPose[1],
+                    Rotation2d.fromDegrees(limelight11BotPose[5]));
+            swerveDrivePoseEstimator.addVisionMeasurement(latestVisionPose,
+                    Timer.getFPGATimestamp());
+        }
     }
-    return CoordinateSpace.Blue;
-  }
-  public void setDriveNeutralMode(NeutralMode mode) {
-    frontLeftDrive.setNeutralMode(mode);
-    frontRightDrive.setNeutralMode(mode);
-    rearLeftDrive.setNeutralMode(mode);
-    rearRightDrive.setNeutralMode(mode);
-  }
 
-  public void setTurnNeutralMode(NeutralMode mode) {
-    frontLeftTurn.setNeutralMode(mode);
-    frontRightTurn.setNeutralMode(mode);
-    rearLeftTurn.setNeutralMode(mode);
-    rearRightTurn.setNeutralMode(mode);
-  }
-
-  public void setDriveCurrentLimit(double currentLimit, double triggerCurrent) {
-    frontLeftDrive.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, currentLimit, triggerCurrent, 0));
-    frontRightDrive
-        .configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, currentLimit, triggerCurrent, 0));
-    rearLeftDrive.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, currentLimit, triggerCurrent, 0));
-    rearRightDrive.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, currentLimit, triggerCurrent, 0));
-  }
-
-  // seconds from idle to max speed
-  public void setDriveRampRate(double seconds) {
-    // Open loop ramp rates
-    frontLeftDrive.configOpenloopRamp(seconds);
-    frontRightDrive.configOpenloopRamp(seconds);
-    rearLeftDrive.configOpenloopRamp(seconds);
-    rearRightDrive.configOpenloopRamp(seconds);
-
-    // Closed loop ramp rates
-    frontLeftDrive.configClosedloopRamp(seconds);
-    frontRightDrive.configClosedloopRamp(seconds);
-    rearLeftDrive.configClosedloopRamp(seconds);
-    rearRightDrive.configClosedloopRamp(seconds);
-  }
-
-  public void setTurnCurrentLimit(double current) {
-    frontLeftTurn.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, current, current, 0));
-    frontRightTurn.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, current, current, 0));
-    rearLeftTurn.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, current, current, 0));
-    rearRightTurn.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, current, current, 0));
-  }
-
-  public void stopDrive() {
-    frontLeftModule.stop();
-    frontRightModule.stop();
-    rearLeftModule.stop();
-    rearRightModule.stop();
-
-  }
-
-  public void resetOdometry() {
-    swerveDrivePoseEstimator.resetPosition(Rotation2d.fromDegrees(-getGyroYaw()), swerveDriveModulePositions,
-        new Pose2d(0.0, 0.0, new Rotation2d()));
-  }
-
-  public void resetOdometryToPose(Pose2d initialPose) {
-    swerveDrivePoseEstimator.resetPosition(Rotation2d.fromDegrees(-getGyroYaw()), swerveDriveModulePositions,
-        initialPose);
-    latestSwervePose = initialPose;
-  }
-
-  public double getGyroYaw() {
-    double angle = navx.getYaw() + gyroOffset;
-    while (angle > 360) {
-      angle -= 360;
+    public CoordinateSpace getAllianceCoordinateSpace() {
+        if (DriverStation.getAlliance() == DriverStation.Alliance.Red) {
+            return CoordinateSpace.Red;
+        }
+        return CoordinateSpace.Blue;
     }
-    while (angle < 0) {
-      angle += 360;
+
+    public void setDriveNeutralMode(NeutralMode mode) {
+        frontLeftDrive.setNeutralMode(mode);
+        frontRightDrive.setNeutralMode(mode);
+        rearLeftDrive.setNeutralMode(mode);
+        rearRightDrive.setNeutralMode(mode);
     }
-    return angle;
-  }
 
-  public Pose2d getLatestSwervePose() {
-    return latestSwervePose;
-  }
+    public void setTurnNeutralMode(NeutralMode mode) {
+        frontLeftTurn.setNeutralMode(mode);
+        frontRightTurn.setNeutralMode(mode);
+        rearLeftTurn.setNeutralMode(mode);
+        rearRightTurn.setNeutralMode(mode);
+    }
 
-  public void setModuleStates(SwerveModuleState[] states) {
-    frontLeftModule.setState(states[0]);
-    frontRightModule.setState(states[1]);
-    rearLeftModule.setState(states[2]);
-    rearRightModule.setState(states[3]);
+    public void setDriveCurrentLimit(double currentLimit, double triggerCurrent) {
+        frontLeftDrive
+                .configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, currentLimit, triggerCurrent, 0));
+        frontRightDrive
+                .configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, currentLimit, triggerCurrent, 0));
+        rearLeftDrive
+                .configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, currentLimit, triggerCurrent, 0));
+        rearRightDrive
+                .configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, currentLimit, triggerCurrent, 0));
+    }
 
-  }
+    // seconds from idle to max speed
+    public void setDriveRampRate(double seconds) {
+        // Open loop ramp rates
+        frontLeftDrive.configOpenloopRamp(seconds);
+        frontRightDrive.configOpenloopRamp(seconds);
+        rearLeftDrive.configOpenloopRamp(seconds);
+        rearRightDrive.configOpenloopRamp(seconds);
 
-  public boolean isInSlowMode() {
-    return inSlowMode;
-  }
+        // Closed loop ramp rates
+        frontLeftDrive.configClosedloopRamp(seconds);
+        frontRightDrive.configClosedloopRamp(seconds);
+        rearLeftDrive.configClosedloopRamp(seconds);
+        rearRightDrive.configClosedloopRamp(seconds);
+    }
 
-  public void setInSlowMode(boolean inSlowMode) {
-    this.inSlowMode = inSlowMode;
-  }
+    public void setTurnCurrentLimit(double current) {
+        frontLeftTurn.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, current, current, 0));
+        frontRightTurn.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, current, current, 0));
+        rearLeftTurn.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, current, current, 0));
+        rearRightTurn.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, current, current, 0));
+    }
 
-  public boolean getDoFieldOreint() {
-    return doFieldOreint;
-  }
+    public void stopDrive() {
+        frontLeftModule.stop();
+        frontRightModule.stop();
+        rearLeftModule.stop();
+        rearRightModule.stop();
 
-  public void setDoFieldOreint(boolean disableFieldOreint) {
-    this.doFieldOreint = disableFieldOreint;
-  }
+    }
 
-  public boolean isScoringMode() {
-    return scoringMode;
-  }
+    public void resetOdometry() {
+        swerveDrivePoseEstimator.resetPosition(Rotation2d.fromDegrees(-getGyroYaw()), swerveDriveModulePositions,
+                new Pose2d(0.0, 0.0, new Rotation2d()));
+    }
 
-  public void setScoringMode(boolean scoringMode) {
-    this.scoringMode = scoringMode;
-  }
+    public void resetOdometryToPose(Pose2d initialPose) {
+        swerveDrivePoseEstimator.resetPosition(Rotation2d.fromDegrees(-getGyroYaw()), swerveDriveModulePositions,
+                initialPose);
+        latestSwervePose = initialPose;
+    }
 
-  public boolean isLoadingMode() {
-    return loadingMode;
-  }
+    public double getGyroYaw() {
+        double angle = navx.getYaw() + gyroOffset;
+        while (angle > 360) {
+            angle -= 360;
+        }
+        while (angle < 0) {
+            angle += 360;
+        }
+        return angle;
+    }
 
-  public void setLoadingMode(boolean loadingMode) {
-    this.loadingMode = loadingMode;
-  }
+    public double getRobotPitch() {
+        return -1 * (navx.getRoll() + Constants.DrivetrainConstants.gyroRollOffset);
+    }
 
-  public void onDisable() {
-    setDriveNeutralMode(NeutralMode.Brake);
-    setTurnNeutralMode(NeutralMode.Brake);
-    stopDrive();
-  }
+    public Pose2d getLatestSwervePose() {
+        return latestSwervePose;
+    }
 
-  private void loadMotionPaths() {
-    // testPath = PathPlanner.loadPath("Test Path", new PathConstraints(2, 1.5));
-    driveStraight = PathPlanner.loadPath("DriveStraight", new PathConstraints(.5, .5));
-    curvePath = PathPlanner.loadPath("CurvePath", new PathConstraints(.5, .5));
-    testPath = PathPlanner.loadPath("TestPath", new PathConstraints(.5, .5));
-  }
+    public void setModuleStates(SwerveModuleState[] states) {
+        frontLeftModule.setState(states[0]);
+        frontRightModule.setState(states[1]);
+        rearLeftModule.setState(states[2]);
+        rearRightModule.setState(states[3]);
 
-  public CommandBase ResetOdometry() {
-    return runOnce(() -> {
-      resetOdometry();
-    });
-  }
+    }
+
+    public boolean isInSlowMode() {
+        return inSlowMode;
+    }
+
+    public void setInSlowMode(boolean inSlowMode) {
+        this.inSlowMode = inSlowMode;
+    }
+
+    public boolean getDoFieldOreint() {
+        return doFieldOreint;
+    }
+
+    public void setDoFieldOreint(boolean disableFieldOreint) {
+        this.doFieldOreint = disableFieldOreint;
+    }
+
+    public boolean isScoringMode() {
+        return scoringMode;
+    }
+
+    public void setScoringMode(boolean scoringMode) {
+        this.scoringMode = scoringMode;
+    }
+
+    public boolean isLoadingMode() {
+        return loadingMode;
+    }
+
+    public void setLoadingMode(boolean loadingMode) {
+        this.loadingMode = loadingMode;
+    }
+
+    public void onDisable() {
+        setDriveNeutralMode(NeutralMode.Brake);
+        setTurnNeutralMode(NeutralMode.Brake);
+        stopDrive();
+    }
+
+    private void loadMotionPaths() {
+        // testPath = PathPlanner.loadPath("Test Path", new PathConstraints(2, 1.5));
+        driveStraight = PathPlanner.loadPath("DriveStraight", new PathConstraints(.5, .5));
+        curvePath = PathPlanner.loadPath("CurvePath", new PathConstraints(.5, .5));
+        testPath = PathPlanner.loadPath("TestPath", new PathConstraints(.5, .5));
+        // NOTE: Motion paths used in autonomous sequences have been moved to
+        // frc.lib.autonomous.AutonomousTrajectory.
+    }
+
+    public CommandBase XWheels() {
+        return new SetSwerveAngle(this, 45, -45, -45, 45);
+    }
+
+    public CommandBase ResetOdometry() {
+        return runOnce(() -> {
+            resetOdometry();
+        });
+    }
+
+    // Move robot straight at a heading and speed
+    public void moveRobotFrontBack(boolean forward, double velocity) {
+
+        // Calculate the Swerve States
+        double[] swerveStates;
+
+        double y1 = velocity / Constants.DrivetrainConstants.swerveMaxSpeed;
+        if (!forward) {
+            y1 *= -1;
+        }
+
+        swerveStates = swerveController.calculate(0.0, y1, 0.0);
+
+        // Get the Swerve Modules
+        SwerveModuleFalconFalcon frontLeft = frontLeftModule;
+        SwerveModuleFalconFalcon frontRight = frontRightModule;
+        SwerveModuleFalconFalcon rearLeft = rearLeftModule;
+        SwerveModuleFalconFalcon rearRight = rearRightModule;
+
+        // Command the Swerve Modules
+        frontLeft.setDriveVelocity(swerveStates[0], swerveStates[1]);
+        frontRight.setDriveVelocity(swerveStates[2], swerveStates[3]);
+        rearLeft.setDriveVelocity(swerveStates[4], swerveStates[5]);
+        rearRight.setDriveVelocity(swerveStates[6], swerveStates[7]);
+    }
 }

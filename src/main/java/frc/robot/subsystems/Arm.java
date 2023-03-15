@@ -175,7 +175,7 @@ public class Arm extends SubsystemBase {
       // In the top slop zone -- assume midpoint but note we don't have good reading
       value -= (Constants.ArmConstants.ArmSlopConstants.topZoneAdjustment / 2.0);
       motorEncoderConfidentCalibrated = EncoderState.TOP_SLOP_ZONE;
-      System.out.println("++++++++++++> Arm init in top slop zone");
+      // System.out.println("++++++++++++> Arm init in top slop zone");
     } else if (value >= Constants.ArmConstants.ArmSlopConstants.bottomZoneHiEdge) {
       // In the mid zone -- no offset to motor encoder needed
       motorEncoderConfidentCalibrated = EncoderState.CALIBRATED;
@@ -183,7 +183,7 @@ public class Arm extends SubsystemBase {
       // In the bottom slop zone -- assume midount but note we dont have good reading
       value -= Constants.ArmConstants.ArmSlopConstants.bottomZoneAdjustment / 2.0;
       motorEncoderConfidentCalibrated = EncoderState.BOTTOM_SLOP_ZONE;
-      System.out.println("++++++++++++++> Arm init in bottom slop zone");
+      // System.out.println("++++++++++++++> Arm init in bottom slop zone");
     } else {
       // Below the bottom slop zone -- apply adjustment
       value -= Constants.ArmConstants.ArmSlopConstants.bottomZoneAdjustment;
@@ -191,7 +191,8 @@ public class Arm extends SubsystemBase {
     }
 
     // Convert from degrees to encoder clicks
-    System.out.println("==========================================> Encoder set to " + value);
+    // System.out.println("==========================================> Encoder set
+    // to " + value);
     value *= Constants.ArmConstants.motorEncoderClicksPerDegree;
     armMotor.setSelectedSensorPosition(value);
 

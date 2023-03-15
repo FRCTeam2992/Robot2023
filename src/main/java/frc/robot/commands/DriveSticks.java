@@ -40,6 +40,7 @@ public class DriveSticks extends CommandBase {
                 Constants.DrivetrainConstants.AutoScorePIDConstants.scoreD,
                 new TrapezoidProfile.Constraints(Constants.DrivetrainConstants.AutoScorePIDConstants.scoreCruise,
                         Constants.DrivetrainConstants.AutoScorePIDConstants.scoreAccel));
+        scoreYController.setIntegratorRange(-0.2, 0.2);
 
         // Set the Subsystem Requirement
         addRequirements(mDriveTrain);
