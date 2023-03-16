@@ -190,8 +190,14 @@ public class RobotContainer {
                 }));
                 controller0.x().onTrue(
                                 new AutoGroundIntakeCube(mElevator, mArm, mClaw, mIntake, mIntakeDeploy, mSpindexer));// cubes
+                controller0.x().onTrue(new SetLEDsColor(Constants.LEDColors.purple));
+                controller0.x().onTrue(new InstantCommand(
+                                () -> mRobotState.intakeMode = RobotState.IntakeModeState.Cube));
                 controller0.y().onTrue(
                                 new AutoGroundIntakeCone(mElevator, mArm, mClaw, mIntake, mIntakeDeploy, mSpindexer));// cone
+                controller0.y().onTrue(new SetLEDsColor(Constants.LEDColors.yellow));
+                controller0.y().onTrue(new InstantCommand(
+                                () -> mRobotState.intakeMode = RobotState.IntakeModeState.Cone));
                 // D-Pad
                 controller0.povLeft().whileTrue(mDrivetrain.XWheels());// X the wheels
 
