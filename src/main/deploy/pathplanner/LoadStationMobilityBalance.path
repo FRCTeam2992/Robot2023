@@ -34,29 +34,29 @@
       "nextControl": {
         "x": 7.847855129828984,
         "y": 4.523525835734914
-    },
-    "holonomicAngle": -4.0,
-    "isReversal": false,
-    "velOverride": null,
-    "isLocked": false,
-    "isStopPoint": false,
-    "stopEvent": {
+      },
+      "holonomicAngle": -4.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
         "names": [],
         "executionBehavior": "parallel",
         "waitBehavior": "none",
         "waitTime": 0
-    }
-},
-{
-    "anchorPoint": {
+      }
+    },
+    {
+      "anchorPoint": {
         "x": 6.35,
         "y": 3.8
-    },
-    "prevControl": {
+      },
+      "prevControl": {
         "x": 7.152115562183948,
         "y": 4.226492409695655
-    },
-    "nextControl": {
+      },
+      "nextControl": {
         "x": 5.582801064409575,
         "y": 3.3920730899859235
       },
@@ -99,11 +99,11 @@
     },
     {
       "anchorPoint": {
-        "x": 2.9,
+        "x": 3.25,
         "y": 3.2
       },
       "prevControl": {
-        "x": 3.4031586643957064,
+        "x": 3.7531586643957064,
         "y": 3.2
       },
       "nextControl": null,
@@ -120,27 +120,27 @@
       }
     }
   ],
-"markers": [
+  "markers": [
     {
-        "position": 0.05,
-        "names": [
-            "UndeployElevator",
-            "TowerMoveBackstop",
-            "IntakeSpeedCube",
-            "IntakeDeployGround"
-        ]
+      "position": 0.05,
+      "names": [
+        "UndeployElevator",
+        "TowerMoveBackstop",
+        "IntakeSpeedCube",
+        "IntakeDeployGround"
+      ]
     },
     {
-        "position": 1.5709090909091006,
-        "names": [
-            "IntakeDeployHome"
-        ]
+      "position": 1.5709090909091006,
+      "names": [
+        "IntakeDeployHome"
+      ]
     },
     {
-        "position": 2.210909090909049,
-        "names": [
-            "IntakeStop"
-        ]
+      "position": 2.210909090909049,
+      "names": [
+        "IntakeStop"
+      ]
     }
-]
+  ]
 }
