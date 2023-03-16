@@ -86,8 +86,8 @@ public final class Constants {
     // Gyro balancing constants
     public static final double gyroRollOffset = -1.9; // degrees -- its robot pitch but navx roll
     public static final double pitchTolerance = 2.0; // degrees -- level if Abs() less than this
-    public static final double pitchDeltaTolerance = 0.05; // degrees/20ms robot cycle
-    public static final double balanceMoveSpeed = 0.3; // m/sec -- how fast to crawl for final balance
+    public static final double pitchDeltaTolerance = 0.15; // degrees/20ms robot cycle
+    public static final double balanceMoveSpeed = 0.55; // m/sec -- how fast to crawl for final balance
 
     // Drive Rotation P
     public static final double driveRotationP = .007;
@@ -211,7 +211,7 @@ public final class Constants {
   public static class TowerConstants {
     public static Waypoint scoreFloor = new Waypoint(0.0, 117.0);
     public static Waypoint scoreConeMid = new Waypoint(0.0, 219.0);
-    public static Waypoint scoreConeHigh = new Waypoint(26.5, 199.0);
+    public static Waypoint scoreConeHigh = new Waypoint(25.5, 199.0);
     public static Waypoint scoreCubeMid = new Waypoint(0.0, 199.0);
     public static Waypoint scoreCubeHigh = new Waypoint(27.25, 166.0);
     public static Waypoint intakeBackstop = new Waypoint(11.75, 45);
