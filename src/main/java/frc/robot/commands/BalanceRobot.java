@@ -23,8 +23,8 @@ public class BalanceRobot extends CommandBase {
     private int correctionWaitTimer;
     private boolean executeCorrectionNow;
     private int correctionsCompleted;
-    private final int WAIT_CYCLES_INTOLERANCE = 100;
-    private final int WAIT_CYCLES_NEXT_CORRECTION = 20;
+    private final int WAIT_CYCLES_INTOLERANCE = 250;
+    private final int WAIT_CYCLES_NEXT_CORRECTION = 150;
 
     /** Creates a new BalanceRobot. */
     public BalanceRobot(Drivetrain driveTrain) {
@@ -57,11 +57,13 @@ public class BalanceRobot extends CommandBase {
                 (currentPitchDelta < Constants.DrivetrainConstants.pitchDeltaTolerance);
 
         if (executeCorrectionNow && needForwardCorrection) {
-            mDrivetrain.moveRobotFrontBack(true, Constants.DrivetrainConstants.balanceMoveSpeed * Math.max(0.3, 1 - 0.1 * correctionsCompleted));
+            mDrivetrain.moveRobotFrontBack(true,
+                    Constants.DrivetrainConstants.balanceMoveSpeed * Math.max(0.3, 1 - 0.1 * correctionsCompleted));
             inToleranceCount = 0;
             correctionsCompleted++;
         } else if (executeCorrectionNow && needReverseCorrection) {
-            mDrivetrain.moveRobotFrontBack(false, (Constants.DrivetrainConstants.balanceMoveSpeed - .1) * Math.max(0.3, 1 - 0.1 * correctionsCompleted));
+            mDrivetrain.moveRobotFrontBack(false, (Constants.DrivetrainConstants.balanceMoveSpeed - .1)
+                    * Math.max(0.3, 1 - 0.1 * correctionsCompleted));
             inToleranceCount = 0;
             correctionsCompleted++;
         } else {
