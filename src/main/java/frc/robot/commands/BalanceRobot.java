@@ -22,6 +22,7 @@ public class BalanceRobot extends CommandBase {
     private boolean recentlyCorrected;
     private int correctionWaitTimer;
     private boolean executeCorrectionNow;
+    private int correctionsCompleted;
     private final int WAIT_CYCLES_INTOLERANCE = 100;
     private final int WAIT_CYCLES_NEXT_CORRECTION = 20;
 
@@ -40,6 +41,7 @@ public class BalanceRobot extends CommandBase {
         inToleranceCount = 0;
         correctionWaitTimer = 0;
         recentlyCorrected = false;
+        correctionsCompleted = 0;
     }
 
     // Called every time the scheduler runs while the command is scheduled.
@@ -55,11 +57,13 @@ public class BalanceRobot extends CommandBase {
                 (currentPitchDelta < Constants.DrivetrainConstants.pitchDeltaTolerance);
 
         if (executeCorrectionNow && needForwardCorrection) {
-            mDrivetrain.moveRobotFrontBack(true, Constants.DrivetrainConstants.balanceMoveSpeed);
+            mDrivetrain.moveRobotFrontBack(true, Constants.DrivetrainConstants.balanceMoveSpeed * Math.max(0.3, 1 - 0.1 * correctionsCompleted));
             inToleranceCount = 0;
+            correctionsCompleted++;
         } else if (executeCorrectionNow && needReverseCorrection) {
-            mDrivetrain.moveRobotFrontBack(false, Constants.DrivetrainConstants.balanceMoveSpeed - .1);
+            mDrivetrain.moveRobotFrontBack(false, (Constants.DrivetrainConstants.balanceMoveSpeed - .1) * Math.max(0.3, 1 - 0.1 * correctionsCompleted));
             inToleranceCount = 0;
+            correctionsCompleted++;
         } else {
             mDrivetrain.stopDrive();
             inToleranceCount++;
