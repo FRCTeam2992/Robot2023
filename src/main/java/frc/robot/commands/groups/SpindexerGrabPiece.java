@@ -62,7 +62,7 @@ public class SpindexerGrabPiece extends SequentialCommandGroup {
                                 RobotState.IntakeModeState.Cone,
                                                         new SafeDumbTowerToPosition(elevator, arm,
                                                                         Constants.TowerConstants.intakeGrabCone)
-                                                                        .andThen(new SetArmPosition(arm, 3.0))),
+                                                                        .andThen(new SetArmPosition(arm, -4.0))),
                         Map.entry(
                                 RobotState.IntakeModeState.Cube,
                                 new SafeDumbTowerToPosition(elevator, arm, Constants.TowerConstants.intakeGrabCube)),
@@ -70,7 +70,7 @@ public class SpindexerGrabPiece extends SequentialCommandGroup {
                                 RobotState.IntakeModeState.Unknown,
                                                         new SafeDumbTowerToPosition(elevator, arm,
                                                                         Constants.TowerConstants.intakeGrabCone)
-                                                                        .andThen(new SetArmPosition(arm, 3.0)))),
+                                                                        .andThen(new SetArmPosition(arm, -4.0)))),
                 robotState::getIntakeMode);
 
     }
