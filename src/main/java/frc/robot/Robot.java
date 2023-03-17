@@ -9,6 +9,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -28,6 +29,8 @@ public class Robot extends TimedRobot {
 
     private int slowLoopCounter = 0;
     private int slowAutoBuildCounter = 0;
+
+    public static Timer balanceTimer = new Timer();
 
     // public static AddressableLED m_led;
     // public static AddressableLEDBuffer m_ledBuffer;
@@ -139,6 +142,9 @@ public class Robot extends TimedRobot {
         // Arm make sure encoders are current
         mRobotContainer.mArm.initArmMotorEncoder(); // Reset each time we enter Teleop or Auto
 
+        balanceTimer.reset();
+        balanceTimer.start();
+
         // schedule the autonomous command (example)
         if (m_autonomousCommand != null) {
             m_autonomousCommand.schedule();
@@ -171,6 +177,8 @@ public class Robot extends TimedRobot {
 
         // Arm make sure encoders are current
         mRobotContainer.mArm.initArmMotorEncoder(); // Attempt reset at each teleop init
+
+        balanceTimer.stop();
 
     }
 

@@ -5,8 +5,10 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.filter.LinearFilter;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
+import frc.robot.Robot;
 import frc.robot.subsystems.Drivetrain;
 
 public class BalanceRobot extends CommandBase {
@@ -46,7 +48,7 @@ public class BalanceRobot extends CommandBase {
             inToleranceCount = 0;
         } else if ((mDrivetrain.getRobotPitch() < -Constants.DrivetrainConstants.pitchTolerance) &&
                 (currentPitchDelta < Constants.DrivetrainConstants.pitchDeltaTolerance)) {
-            mDrivetrain.moveRobotFrontBack(false, Constants.DrivetrainConstants.balanceMoveSpeed);
+            mDrivetrain.moveRobotFrontBack(false, Constants.DrivetrainConstants.balanceMoveSpeed - .1);
             inToleranceCount = 0;
         } else {
             mDrivetrain.stopDrive();
@@ -62,7 +64,7 @@ public class BalanceRobot extends CommandBase {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return inToleranceCount >= 100;
+        return inToleranceCount >= 100 || (Robot.balanceTimer.get() > 14.0 && DriverStation.isAutonomousEnabled());
     }
 
 }

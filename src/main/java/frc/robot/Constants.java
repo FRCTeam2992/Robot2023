@@ -86,7 +86,7 @@ public final class Constants {
     // Gyro balancing constants
     public static final double gyroRollOffset = -1.9; // degrees -- its robot pitch but navx roll
     public static final double pitchTolerance = 2.0; // degrees -- level if Abs() less than this
-    public static final double pitchDeltaTolerance = 0.09; // degrees/20ms robot cycle
+    public static final double pitchDeltaTolerance = 0.08; // degrees/20ms robot cycle
     public static final double balanceMoveSpeed = 0.3; // m/sec -- how fast to crawl for final balance
 
     // Drive Rotation P
