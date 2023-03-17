@@ -19,6 +19,11 @@ public class BalanceRobot extends CommandBase {
     private double currentPitchDelta;
     private LinearFilter lowPass;
     private int inToleranceCount;
+    private boolean recentlyCorrected;
+    private int correctionWaitTimer;
+    private boolean executeCorrectionNow;
+    private final int WAIT_CYCLES_INTOLERANCE = 100;
+    private final int WAIT_CYCLES_NEXT_CORRECTION = 20;
 
     /** Creates a new BalanceRobot. */
     public BalanceRobot(Drivetrain driveTrain) {
@@ -33,6 +38,8 @@ public class BalanceRobot extends CommandBase {
         priorPitch = currentPitch = mDrivetrain.getRobotPitch();
         lowPass.reset();
         inToleranceCount = 0;
+        correctionWaitTimer = 0;
+        recentlyCorrected = false;
     }
 
     // Called every time the scheduler runs while the command is scheduled.
@@ -41,18 +48,27 @@ public class BalanceRobot extends CommandBase {
         priorPitch = currentPitch;
         currentPitch = lowPass.calculate(mDrivetrain.getRobotPitch());
         currentPitchDelta = currentPitch - priorPitch;
+        executeCorrectionNow = !recentlyCorrected || (recentlyCorrected && correctionWaitTimer >= WAIT_CYCLES_NEXT_CORRECTION);
+        boolean needForwardCorrection = (mDrivetrain.getRobotPitch() > Constants.DrivetrainConstants.pitchTolerance) &&
+                (currentPitchDelta > -Constants.DrivetrainConstants.pitchDeltaTolerance);
+        boolean needReverseCorrection = (mDrivetrain.getRobotPitch() < -Constants.DrivetrainConstants.pitchTolerance) &&
+                (currentPitchDelta < Constants.DrivetrainConstants.pitchDeltaTolerance);
 
-        if ((mDrivetrain.getRobotPitch() > Constants.DrivetrainConstants.pitchTolerance) &&
-                (currentPitchDelta > -Constants.DrivetrainConstants.pitchDeltaTolerance)) {
+        if (executeCorrectionNow && needForwardCorrection) {
             mDrivetrain.moveRobotFrontBack(true, Constants.DrivetrainConstants.balanceMoveSpeed);
             inToleranceCount = 0;
-        } else if ((mDrivetrain.getRobotPitch() < -Constants.DrivetrainConstants.pitchTolerance) &&
-                (currentPitchDelta < Constants.DrivetrainConstants.pitchDeltaTolerance)) {
+        } else if (executeCorrectionNow && needReverseCorrection) {
             mDrivetrain.moveRobotFrontBack(false, Constants.DrivetrainConstants.balanceMoveSpeed - .1);
             inToleranceCount = 0;
         } else {
             mDrivetrain.stopDrive();
             inToleranceCount++;
+            if (recentlyCorrected) {
+                correctionWaitTimer++;
+            } else {
+                recentlyCorrected = true;
+                correctionWaitTimer = 0;
+            }
         }
     }
 
@@ -64,7 +80,7 @@ public class BalanceRobot extends CommandBase {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return inToleranceCount >= 100 || (Robot.balanceTimer.get() > 14.0 && DriverStation.isAutonomousEnabled());
+        return inToleranceCount >= WAIT_CYCLES_INTOLERANCE || (Robot.balanceTimer.get() > 14.0 && DriverStation.isAutonomousEnabled());
     }
 
 }
