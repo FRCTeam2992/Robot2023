@@ -23,6 +23,8 @@ public class BalanceRobot extends CommandBase {
     private int correctionWaitTimer;
     private boolean executeCorrectionNow;
     private int correctionsCompleted;
+    private boolean lastCorrectedForward;
+    private boolean lastCorrectedReverse;
     private final int WAIT_CYCLES_INTOLERANCE = 250;
     private final int WAIT_CYCLES_NEXT_CORRECTION = 150;
 
@@ -42,6 +44,8 @@ public class BalanceRobot extends CommandBase {
         correctionWaitTimer = 0;
         recentlyCorrected = false;
         correctionsCompleted = 0;
+        lastCorrectedForward = false;
+        lastCorrectedReverse = false;
     }
 
     // Called every time the scheduler runs while the command is scheduled.
@@ -55,25 +59,38 @@ public class BalanceRobot extends CommandBase {
                 (currentPitchDelta > -Constants.DrivetrainConstants.pitchDeltaTolerance);
         boolean needReverseCorrection = (mDrivetrain.getRobotPitch() < -Constants.DrivetrainConstants.pitchTolerance) &&
                 (currentPitchDelta < Constants.DrivetrainConstants.pitchDeltaTolerance);
+        double correctionFactor = 1.0;
+        if (correctionsCompleted > 0) {
+            correctionFactor *= 0.5 * Math.max(0.3, 1 - 0.1 * correctionsCompleted);
+        }
 
         if (executeCorrectionNow && needForwardCorrection) {
             mDrivetrain.moveRobotFrontBack(true,
-                    Constants.DrivetrainConstants.balanceMoveSpeed * Math.max(0.3, 1 - 0.1 * correctionsCompleted));
+                    Constants.DrivetrainConstants.balanceMoveSpeed * correctionFactor);
             inToleranceCount = 0;
-            correctionsCompleted++;
+            if (lastCorrectedReverse) {
+                correctionsCompleted++;
+                recentlyCorrected = true;
+                correctionWaitTimer = 0;
+            }
+            lastCorrectedForward = true;
+            lastCorrectedReverse = false;
         } else if (executeCorrectionNow && needReverseCorrection) {
-            mDrivetrain.moveRobotFrontBack(false, (Constants.DrivetrainConstants.balanceMoveSpeed - .1)
-                    * Math.max(0.3, 1 - 0.1 * correctionsCompleted));
+            mDrivetrain.moveRobotFrontBack(false, 
+                    (Constants.DrivetrainConstants.balanceMoveSpeed - .1) * correctionFactor);
             inToleranceCount = 0;
-            correctionsCompleted++;
+            if (lastCorrectedForward) {
+                correctionsCompleted++;
+                recentlyCorrected = true;
+                correctionWaitTimer = 0;
+            }
+            lastCorrectedForward = false;
+            lastCorrectedReverse = true;
         } else {
             mDrivetrain.stopDrive();
             inToleranceCount++;
             if (recentlyCorrected) {
                 correctionWaitTimer++;
-            } else {
-                recentlyCorrected = true;
-                correctionWaitTimer = 0;
             }
         }
     }
