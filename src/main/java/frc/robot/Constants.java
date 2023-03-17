@@ -297,7 +297,7 @@ public final class Constants {
       public static double topZoneAdjustment = 9.6; // Slop adjustment to apply
 
       public static double bottomZoneHiEdge = 43.8; // Past this in the slop zone
-      public static double bottomZoneLowEdge = 34.2; // Past the slop zone -- use adjustment
+      public static double bottomZoneLowEdge = 43.6; // Past the slop zone -- use adjustment
       public static double bottomZoneAdjustment = 9.6;
     }
 
