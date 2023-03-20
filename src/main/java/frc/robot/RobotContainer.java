@@ -9,6 +9,8 @@ import frc.lib.autonomous.AutoBuilder;
 import frc.lib.leds.Color;
 
 import frc.robot.Constants.TowerConstants;
+import frc.robot.RobotState.GridTargetingPosition;
+import frc.robot.commands.BalanceRobot;
 import frc.robot.commands.DeployButterflyWheels;
 import frc.robot.commands.DeployElevator;
 import frc.robot.commands.DriveSticks;
@@ -190,8 +192,14 @@ public class RobotContainer {
                 }));
                 controller0.x().onTrue(
                                 new AutoGroundIntakeCube(mElevator, mArm, mClaw, mIntake, mIntakeDeploy, mSpindexer));// cubes
+                controller0.x().onTrue(new SetLEDsColor(Constants.LEDColors.purple));
+                controller0.x().onTrue(new InstantCommand(
+                                () -> mRobotState.intakeMode = RobotState.IntakeModeState.Cube));
                 controller0.y().onTrue(
                                 new AutoGroundIntakeCone(mElevator, mArm, mClaw, mIntake, mIntakeDeploy, mSpindexer));// cone
+                controller0.y().onTrue(new SetLEDsColor(Constants.LEDColors.yellow));
+                controller0.y().onTrue(new InstantCommand(
+                                () -> mRobotState.intakeMode = RobotState.IntakeModeState.Cone));
                 // D-Pad
                 controller0.povLeft().whileTrue(mDrivetrain.XWheels());// X the wheels
 
@@ -230,10 +238,14 @@ public class RobotContainer {
                 controller0.axisGreaterThan(XboxController.Axis.kRightTrigger.value, .3)
                                 .onTrue(new ToggleClawState(mClaw));
                 controller0.leftTrigger(0.6)
-                        .whileTrue(new WaitCommand(0.5)
+                                .whileTrue((new WaitCommand(0.5).unless(
+                                                () -> (mRobotState.currentTargetPosition == GridTargetingPosition.MidLeft
+                                                                ||
+                                                                mRobotState.currentTargetPosition == GridTargetingPosition.MidRight
+                                                                || mRobotState.currentTargetPosition == GridTargetingPosition.MidCenter)))
                                 .andThen(new MoveTowerToScoringPosition(mElevator, mArm, mRobotState)));
                 controller0.leftTrigger(0.6)
-                                .onTrue(new SetIntakeDeployState(mIntakeDeploy, IntakeDeploy.IntakeDeployState.Homed));
+                                .onTrue(new SetIntakeDeployState(mIntakeDeploy, IntakeDeploy.IntakeDeployState.Normal));
                 controller0.leftTrigger(0.6).onTrue(new DeployElevator(mElevator, ElevatorState.Deployed)
                         .unless(() -> (mRobotState.currentTargetPosition.towerWaypoint == Constants.TowerConstants.scoreFloor)));
 
@@ -244,6 +256,8 @@ public class RobotContainer {
                 // Back and Start
 
                 controller0.start().onTrue(new ResetGyro(mDrivetrain));
+
+                controller0.back().onTrue(new BalanceRobot(mDrivetrain));
 
                 // Joysticks Buttons
                 controller0.rightStick().onTrue(new MoveIntake(mIntake, .5, .5).withTimeout(2));

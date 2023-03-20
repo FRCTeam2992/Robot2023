@@ -162,7 +162,7 @@ public class AutoBuilder {
                 initialScoreCommand = initialScoreCommand
                         .andThen(new WaitCommand(0.2))
                         .andThen(new SetClawState(mClaw, ClawState.Opened))
-                        .andThen(new WaitCommand(0.2));
+                        .andThen(new WaitCommand(0.4));
                 break;
             default:
                 initialScoreCommand = new InstantCommand(() -> mDrivetrain.resetOdometryToPose(startingPose));

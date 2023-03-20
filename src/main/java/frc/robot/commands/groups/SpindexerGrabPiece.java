@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.RobotState;
 import frc.robot.commands.MoveIntake;
+import frc.robot.commands.SetArmPosition;
 import frc.robot.commands.SetClawState;
 import frc.robot.commands.SetIntakeDeployState;
 import frc.robot.commands.StopSpindexer;
@@ -59,13 +60,17 @@ public class SpindexerGrabPiece extends SequentialCommandGroup {
                 Map.ofEntries(
                         Map.entry(
                                 RobotState.IntakeModeState.Cone,
-                                new SafeDumbTowerToPosition(elevator, arm, Constants.TowerConstants.intakeGrabCone)),
+                                                        new SafeDumbTowerToPosition(elevator, arm,
+                                                                        Constants.TowerConstants.intakeGrabCone)
+                                                                        .andThen(new SetArmPosition(arm, -2.0))),
                         Map.entry(
                                 RobotState.IntakeModeState.Cube,
                                 new SafeDumbTowerToPosition(elevator, arm, Constants.TowerConstants.intakeGrabCube)),
                         Map.entry(
                                 RobotState.IntakeModeState.Unknown,
-                                new SafeDumbTowerToPosition(elevator, arm, Constants.TowerConstants.intakeGrabCone))),
+                                                        new SafeDumbTowerToPosition(elevator, arm,
+                                                                        Constants.TowerConstants.intakeGrabCone)
+                                                                        .andThen(new SetArmPosition(arm, -2.0)))),
                 robotState::getIntakeMode);
 
     }
