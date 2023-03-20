@@ -56,7 +56,7 @@ public final class Constants {
     public static final double frontLeftOffset = -174.3;
     public static final double frontRightOffset = 90.8;
     public static final double rearLeftOffset = 170.6;
-    public static final double rearRightOffset = 28.7;
+    public static final double rearRightOffset = 31.0;
 
     public static class PIDConstants {
       // Swerve Drive PID (Velocity Control)
@@ -215,7 +215,7 @@ public final class Constants {
     public static Waypoint scoreCubeMid = new Waypoint(0.0, 199.0);
     public static Waypoint scoreCubeHigh = new Waypoint(27.25, 166.0);
     public static Waypoint intakeBackstop = new Waypoint(11.75, 45);
-    public static Waypoint intakeGrabCube = new Waypoint(1.0, 6);
+    public static Waypoint intakeGrabCube = new Waypoint(1.0, 0.0);
     public static Waypoint intakeGrabCone = new Waypoint(0.0, 11.0);
     public static Waypoint intakeRegrab = new Waypoint(7.75, 5.0);
     public static Waypoint floorGrab = new Waypoint(0.0, 92.0);

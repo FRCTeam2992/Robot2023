@@ -12,6 +12,7 @@ import com.ctre.phoenix.sensors.CANCoder;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -80,6 +81,9 @@ public class Arm extends SubsystemBase {
       SmartDashboard.putNumber("Arm Motor Encoder Raw", getArmMotorPositionRaw());
 
       SmartDashboard.putNumber("Arm Motor Encoder Degrees", getArmMotorPositionDeg());
+
+      // SmartDashboard.putData("ZeroArm", new InstantCommand(() ->
+      // initArmMotorEncoder()));
 
       dashboardCounter = 0;
     }
